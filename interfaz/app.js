@@ -138,8 +138,8 @@ class Grafica {
       const et = this.log ? fmt(10 ** v) : fmt(v);
       g.fillText(et, 2, yy + 3);
     }
-    g.fillText(`paso ${x0}`, izq, H - 4);
-    const t1 = `paso ${x1}`;
+    g.fillText(`${T('paso', 'step')} ${x0}`, izq, H - 4);
+    const t1 = `${T('paso', 'step')} ${x1}`;
     g.fillText(t1, W - der - g.measureText(t1).width, H - 4);
     for (const s of vis) {
       g.strokeStyle = s.color; g.lineWidth = 1.6; g.beginPath();

@@ -642,6 +642,9 @@ function huirSiHayPeligro(a, c) {
     const presas = c.presasDe.get(p.grupo);
     if (!presas || !presas.has(a.grupo)) return;
     if (!activo(p.e, c.hora) && !p.presa) return;
+    // solo asusta quien podría cazarlo por tamaño (como en buscarPresa: presas de hasta la mitad
+    // de su peso), salvo que vaya a por él de verdad
+    if (p.presa !== a.id && a.masa > p.masa * 0.6) return;
     if (dist(a, p) < a.e.alerta) { peligro = p; return false; }
   });
   if (!peligro) return false;

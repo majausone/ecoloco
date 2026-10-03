@@ -18,7 +18,7 @@ export function cabecera(actual) {
   c.className = 'cabecera';
   c.innerHTML = `<a class="cab-marca" href="${new URL('index.html', raiz)}">EcoLoco</a>` +
     PAGINAS.map(([id, ruta, es, en]) => `<a class="ir${id === actual ? ' on' : ''}" href="${new URL(ruta, raiz)}">${T(es, en)}</a>`).join('') +
-    `<span class="hueco"></span><label title="${T('Idioma', 'Language')}">🌐 <select id="idioma-elegir"><option value="en">English</option><option value="es">Español</option></select></label>`;
+    `<span class="hueco"></span><a class="ir git" href="https://github.com/majausone/ecoloco" target="_blank" rel="noopener" title="${T('El código en GitHub', 'The source code on GitHub')}">GitHub</a><label title="${T('Idioma', 'Language')}">🌐 <select id="idioma-elegir"><option value="en">English</option><option value="es">Español</option></select></label>`;
   document.body.prepend(c);
   document.body.classList.add('con-cabecera');
   const s = c.querySelector('select');
