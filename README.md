@@ -141,7 +141,8 @@ Also used, with thanks:
 ## License
 
 [BSD 3-Clause](LICENSE), the same license as Virtual Ecosystem. The species photos are not
-covered by it: each belongs to its author under the license shown with it.
+covered by it: each belongs to its author under the license shown with it. Third-party parts
+are listed in [NOTICE](NOTICE).
 
 ## Technical details
 

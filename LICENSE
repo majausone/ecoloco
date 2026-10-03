@@ -1,8 +1,7 @@
 BSD 3-Clause License
 
-Copyright (c) 2026, majausone (EcoLoco)
-Copyright (c) 2022, Imperial College London (Virtual Ecosystem, from which the engine in
-motor/ is ported)
+Copyright (c) 2026, majausone
+Copyright (c) 2022, Imperial College London
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,16 +28,3 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-Third-party parts, under their own licenses:
-
-- motor/pyrealm.js ports the parts of pyrealm used by Virtual Ecosystem.
-  pyrealm: MIT License, Copyright (c) 2023 David Orme.
-- graficos/pruebas-morta/vendor/ (three.js) and vivo/vendor/ (Sky and Water from
-  the three.js examples): MIT License, Copyright 2010-2026 Three.js Authors.
-- The species photos in graficos/pruebas-morta/borneo/ref/ come from iNaturalist
-  and are NOT covered by this license: each one belongs to its author, under the
-  license shown next to it (graficos/pruebas-morta/borneo/ref-fotos.json).
-- Climate data for the Maliau scenario: ERA5 and ERA5-Land (Copernicus Climate
-  Change Service), downloaded through Open-Meteo (CC BY 4.0).
