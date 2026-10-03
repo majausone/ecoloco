@@ -1,18 +1,18 @@
 // Modelo de plantas (models/plants): biomasses.py, canopy.py, communities.py, fruit.py,
 // subcanopy.py y plants_model.py, con la parte de pyrealm en ../pyrealm.js.
 
-import { Arr } from '../core/arr.js?v=202610032043';
-import { ModeloBase } from './base.js?v=202610032043';
-import { exp, pow } from '../num/ucrt.js?v=202610032043';
-import { sumaPares, nansumaEje } from '../num/np.js?v=202610032043';
-import { sumaNp } from '../num/py.js?v=202610032043';
-import { npClip, npMin, npMax } from './comun.js?v=202610032043';
+import { Arr } from '../core/arr.js?v=202610032115';
+import { ModeloBase } from './base.js?v=202610032115';
+import { exp, pow } from '../num/ucrt.js?v=202610032115';
+import { sumaPares, nansumaEje } from '../num/np.js?v=202610032115';
+import { sumaNp } from '../num/py.js?v=202610032115';
+import { npClip, npMin, npMax } from './comun.js?v=202610032115';
 import {
   pmodel, molesAMm, crearFlora, crearCohortes, concatCohortes, nCohortes, alometria, asignacion, incrementos,
   dosel, pyrealmConst,
-} from '../pyrealm.js?v=202610032043';
-import { ExportadorPlantas } from './plants_export.js?v=202610032043';
-import { diasAFecha } from '../core/componentes.js?v=202610032043';
+} from '../pyrealm.js?v=202610032115';
+import { ExportadorPlantas } from './plants_export.js?v=202610032115';
+import { diasAFecha } from '../core/componentes.js?v=202610032115';
 
 const ELEM = ['C', 'N', 'P'];
 const suma = (a) => 0.0 + sumaPares(a, 0, a.length, 1);

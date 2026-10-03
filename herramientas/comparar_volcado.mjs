@@ -5,7 +5,7 @@
 // Uso: node herramientas/comparar_volcado.mjs <escenario.json> <dir volcado> [--semilla 1]
 //        [--pasos N] [--seguir] [--solo modulo]
 import { readFileSync } from 'node:fs';
-import { Simulacion } from '../motor/simulacion.js?v=202610032043';
+import { Simulacion } from '../motor/simulacion.js?v=202610032115';
 import { Volcado } from './volcado.mjs';
 
 const args = process.argv.slice(2);

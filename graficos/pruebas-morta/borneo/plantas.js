@@ -4,7 +4,7 @@
    el bosque entero son pocas mallas. */
 
 import * as THREE from '../vendor/three.module.js';
-import { azar } from '../escena-v3.js?v=202610032043';
+import { azar } from '../escena-v3.js?v=202610032115';
 
 /* El viento: cada hoja tiembla en su sitio (unos centímetros) en vez de desplazarse más
    cuanto más alta está, que separaba las copas de las ramas («hojas flotando»). */

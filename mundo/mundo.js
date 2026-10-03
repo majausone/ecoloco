@@ -15,18 +15,18 @@
 //  5. al acabar, cada cohorte tiene los animales que le tocan.
 // Se mide cuánto sale solo y cuánto se empuja (medidas de cada día).
 
-import { Azar } from './azar.js?v=202610032043';
-import { Mapa, hashTexto } from './mapa.js?v=202610032043';
-import { PuenteMotor } from './puente.js?v=202610032043';
-import { Agente, elegirEspecie, nuevoId, quitarEspecies } from './agentes.js?v=202610032043';
-import { completar, aplicarAlEscenario, opcionesMapa } from './config.js?v=202610032043';
-import { VERTEBRADOS, ESPECIES_DE_GRUPO, E } from './especies.js?v=202610032043';
-import { simularDia, TICS, CLAVE, DETALLE, CLASE_COMIDA, TAREAS } from './dia.js?v=202610032043';
-import { escalarEscenario } from './escala.js?v=202610032043';
-import { Registro } from './registro.js?v=202610032043';
-import { aplicarParametros } from './parametros.js?v=202610032043';
-import { clonarProfundo } from '../motor/clonar.js?v=202610032043';
-import { horquilla, ARBOL } from './posaderos.js?v=202610032043';
+import { Azar } from './azar.js?v=202610032115';
+import { Mapa, hashTexto } from './mapa.js?v=202610032115';
+import { PuenteMotor } from './puente.js?v=202610032115';
+import { Agente, elegirEspecie, nuevoId, quitarEspecies } from './agentes.js?v=202610032115';
+import { completar, aplicarAlEscenario, opcionesMapa } from './config.js?v=202610032115';
+import { VERTEBRADOS, ESPECIES_DE_GRUPO, E } from './especies.js?v=202610032115';
+import { simularDia, TICS, CLAVE, DETALLE, CLASE_COMIDA, TAREAS } from './dia.js?v=202610032115';
+import { escalarEscenario } from './escala.js?v=202610032115';
+import { Registro } from './registro.js?v=202610032115';
+import { aplicarParametros } from './parametros.js?v=202610032115';
+import { clonarProfundo } from '../motor/clonar.js?v=202610032115';
+import { horquilla, ARBOL } from './posaderos.js?v=202610032115';
 
 // cuántos animales caben: vertebrados en total y de cada grupo de invertebrados (más allá, cada
 // animal representa a varios individuos del motor)

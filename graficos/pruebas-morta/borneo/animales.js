@@ -5,7 +5,7 @@
    Todos miran hacia +x y tienen los pies en y = 0. */
 
 import * as THREE from '../vendor/three.module.js';
-import { azar } from '../escena-v3.js?v=202610032043';
+import { azar } from '../escena-v3.js?v=202610032115';
 
 const GRIS = new THREE.Color('#77736e');
 

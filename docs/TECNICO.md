@@ -68,7 +68,7 @@ La casilla **corregir el fallo de los herbívoros** activa todas las correccione
 ### El mundo vivo de Maliau
 
 En el móvil y la tableta se navega con los dedos: uno gira la cámara sobre sí misma (como el
-botón derecho del ratón) y pellizcar con dos avanza o retrocede hacia donde se mira. Un toque selecciona un animal o una planta. Se dibuja a la resolución real de la
+botón derecho del ratón) pellizcar con dos avanza o retrocede hacia donde se mira, y arrastrar con dos la desplaza (como el botón central). Un toque selecciona un animal o una planta. Se dibuja a la resolución real de la
 pantalla (hasta ×2). Todas las páginas se adaptan al ancho del móvil.
 
 ```

@@ -100,7 +100,7 @@ This is the full port of Virtual Ecosystem with an interface:
 ![Every parameter, with its explanation](docs/capturas/11-engine-parameters.jpg)
 
 The whole application is in English and Spanish, works on phones and tablets (one finger turns
-the camera, pinching moves forwards and backwards), and every control has a «?» that explains it.
+the camera, pinching moves forwards and backwards, two fingers pan), and every control has a «?» that explains it.
 
 ## How faithful is it
 

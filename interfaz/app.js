@@ -1,12 +1,12 @@
 // Interfaz de EcoLoco: edita el escenario, manda la simulación a un Web Worker
 // (trabajador.js) y pinta lo que va llegando. No calcula nada del modelo.
 
-import { Rejilla } from '../motor/core/rejilla.js?v=202610032043';
-import { zip as zipBytes } from '../motor/salida/zip.js?v=202610032043';
-import { activarCorrecciones } from '../motor/correcciones.js?v=202610032043';
-import { T, enIngles, traducirDom } from '../comun/idioma.js?v=202610032043';
-import { ayuda, ponerAyudas } from '../comun/ayuda.js?v=202610032043';
-import { cabecera } from '../comun/cabecera.js?v=202610032043';
+import { Rejilla } from '../motor/core/rejilla.js?v=202610032115';
+import { zip as zipBytes } from '../motor/salida/zip.js?v=202610032115';
+import { activarCorrecciones } from '../motor/correcciones.js?v=202610032115';
+import { T, enIngles, traducirDom } from '../comun/idioma.js?v=202610032115';
+import { ayuda, ponerAyudas } from '../comun/ayuda.js?v=202610032115';
+import { cabecera } from '../comun/cabecera.js?v=202610032115';
 
 traducirDom(); ponerAyudas(); cabecera('motor');
 
@@ -574,7 +574,7 @@ function retardo() { return Math.round((100 - Number($('#velocidad').value)) * 2
 
 function nuevoTrabajador() {
   if (trabajador) trabajador.terminate();
-  trabajador = new Worker('trabajador.js?v=202610032043', { type: 'module' });
+  trabajador = new Worker('trabajador.js?v=202610032115', { type: 'module' });
   trabajador.onmessage = (ev) => {
     const m = ev.data;
     if (m.tipo === 'listo') {

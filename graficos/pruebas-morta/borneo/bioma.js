@@ -4,12 +4,12 @@
    bichos pasean, comen y descansan al azar; sirve para ver cómo queda todo junto. */
 
 import * as THREE from '../vendor/three.module.js';
-import { azar, Saco, terreno, particulas } from '../escena-v3.js?v=202610032043';
-import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610032043';
-import { crearAnimal } from './animales.js?v=202610032043';
-import { SacoP, construir } from './plantas.js?v=202610032043';
-import { Visor, pantallaCompleta } from './visor.js?v=202610032043';
-import { CamaraUnity } from './camara.js?v=202610032043';
+import { azar, Saco, terreno, particulas } from '../escena-v3.js?v=202610032115';
+import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610032115';
+import { crearAnimal } from './animales.js?v=202610032115';
+import { SacoP, construir } from './plantas.js?v=202610032115';
+import { Visor, pantallaCompleta } from './visor.js?v=202610032115';
+import { CamaraUnity } from './camara.js?v=202610032115';
 
 const $ = (id) => document.getElementById(id);
 const lienzo = $('lienzo');

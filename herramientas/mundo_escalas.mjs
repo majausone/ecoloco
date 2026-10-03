@@ -5,9 +5,9 @@
 //
 // Uso: node herramientas/mundo_escalas.mjs [--km2 0.6561,1,10,100,1000] [--dias 3]
 import { readFileSync } from 'node:fs';
-import { Mundo } from '../mundo/mundo.js?v=202610032043';
-import { reiniciarIds } from '../mundo/agentes.js?v=202610032043';
-import { VERTEBRADOS } from '../mundo/especies.js?v=202610032043';
+import { Mundo } from '../mundo/mundo.js?v=202610032115';
+import { reiniciarIds } from '../mundo/agentes.js?v=202610032115';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610032115';
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : d; };

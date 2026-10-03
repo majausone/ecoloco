@@ -17,27 +17,27 @@
      en Maliau, a 4,8° N); de noche brillan las setas luminosas y salen las luciérnagas. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { particulas } from '../graficos/pruebas-morta/escena-v3.js?v=202610032043';
-import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032043';
-import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js?v=202610032043';
-import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js?v=202610032043';
-import { Mapa, BALDOSA } from '../mundo/mapa.js?v=202610032043';
-import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610032043';
-import { crearFicha } from './ficha.js?v=202610032043';
-import { crearTactil } from './tactil.js?v=202610032043';
-import { crearTerreno } from './terreno.js?v=202610032043';
-import { crearBosque, LEJOS, uSeguido, uSigue } from './bosque.js?v=202610032043';
-import { crearManada } from './manada.js?v=202610032043';
-import { completar, aTexto, deTexto } from '../mundo/config.js?v=202610032043';
-import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js?v=202610032043';
-import { crearCielo, CAPA_CIELO } from './cielo.js?v=202610032043';
-import { crearHogares } from './hogares.js?v=202610032043';
-import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js?v=202610032043';
-import { ponerAyudas } from '../comun/ayuda.js?v=202610032043';
-import { traducirDom, T, num, enIngles } from '../comun/idioma.js?v=202610032043';
-import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js?v=202610032043';
-import { cabecera } from '../comun/cabecera.js?v=202610032043';
-import { VERTEBRADOS } from '../mundo/especies.js?v=202610032043';
+import { particulas } from '../graficos/pruebas-morta/escena-v3.js?v=202610032115';
+import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032115';
+import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js?v=202610032115';
+import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js?v=202610032115';
+import { Mapa, BALDOSA } from '../mundo/mapa.js?v=202610032115';
+import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610032115';
+import { crearFicha } from './ficha.js?v=202610032115';
+import { crearTactil } from './tactil.js?v=202610032115';
+import { crearTerreno } from './terreno.js?v=202610032115';
+import { crearBosque, LEJOS, uSeguido, uSigue } from './bosque.js?v=202610032115';
+import { crearManada } from './manada.js?v=202610032115';
+import { completar, aTexto, deTexto } from '../mundo/config.js?v=202610032115';
+import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js?v=202610032115';
+import { crearCielo, CAPA_CIELO } from './cielo.js?v=202610032115';
+import { crearHogares } from './hogares.js?v=202610032115';
+import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js?v=202610032115';
+import { ponerAyudas } from '../comun/ayuda.js?v=202610032115';
+import { traducirDom, T, num, enIngles } from '../comun/idioma.js?v=202610032115';
+import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js?v=202610032115';
+import { cabecera } from '../comun/cabecera.js?v=202610032115';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610032115';
 
 const $ = (id) => document.getElementById(id);
 const lienzo = $('lienzo');
@@ -64,7 +64,7 @@ let CONFIG;
 try { CONFIG = completar(parametros.get('mundo') ? deTexto(parametros.get('mundo')) : { km2: KM2 || undefined, lado: Number(parametros.get('lado')) || undefined, semilla: Number(parametros.get('semilla') || 1) }); }
 catch { CONFIG = completar({}); }
 const DIA = Math.max(0, Number(parametros.get('dia')) || 0);
-const trabajador = new Worker(new URL('./trabajador.js?v=202610032043', import.meta.url), { type: 'module' });
+const trabajador = new Worker(new URL('./trabajador.js?v=202610032115', import.meta.url), { type: 'module' });
 const cola = [];          // días calculados y aún sin enseñar
 let mapa = null, cx = 0, cz = 0, dia = null, info = null, terreno = null, bosque = null, manada = null, hogares = null;
 const detalles = new Map(); // id -> { dia, d: Float32Array } (hambre, sed... del animal seleccionado)

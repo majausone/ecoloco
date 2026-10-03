@@ -7,10 +7,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { Mundo } from '../mundo/mundo.js?v=202610032043';
-import { reiniciarIds } from '../mundo/agentes.js?v=202610032043';
-import { VERTEBRADOS, COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610032043';
-import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610032043';
+import { Mundo } from '../mundo/mundo.js?v=202610032115';
+import { reiniciarIds } from '../mundo/agentes.js?v=202610032115';
+import { VERTEBRADOS, COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610032115';
+import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610032115';
 
 const RUTA = new URL('../datos/escenarios/maliau.json', import.meta.url);
 const hay = existsSync(RUTA);
@@ -117,7 +117,7 @@ test('lo que se caza y lo que se come en el mundo se parece a lo del motor', { s
 });
 
 test('los que vuelan, parados, están sobre algo real: una flor, hoja, fruto o rama, su nido o el suelo', { skip: !hay && 'falta maliau.json' }, async () => {
-  const { puntosPlanta, varianteDe, escalaDe } = await import('../mundo/posaderos.js?v=202610032043');
+  const { puntosPlanta, varianteDe, escalaDe } = await import('../mundo/posaderos.js?v=202610032115');
   const m = resultado.mundo, r = resultado[resultado.length - 1].r;
   const PARADOS = new Set(['quieto', 'descansar', 'dormir', 'comer']);
   const puntos = (t) => { const p = puntosPlanta(t.especie, varianteDe(t)), e = escalaDe(t), cs = Math.cos(t.giro), sn = Math.sin(t.giro), out = []; for (const k of ['flor', 'fruto', 'hoja', 'rama']) { const l = p[k]; for (let i = 0; i < l.length; i += 3) out.push([t.x + (l[i] * cs + l[i + 2] * sn) * e, l[i + 1] * e, t.z + (-l[i] * sn + l[i + 2] * cs) * e]); } return out; };

@@ -2,7 +2,7 @@
 // calculados como GEOS (abanico de triángulos desde el primer vértice) y distancias
 // como scipy.spatial.distance.pdist.
 
-import { pow } from '../num/ucrt.js?v=202610032043';
+import { pow } from '../num/ucrt.js?v=202610032115';
 
 function escalar(pol, f) { return pol.map(([x, y]) => [f * x + 0 * y + (0 - 0 * f), 0 * x + f * y + (0 - 0 * f)]); }
 function trasladar(pol, dx, dy) { return pol.map(([x, y]) => [x + dx, y + dy]); }

@@ -6,7 +6,7 @@
    retoque encima de la raíz del modelo (agacharse, hundirse, girar, botar...). El retoque
    se aplica después de m.paso(), que restaura la postura cada fotograma. */
 
-import { ESTADOS } from '../mundo/especies.js?v=202610032043';
+import { ESTADOS } from '../mundo/especies.js?v=202610032115';
 
 const primera = (m, ...op) => op.find((a) => m.anims.includes(a)) || 'quieto';
 const andarDe = (m) => primera(m, 'andar', 'reptar', 'saltitos', 'saltar', 'arrastrarse', 'volar');
