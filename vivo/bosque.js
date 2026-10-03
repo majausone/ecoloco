@@ -15,10 +15,10 @@
    siempre tenga las que tocan, y como mucho un nivel por fotograma. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032007';
-import { construir } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610032007';
+import { PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032043';
+import { construir } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610032043';
 // (variantes, azar y escala de cada árbol: los mismos que usan los posaderos de la simulación)
-import { VARIANTES, ARBOL, azarDe, varianteDe, escalaDe } from '../mundo/posaderos.js?v=202610032007';
+import { VARIANTES, ARBOL, azarDe, varianteDe, escalaDe } from '../mundo/posaderos.js?v=202610032043';
 
 export const CERCA = 35, MEDIO = 140, LEJOS = 500, SETAS_HASTA = 60;
 const DOSEL = 10; // m: de lejos (nivel 2) solo se ven los árboles más altos que esto

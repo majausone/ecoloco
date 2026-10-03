@@ -1,7 +1,7 @@
 // Las fichas de las especies en inglés (las de español están en
 // graficos/pruebas-morta/borneo/especies.js): dieta, dónde, nota y, en plantas y hongos, lo que
 // son en el motor. dato(e, 'nota') da el campo en el idioma elegido.
-import { enIngles } from './idioma.js?v=202610032007';
+import { enIngles } from './idioma.js?v=202610032043';
 
 export const FICHA_EN = {
   'pantera-nebulosa': ['Deer, pigs, monkeys, porcupines', 'Maliau and Sabah', 'The largest cat in Borneo. It weighs half as much as the engine group.'],

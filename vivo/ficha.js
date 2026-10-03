@@ -17,13 +17,13 @@
    seleccionado (hambre, sed, sueño, tarea; se pide al trabajador), de la descripción de los
    animales que manda el trabajador y de las plantas del mapa (mundo/mapa.js). */
 
-import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032007';
-import { COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610032007';
-import { CLAVE, DETALLE, TAREAS } from '../mundo/dia.js?v=202610032007';
-import { T, enIngles, num } from '../comun/idioma.js?v=202610032007';
-import { ayuda } from '../comun/ayuda.js?v=202610032007';
-import { NOMBRE_EN, nombreEsp, categoria } from '../comun/nombres.js?v=202610032007';
-import { dato } from '../comun/fichas-en.js?v=202610032007';
+import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032043';
+import { COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610032043';
+import { CLAVE, DETALLE, TAREAS } from '../mundo/dia.js?v=202610032043';
+import { T, enIngles, num } from '../comun/idioma.js?v=202610032043';
+import { ayuda } from '../comun/ayuda.js?v=202610032043';
+import { NOMBRE_EN, nombreEsp, categoria } from '../comun/nombres.js?v=202610032043';
+import { dato } from '../comun/fichas-en.js?v=202610032043';
 
 const $ = (id) => document.getElementById(id);
 const FICHA = Object.fromEntries(ANIMALES.map((e) => [e.id, e]));

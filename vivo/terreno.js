@@ -9,10 +9,10 @@
    La altura es la del mapa del mundo (mundo/mapa.js), en escalones de 0,5 m. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { ruido2, tono } from '../graficos/pruebas-morta/escena-v3.js?v=202610032007';
-import { BALDOSA } from '../mundo/mapa.js?v=202610032007';
+import { ruido2, tono } from '../graficos/pruebas-morta/escena-v3.js?v=202610032043';
+import { BALDOSA } from '../mundo/mapa.js?v=202610032043';
 import { Water } from './vendor/Water.js';
-import { CAPA_CIELO } from './cielo.js?v=202610032007';
+import { CAPA_CIELO } from './cielo.js?v=202610032043';
 
 export const NIVEL_AGUA = -0.45;
 const B = BALDOSA, DETALLE = 75; // m alrededor de la cámara con columnas (un mapa pequeño, entero)

@@ -2,8 +2,8 @@
 // (scipy 1.18.1: _ivp/rk.py, common.py, base.py, ivp.py), reproduciendo cada operación:
 // los productos K·a van por dgemv de OpenBLAS y la norma por ddot, como en numpy.
 
-import { pow } from './ucrt.js?v=202610032007';
-import { dotMatVec, ddot } from './np.js?v=202610032007';
+import { pow } from './ucrt.js?v=202610032043';
+import { dotMatVec, ddot } from './np.js?v=202610032043';
 
 const SAFETY = 0.9, MIN_FACTOR = 0.2, MAX_FACTOR = 10;
 const C = [0, 1 / 5, 3 / 10, 4 / 5, 8 / 9, 1];

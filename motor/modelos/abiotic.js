@@ -4,12 +4,12 @@
 //
 // Convención: arrays por capas como Float64Array de nl*n (fila = capa), por celda de n.
 
-import { Arr } from '../core/arr.js?v=202610032007';
-import { ModeloBase } from './base.js?v=202610032007';
-import { exp, log, log10, pow, sin, cos } from '../num/ucrt.js?v=202610032007';
-import { sumaPares, nansumaEje, nanmediaEje, nanmaxEje, nanminEje, nanmax } from '../num/np.js?v=202610032007';
-import { ZERO_CELSIUS, npMax, npMin, npClip, nanACero, vpSat, calorEspecifico, densidadAire, calorLatente } from './comun.js?v=202610032007';
-import { microclimaSimple, vpdReferencia, perfilDesdeReferencia, emisionOndaLarga } from './abiotic_simple.js?v=202610032007';
+import { Arr } from '../core/arr.js?v=202610032043';
+import { ModeloBase } from './base.js?v=202610032043';
+import { exp, log, log10, pow, sin, cos } from '../num/ucrt.js?v=202610032043';
+import { sumaPares, nansumaEje, nanmediaEje, nanmaxEje, nanminEje, nanmax } from '../num/np.js?v=202610032043';
+import { ZERO_CELSIUS, npMax, npMin, npClip, nanACero, vpSat, calorEspecifico, densidadAire, calorLatente } from './comun.js?v=202610032043';
+import { microclimaSimple, vpdReferencia, perfilDesdeReferencia, emisionOndaLarga } from './abiotic_simple.js?v=202610032043';
 
 const esNan = (v) => v !== v;
 const fin = Number.isFinite;

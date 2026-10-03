@@ -3,7 +3,7 @@
    pantalla completa. */
 
 import * as THREE from '../vendor/three.module.js';
-import { retoque } from '../escena-v3.js?v=202610032007';
+import { retoque } from '../escena-v3.js?v=202610032043';
 
 export const LUCES = {
   dia: { cielo: '#7fa8a0', sol: '#fff2d0', fuerza: 3.2, dir: [-0.6, 0.75, 0.35], hemiCielo: '#cfe0c0', hemiSuelo: '#2a3a20', ambiente: 1.4, niebla: '#6a8a7a',

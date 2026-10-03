@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
-import { exp, log, log10, pow, sin, cos, asin } from '../motor/num/ucrt.js?v=202610032007';
+import { exp, log, log10, pow, sin, cos, asin } from '../motor/num/ucrt.js?v=202610032043';
 
 const DIR = new URL('../datos/vectores/', import.meta.url);
 

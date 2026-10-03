@@ -9,13 +9,13 @@
    - y la de la ficha (de un animal, una planta o un hongo), que sale al pulsar uno, lleva su
      nombre y se cierra con una ✕ (se vuelve a la pestaña en la que se estaba). */
 
-import { NOMBRE_CATEGORIA } from '../mundo/registro.js?v=202610032007';
-import { INDICADORES } from '../mundo/registro.js?v=202610032007';
-import { PARAMETROS, NEUTROS } from '../mundo/parametros.js?v=202610032007';
-import { VERTEBRADOS } from '../mundo/especies.js?v=202610032007';
-import { grafica, numero, COLOR } from './grafica.js?v=202610032007';
-import { T, enIngles } from '../comun/idioma.js?v=202610032007';
-import { GRUPO_EN } from '../comun/nombres.js?v=202610032007';
+import { NOMBRE_CATEGORIA } from '../mundo/registro.js?v=202610032043';
+import { INDICADORES } from '../mundo/registro.js?v=202610032043';
+import { PARAMETROS, NEUTROS } from '../mundo/parametros.js?v=202610032043';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610032043';
+import { grafica, numero, COLOR } from './grafica.js?v=202610032043';
+import { T, enIngles } from '../comun/idioma.js?v=202610032043';
+import { GRUPO_EN } from '../comun/nombres.js?v=202610032043';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
