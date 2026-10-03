@@ -9,12 +9,12 @@
    La posición de cada animal se interpola entre sus fotogramas clave. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js';
-import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales.js';
-import { CLAVE, TICS } from '../mundo/dia.js';
-import { ESTADOS, COMPORTAMIENTO } from '../mundo/especies.js';
-import { fundir } from './fundir.js';
-import { animar } from './animaciones.js';
+import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032007';
+import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales.js?v=202610032007';
+import { CLAVE, TICS } from '../mundo/dia.js?v=202610032007';
+import { ESTADOS, COMPORTAMIENTO } from '../mundo/especies.js?v=202610032007';
+import { fundir } from './fundir.js?v=202610032007';
+import { animar } from './animaciones.js?v=202610032007';
 
 const CERCA = 30, CERCANOS = 60;
 // los pequeños, más grandes para que se vean (como en el bioma del Observer)

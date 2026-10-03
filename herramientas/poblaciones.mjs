@@ -6,8 +6,8 @@
 //   --corregido   activa todas las correcciones del fallo de los herbívoros
 //   --set         cambia un valor de la configuración, p. ej. --set animal.constants.tau_f=0.6
 import { readFileSync, writeFileSync } from 'node:fs';
-import { Simulacion } from '../motor/simulacion.js';
-import { activarCorrecciones } from '../motor/correcciones.js';
+import { Simulacion } from '../motor/simulacion.js?v=202610032007';
+import { activarCorrecciones } from '../motor/correcciones.js?v=202610032007';
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : d; };

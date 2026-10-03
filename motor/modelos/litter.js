@@ -1,10 +1,10 @@
 // Modelo de hojarasca (models/litter). Traducción directa, operación a operación, de
 // carbon.py, chemistry.py, env_factors.py, inputs.py, losses.py y litter_model.py.
 
-import { Arr } from '../core/arr.js';
-import { ModeloBase } from './base.js';
-import { exp, log10 } from '../num/ucrt.js';
-import { dotVecMat, potArr, nansumaEje } from '../num/np.js';
+import { Arr } from '../core/arr.js?v=202610032007';
+import { ModeloBase } from './base.js?v=202610032007';
+import { exp, log10 } from '../num/ucrt.js?v=202610032007';
+import { dotVecMat, potArr, nansumaEje } from '../num/np.js?v=202610032007';
 
 const ELEM = ['C', 'N', 'P'];
 const POOLS = ['above_metabolic', 'above_structural', 'woody', 'below_metabolic', 'below_structural'];

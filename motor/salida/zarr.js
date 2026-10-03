@@ -4,7 +4,7 @@
 // ruta -> Uint8Array, así sirve tanto en Node (se escribe a ficheros) como en el
 // navegador (se empaqueta para descargar).
 
-import { diasAFecha } from '../core/componentes.js';
+import { diasAFecha } from '../core/componentes.js?v=202610032007';
 
 const texto = (o) => new TextEncoder().encode(JSON.stringify(o, null, 2));
 

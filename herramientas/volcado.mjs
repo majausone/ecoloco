@@ -1,7 +1,7 @@
 // Lector (Node) de los volcados del oráculo (herramientas/volcado.py).
 import { readFileSync, openSync, readSync, closeSync } from 'node:fs';
 import { join } from 'node:path';
-import { Arr } from '../motor/core/arr.js';
+import { Arr } from '../motor/core/arr.js?v=202610032007';
 
 export class Volcado {
   constructor(dir) {

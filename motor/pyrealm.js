@@ -5,8 +5,8 @@
 //  * demografía: Flora, StemAllometry, StemAllocation, GrowthIncrements, Canopy (PPA) con
 //    el brentq de scipy (Zeros/brentq.c) para las alturas de cierre de capa.
 
-import { exp, log, pow } from './num/ucrt.js';
-import { sumaPares } from './num/np.js';
+import { exp, log, pow } from './num/ucrt.js?v=202610032007';
+import { sumaPares } from './num/np.js?v=202610032007';
 
 const K_R = 8.3145, K_CO = 209476.0, K_PO = 101325.0, K_TO = 298.15, K_C_MOLMASS = 12.0107,
   K_CTOK = 273.15, K_WATER_MOLMASS = 18.01258;

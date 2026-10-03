@@ -1,15 +1,15 @@
 // Modelo hidrológico (models/hydrology): above_ground.py, below_ground.py,
 // hydrology_tools.py y hydrology_model.py, operación a operación.
 
-import { Arr } from '../core/arr.js';
-import { ModeloBase } from './base.js';
-import { exp, pow } from '../num/ucrt.js';
-import { suma, sumaEje, nansumaEje, mediaEje, gradienteEje0, argmax } from '../num/np.js';
-import { PySet } from '../num/pyset.js';
+import { Arr } from '../core/arr.js?v=202610032007';
+import { ModeloBase } from './base.js?v=202610032007';
+import { exp, pow } from '../num/ucrt.js?v=202610032007';
+import { suma, sumaEje, nansumaEje, mediaEje, gradienteEje0, argmax } from '../num/np.js?v=202610032007';
+import { PySet } from '../num/pyset.js?v=202610032007';
 import {
   ZERO_CELSIUS, npMax, npMin, npClip, nanACero, vpSat, calorEspecifico, densidadAire, calorLatente,
   pendientePresionSat,
-} from './comun.js';
+} from './comun.js?v=202610032007';
 
 const celdas = (n) => Array.from({ length: n }, (_, i) => i);
 

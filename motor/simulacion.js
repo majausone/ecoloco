@@ -8,14 +8,14 @@
 // El escenario es el JSON de herramientas/convertir_entradas.py (o uno editado en la
 // interfaz). El azar se siembra igual que en herramientas/oraculo.py.
 
-import { Arr } from './core/arr.js';
-import { Datos } from './core/datos.js';
-import { Rejilla } from './core/rejilla.js';
-import { LayerStructure, ModelTiming } from './core/componentes.js';
-import { setupVariables, getModelOrder } from './core/variables.js';
-import { PyRandom, RandomState } from './azar/mt19937.js';
-import { Generator } from './azar/pcg64.js';
-import { MODELOS } from './modelos/index.js';
+import { Arr } from './core/arr.js?v=202610032007';
+import { Datos } from './core/datos.js?v=202610032007';
+import { Rejilla } from './core/rejilla.js?v=202610032007';
+import { LayerStructure, ModelTiming } from './core/componentes.js?v=202610032007';
+import { setupVariables, getModelOrder } from './core/variables.js?v=202610032007';
+import { PyRandom, RandomState } from './azar/mt19937.js?v=202610032007';
+import { Generator } from './azar/pcg64.js?v=202610032007';
+import { MODELOS } from './modelos/index.js?v=202610032007';
 
 export function decodificar(v) {
   if (v === 'NaN') return NaN;

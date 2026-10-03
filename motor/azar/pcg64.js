@@ -1,11 +1,11 @@
 // numpy.random.default_rng(semilla): SeedSequence + PCG64 (XSL-RR 128/64) y las
 // distribuciones de Generator que usa el original (random, gamma con zigurat).
 
-import { log, exp, log1p, pow } from '../num/ucrt.js';
+import { log, exp, log1p, pow } from '../num/ucrt.js?v=202610032007';
 import {
   KI_DOUBLE, WI_DOUBLE, FI_DOUBLE, KE_DOUBLE, WE_DOUBLE, FE_DOUBLE,
   ZIGGURAT_NOR_R, ZIGGURAT_NOR_INV_R, ZIGGURAT_EXP_R,
-} from './zigurat.js';
+} from './zigurat.js?v=202610032007';
 
 const M64 = (1n << 64n) - 1n;
 const M128 = (1n << 128n) - 1n;

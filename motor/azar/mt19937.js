@@ -3,7 +3,7 @@
 //  - `numpy.random.RandomState` (el generador global "legacy" de numpy 2.5)
 // Todo reproducido bit a bit, incluido el orden en que se gastan los números.
 
-import { log, exp, pow } from '../num/ucrt.js';
+import { log, exp, pow } from '../num/ucrt.js?v=202610032007';
 
 const N = 624, M = 397;
 const MATRIX_A = 0x9908b0df, UPPER = 0x80000000, LOWER = 0x7fffffff;

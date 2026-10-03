@@ -11,7 +11,8 @@
 /* la cabecera común */
 .cabecera { position:fixed; top:0; left:0; right:0; height:34px; z-index:40; display:flex; align-items:center; gap:4px; padding:0 10px;
   background:rgba(20,16,15,.92); border-bottom:1px solid #3a2f29; font:13px system-ui, sans-serif; color:#efe4d2; }
-.cabecera .cab-marca { color:#e8a64a; font-weight:700; margin-right:12px; text-decoration:none; font-size:15px; }
+.cabecera .cab-marca { color:#e8a64a; font-weight:700; margin-right:12px; text-decoration:none; font-size:15px; padding:3px 9px; border-radius:5px; }
+.cabecera .cab-marca.on { background:#e8a64a; color:#1a1410; }
 .cabecera a.ir { color:#efe4d2; text-decoration:none; padding:4px 10px; border-radius:5px; }
 .cabecera a.ir:hover { background:#2a221e; } .cabecera a.ir.on { background:#e8a64a; color:#1a1410; }
 .cabecera .hueco { flex:1; }

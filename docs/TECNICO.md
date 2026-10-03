@@ -153,3 +153,11 @@ Para depurar un módulo por separado (sustituyendo los demás por los datos del 
 repos/virtual_ecosystem/.venv/Scripts/python herramientas/oraculo.py --semilla 1 --salida runs/py_x --volcar runs/py_x/volcado config/*.toml
 node herramientas/comparar_volcado.mjs datos/escenarios/ejemplo.json runs/py_x/volcado
 ```
+
+### Antes de publicar cambios en la web
+
+El servidor de majaus.es guarda el JavaScript 4 horas en la caché del navegador. Para que nadie se
+quede con la versión vieja, antes de cada subida:
+```
+node herramientas/versionar.mjs      # pone ?v=<fecha> en todas las importaciones
+```

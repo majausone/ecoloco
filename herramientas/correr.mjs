@@ -4,8 +4,8 @@
 // Uso: node herramientas/correr.mjs <escenario.json> --salida runs/js_mensual [--semilla 1]
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { Simulacion } from '../motor/simulacion.js';
-import { escribirZarr } from '../motor/salida/zarr.js';
+import { Simulacion } from '../motor/simulacion.js?v=202610032007';
+import { escribirZarr } from '../motor/salida/zarr.js?v=202610032007';
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : d; };

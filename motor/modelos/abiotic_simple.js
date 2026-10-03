@@ -2,11 +2,11 @@
 // abiotic_simple_model.py. run_simple_microclimate también lo usa el modelo abiótico
 // completo para su estado inicial.
 
-import { Arr } from '../core/arr.js';
-import { ModeloBase } from './base.js';
-import { exp, log, pow } from '../num/ucrt.js';
-import { nansumaEje } from '../num/np.js';
-import { npClip, vpSat } from './comun.js';
+import { Arr } from '../core/arr.js?v=202610032007';
+import { ModeloBase } from './base.js?v=202610032007';
+import { exp, log, pow } from '../num/ucrt.js?v=202610032007';
+import { nansumaEje } from '../num/np.js?v=202610032007';
+import { npClip, vpSat } from './comun.js?v=202610032007';
 
 const filaDe = (a, l, n) => a.data.subarray(l * n, (l + 1) * n);
 

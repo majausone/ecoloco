@@ -17,27 +17,27 @@
      en Maliau, a 4,8° N); de noche brillan las setas luminosas y salen las luciérnagas. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { particulas } from '../graficos/pruebas-morta/escena-v3.js';
-import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js';
-import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js';
-import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js';
-import { Mapa, BALDOSA } from '../mundo/mapa.js';
-import { TICS, CLAVE, DETALLE } from '../mundo/dia.js';
-import { crearFicha } from './ficha.js';
-import { crearTactil } from './tactil.js';
-import { crearTerreno } from './terreno.js';
-import { crearBosque, LEJOS, uSeguido, uSigue } from './bosque.js';
-import { crearManada } from './manada.js';
-import { completar, aTexto, deTexto } from '../mundo/config.js';
-import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js';
-import { crearCielo, CAPA_CIELO } from './cielo.js';
-import { crearHogares } from './hogares.js';
-import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js';
-import { ponerAyudas } from '../comun/ayuda.js';
-import { traducirDom, T, num, enIngles } from '../comun/idioma.js';
-import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js';
-import { cabecera } from '../comun/cabecera.js';
-import { VERTEBRADOS } from '../mundo/especies.js';
+import { particulas } from '../graficos/pruebas-morta/escena-v3.js?v=202610032007';
+import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032007';
+import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js?v=202610032007';
+import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js?v=202610032007';
+import { Mapa, BALDOSA } from '../mundo/mapa.js?v=202610032007';
+import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610032007';
+import { crearFicha } from './ficha.js?v=202610032007';
+import { crearTactil } from './tactil.js?v=202610032007';
+import { crearTerreno } from './terreno.js?v=202610032007';
+import { crearBosque, LEJOS, uSeguido, uSigue } from './bosque.js?v=202610032007';
+import { crearManada } from './manada.js?v=202610032007';
+import { completar, aTexto, deTexto } from '../mundo/config.js?v=202610032007';
+import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js?v=202610032007';
+import { crearCielo, CAPA_CIELO } from './cielo.js?v=202610032007';
+import { crearHogares } from './hogares.js?v=202610032007';
+import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js?v=202610032007';
+import { ponerAyudas } from '../comun/ayuda.js?v=202610032007';
+import { traducirDom, T, num, enIngles } from '../comun/idioma.js?v=202610032007';
+import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js?v=202610032007';
+import { cabecera } from '../comun/cabecera.js?v=202610032007';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610032007';
 
 const $ = (id) => document.getElementById(id);
 const lienzo = $('lienzo');
@@ -46,7 +46,9 @@ traducirDom(); ponerAyudas(); cabecera('simulacion');
 const visor = new Visor(lienzo, { sombras: 4096 });
 // en las pantallas de alta densidad (móviles), a su resolución de verdad (hasta ×2 y unos 3 Mpx);
 // si no, se dibujaba a la resolución de CSS y se veía con píxeles gordos
-const densidad = () => Math.max(1, Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(3e6 / Math.max(1, innerWidth * innerHeight))));
+// (en las pantallas táctiles, hasta ×1,5: la tarjeta gráfica de un móvil da para menos)
+const tactilPrincipal = matchMedia('(pointer: coarse)').matches;
+const densidad = () => Math.max(1, Math.min(window.devicePixelRatio || 1, tactilPrincipal ? 1.5 : 2, Math.sqrt(3e6 / Math.max(1, innerWidth * innerHeight))));
 visor.pixel = 1 / densidad();
 window.addEventListener('resize', () => { visor.pixel = 1 / densidad(); });
 const escena = new THREE.Scene();
@@ -62,7 +64,7 @@ let CONFIG;
 try { CONFIG = completar(parametros.get('mundo') ? deTexto(parametros.get('mundo')) : { km2: KM2 || undefined, lado: Number(parametros.get('lado')) || undefined, semilla: Number(parametros.get('semilla') || 1) }); }
 catch { CONFIG = completar({}); }
 const DIA = Math.max(0, Number(parametros.get('dia')) || 0);
-const trabajador = new Worker(new URL('./trabajador.js', import.meta.url), { type: 'module' });
+const trabajador = new Worker(new URL('./trabajador.js?v=202610032007', import.meta.url), { type: 'module' });
 const cola = [];          // días calculados y aún sin enseñar
 let mapa = null, cx = 0, cz = 0, dia = null, info = null, terreno = null, bosque = null, manada = null, hogares = null;
 const detalles = new Map(); // id -> { dia, d: Float32Array } (hambre, sed... del animal seleccionado)
