@@ -1,0 +1,150 @@
+[
+ {
+  "caso": "bio",
+  "identico": true,
+  "variables_zarr": 249,
+  "variables_identicas": 249,
+  "csv": {
+   "animal_cohort_data.csv": "identica",
+   "animal_trophic_interactions.csv": "identica",
+   "resource_pool_data.csv": "identica",
+   "plants_cohort_data.csv": "identica",
+   "plants_community_canopy_data.csv": "identica",
+   "plants_stem_canopy_data.csv": "identica"
+  },
+  "pasos": 24,
+  "segundos_python": 166.5578709000256,
+  "segundos_js": 29.7399801,
+  "configs": [
+   "datos/variantes/bio/config/abiotic_config.toml",
+   "datos/variantes/bio/config/animal_config.toml",
+   "datos/variantes/bio/config/data_config.toml",
+   "datos/variantes/bio/config/hydrology_config.toml",
+   "datos/variantes/bio/config/litter_config.toml",
+   "datos/variantes/bio/config/plant_config.toml",
+   "datos/variantes/bio/config/soil_config.toml"
+  ],
+  "extra": []
+ },
+ {
+  "caso": "clima",
+  "identico": true,
+  "variables_zarr": 249,
+  "variables_identicas": 249,
+  "csv": {
+   "animal_cohort_data.csv": "identica",
+   "animal_trophic_interactions.csv": "identica",
+   "resource_pool_data.csv": "identica"
+  },
+  "pasos": 24,
+  "segundos_python": 131.5323737000581,
+  "segundos_js": 27.5603403,
+  "configs": [
+   "datos/variantes/clima/config/abiotic_config.toml",
+   "datos/variantes/clima/config/animal_config.toml",
+   "datos/variantes/clima/config/data_config.toml",
+   "datos/variantes/clima/config/hydrology_config.toml",
+   "datos/variantes/clima/config/litter_config.toml",
+   "datos/variantes/clima/config/plant_config.toml",
+   "datos/variantes/clima/config/soil_config.toml"
+  ],
+  "extra": []
+ },
+ {
+  "caso": "rejilla",
+  "identico": true,
+  "variables_zarr": 249,
+  "variables_identicas": 249,
+  "csv": {
+   "animal_cohort_data.csv": "identica",
+   "animal_trophic_interactions.csv": "identica",
+   "resource_pool_data.csv": "identica"
+  },
+  "pasos": 24,
+  "segundos_python": 103.18391190003604,
+  "segundos_js": 9.214172000000001,
+  "configs": [
+   "datos/variantes/rejilla/config/abiotic_config.toml",
+   "datos/variantes/rejilla/config/animal_config.toml",
+   "datos/variantes/rejilla/config/data_config.toml",
+   "datos/variantes/rejilla/config/grid_config.toml",
+   "datos/variantes/rejilla/config/hydrology_config.toml",
+   "datos/variantes/rejilla/config/litter_config.toml",
+   "datos/variantes/rejilla/config/plant_config.toml",
+   "datos/variantes/rejilla/config/soil_config.toml"
+  ],
+  "extra": []
+ },
+ {
+  "caso": "mensual",
+  "identico": true,
+  "variables_zarr": 249,
+  "variables_identicas": 249,
+  "csv": {
+   "animal_cohort_data.csv": "identica",
+   "animal_trophic_interactions.csv": "identica",
+   "resource_pool_data.csv": "identica"
+  },
+  "pasos": 24,
+  "segundos_python": 154.50517829996534,
+  "segundos_js": 42.004302100000004,
+  "configs": [
+   "repos/ve_ejemplo/ve_example/config/abiotic_config.toml",
+   "repos/ve_ejemplo/ve_example/config/animal_config.toml",
+   "repos/ve_ejemplo/ve_example/config/data_config.toml",
+   "repos/ve_ejemplo/ve_example/config/hydrology_config.toml",
+   "repos/ve_ejemplo/ve_example/config/litter_config.toml",
+   "repos/ve_ejemplo/ve_example/config/plant_config.toml",
+   "repos/ve_ejemplo/ve_example/config/soil_config.toml"
+  ],
+  "extra": []
+ },
+ {
+  "caso": "simple",
+  "identico": true,
+  "variables_zarr": 234,
+  "variables_identicas": 234,
+  "csv": {
+   "animal_cohort_data.csv": "identica",
+   "animal_trophic_interactions.csv": "identica",
+   "resource_pool_data.csv": "identica"
+  },
+  "pasos": 24,
+  "segundos_python": 184.90143389999866,
+  "segundos_js": 12.3394658,
+  "configs": [
+   "repos/ve_ejemplo/ve_example/config/abiotic_simple_config.toml",
+   "repos/ve_ejemplo/ve_example/config/animal_config.toml",
+   "repos/ve_ejemplo/ve_example/config/data_config.toml",
+   "repos/ve_ejemplo/ve_example/config/hydrology_config.toml",
+   "repos/ve_ejemplo/ve_example/config/litter_config.toml",
+   "repos/ve_ejemplo/ve_example/config/plant_config.toml",
+   "repos/ve_ejemplo/ve_example/config/soil_config.toml"
+  ],
+  "extra": []
+ },
+ {
+  "caso": "diario",
+  "identico": true,
+  "variables_zarr": 249,
+  "variables_identicas": 249,
+  "csv": {
+   "animal_cohort_data.csv": "identica",
+   "resource_pool_data.csv": "identica"
+  },
+  "pasos": 731,
+  "segundos_python": 15716.812275100034,
+  "segundos_js": 1692.9180713000003,
+  "configs": [
+   "datos/variantes/diario/config/abiotic_config.toml",
+   "datos/variantes/diario/config/animal_config.toml",
+   "datos/variantes/diario/config/data_config.toml",
+   "datos/variantes/diario/config/hydrology_config.toml",
+   "datos/variantes/diario/config/litter_config.toml",
+   "datos/variantes/diario/config/plant_config.toml",
+   "datos/variantes/diario/config/soil_config.toml",
+   "datos/variantes/diario/config/timing_config.toml"
+  ],
+  "extra": []
+ }
+]

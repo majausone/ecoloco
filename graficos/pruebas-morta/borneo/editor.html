@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoLoco · editor de especies de Borneo</title>
+<style>
+  :root { --bg:#14100f; --panel:#1d1815; --panel2:#251f1b; --ink:#efe4d2; --muted:#a8998a; --line:#3a2f29; --accent:#e8a64a; --ok:#7fcb99; --mid:#dbba5e; --no:#e78e83; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--ink); font:14px/1.4 system-ui, sans-serif; overflow:hidden; }
+  .app { display:grid; grid-template-columns:290px 1fr 300px; grid-template-rows:calc(100vh - 34px); height:calc(100vh - 34px); }
+  .app.sin-ui { grid-template-columns:1fr; }
+  .app.sin-ui aside { display:none; }
+  aside { background:var(--panel); border-right:1px solid var(--line); overflow:auto; }
+  aside.der { border-right:0; border-left:1px solid var(--line); padding:14px 16px; }
+  .pestanas { display:flex; position:sticky; top:0; background:var(--panel); border-bottom:1px solid var(--line); z-index:2; }
+  .pestanas button { flex:1; padding:10px 6px; background:none; border:0; color:var(--muted); font:inherit; font-weight:600; cursor:pointer; border-bottom:2px solid transparent; }
+  .pestanas button[aria-selected="true"] { color:var(--accent); border-bottom-color:var(--accent); }
+  .filtro { padding:8px 10px; border-bottom:1px solid var(--line); }
+  .filtro select { width:100%; background:var(--panel2); color:var(--ink); border:1px solid var(--line); border-radius:5px; padding:5px; font:inherit; }
+  h3 { margin:12px 12px 4px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+  .item { display:flex; align-items:center; gap:8px; width:100%; padding:6px 12px; background:none; border:0; color:var(--ink); font:inherit; text-align:left; cursor:pointer; }
+  .item:hover { background:var(--panel2); }
+  .item[aria-current="true"] { background:#3a2c1e; color:var(--accent); }
+  .punto { width:8px; height:8px; border-radius:4px; flex:none; }
+  .bueno { background:var(--ok); } .aprox { background:var(--mid); } .sustituto { background:var(--no); }
+  .item small { color:var(--muted); display:block; font-size:12px; }
+  main { position:relative; min-width:0; height:calc(100vh - 34px); overflow:hidden; }
+  .panelAnims h3 .ayuda, .der h2 .ayuda { text-transform:none; letter-spacing:0; }
+  #lienzo { width:100%; height:100%; display:block; image-rendering:pixelated; cursor:grab; }
+  #lienzo:active { cursor:grabbing; }
+  .barra { position:absolute; top:10px; right:10px; display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+  .barra button, .anims button { background:rgba(29,24,21,.88); color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:6px 10px; font:inherit; cursor:pointer; }
+  .barra button[aria-pressed="true"], .anims button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
+  .panelAnims { margin:0 0 16px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .panelAnims h3 { margin:0 0 8px; }
+  .anims { display:flex; flex-direction:column; gap:5px; }
+  .anims button { text-align:left; width:100%; background:var(--panel2); }
+  .vel { margin-top:10px; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .vel input { flex:1; }
+  .vel input { vertical-align:middle; accent-color:var(--accent); }
+  /* FPS y triángulos, arriba a la izquierda y bien visibles (como el indicador del mundo vivo) */
+  .fps { position:absolute; left:10px; top:10px; z-index:2; background:rgba(20,16,15,.85); border:1px solid #3a2f29; border-radius:6px; padding:5px 12px; font:14px system-ui, sans-serif; color:var(--ink); font-variant-numeric:tabular-nums; }
+  .fps b { color:var(--accent); font-weight:600; }
+  .barra { top:52px !important; }
+  .der h2 { margin:0 0 2px; font-size:18px; }
+  .der .cient { color:var(--muted); font-style:italic; margin:0 0 12px; }
+  .der dl { margin:0; display:grid; grid-template-columns:auto 1fr; gap:6px 10px; }
+  .der dt { color:var(--muted); }
+  .der dd { margin:0; }
+  .der .nota { margin-top:12px; padding:10px; background:var(--panel2); border-radius:6px; }
+  .der a { color:var(--accent); }
+  /* la foto real de la especie, abajo a la derecha; al pulsarla se amplía */
+  .foto { position:absolute; right:12px; bottom:12px; width:170px; background:rgba(29,24,21,.9); border:1px solid var(--line); border-radius:6px; padding:4px; cursor:zoom-in; transition:width .2s; }
+  .foto.grande { width:min(70%, 640px); cursor:zoom-out; }
+  .foto img { display:block; width:100%; border-radius:4px; }
+  .foto .autor { font-size:10.5px; color:var(--muted); margin-top:3px; line-height:1.25; }
+  .foto.sin { display:none; }
+  .leyenda { margin-top:16px; color:var(--muted); font-size:12px; }
+  .leyenda span { display:inline-flex; align-items:center; gap:5px; margin-right:10px; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside>
+    <div class="pestanas" role="tablist">
+      <button role="tab" data-p="animales" aria-selected="true" data-en="Animals">Animales</button>
+      <button role="tab" data-p="plantas" aria-selected="false" data-en="Plants">Plantas</button>
+      <button role="tab" data-p="setas" aria-selected="false" data-en="Mushrooms">Setas</button>
+    </div>
+    <div class="filtro" id="filtro"><select id="grupo"></select></div>
+    <div id="lista"></div>
+  </aside>
+  <main id="principal">
+    <canvas id="lienzo"></canvas>
+    <div class="fps" id="fps"></div>
+    <div class="foto sin" id="foto" title="La foto real de la especie (pulsa para ampliarla)" data-en-title="The real photo of the species (click to enlarge it)"><img id="fotoImg" alt=""><div class="autor" id="fotoAutor"></div></div>
+    <div class="barra">
+      <button id="bDia" data-luz="dia" aria-pressed="true" data-en="Day">Día</button>
+      <button data-luz="atardecer" aria-pressed="false" data-en="Dusk">Atardecer</button>
+      <button data-luz="noche" aria-pressed="false" data-en="Night">Noche</button>
+      <button id="bPixel" title="Tamaño del píxel" data-en-title="Pixel size">Píxel ×1</button>
+      <button id="bGirar" aria-pressed="true" data-en="Auto-rotate">Girar solo</button>
+      <button id="bUi" title="Ocultar paneles (H)" data-en-title="Hide panels (H)" data-en="Panels">Paneles</button>
+      <button id="bPantalla" data-en="Full screen">Pantalla completa</button>
+      <span class="ayuda izq" style="align-self:center" data-es="Ratón: botón izquierdo gira, derecho desplaza, rueda acerca. Teclas: H oculta los paneles, F pantalla completa." data-en="Mouse: left button rotates, right button pans, wheel zooms. Keys: H hides the panels, F full screen."></span>
+    </div>
+  </main>
+  <aside class="der">
+    <section class="panelAnims">
+      <h3><span data-en="Animations">Animaciones</span><span class="ayuda" data-es="Pulsa una para verla en el modelo. La barra cambia lo deprisa que va." data-en="Click one to see it on the model. The slider changes how fast it plays."></span></h3>
+      <div class="anims" id="anims"></div>
+      <div class="vel"><span data-en="Speed">Velocidad</span> <input type="range" id="vel" min="0.1" max="2" step="0.1" value="1"> <span id="velTxt">1×</span></div>
+    </section>
+    <div id="info"></div>
+  </aside>
+</div>
+
+<script type="module">
+import * as THREE from '../vendor/three.module.js';
+import { ANIMALES, PLANTAS, SETAS, GRUPOS } from './especies.js';
+import { crearAnimal, NOMBRES_ANIMACION } from './animales.js';
+import { crearPlanta, NOMBRES_ANIM_PLANTA, SacoP } from './plantas.js';
+import { Visor, pantallaCompleta } from './visor.js';
+import { azar } from '../escena-v3.js';
+import { creditoFoto } from './credito.js';
+import { T, traducirDom, num } from '../../../comun/idioma.js';
+import { ayuda, ponerAyudas } from '../../../comun/ayuda.js';
+import { cabecera } from '../../../comun/cabecera.js';
+import { nombreEsp, categoria } from '../../../comun/nombres.js';
+import { dato, GRUPOS_EN, ANIMACION_EN } from '../../../comun/fichas-en.js';
+traducirDom(); ponerAyudas(); cabecera('editor');
+const grupoTxt = (g) => T(GRUPOS[g], GRUPOS_EN[g]);
+// las fotos reales de cada especie (de iNaturalist, con su autor)
+const FOTOS = Object.fromEntries((await fetch('./ref-fotos.json').then((r) => r.json()).catch(() => [])).map((f) => [f.id, f]));
+
+const $ = (id) => document.getElementById(id);
+const visor = new Visor($('lienzo'));
+const escena = new THREE.Scene();
+let luz = 'dia';
+visor.luces(escena, luz, 6);
+const cam = new THREE.PerspectiveCamera(35, 16 / 9, 0.01, 400);
+
+// el suelo: un claro de hierba y hojarasca que se escala con el tamaño del modelo
+const suelo = new THREE.Group();
+{
+  const S = new SacoP(), r = azar(7);
+  const hierba = ['#2e4626', '#33502a', '#3a562c', '#2a4024'], hojas = ['#5a4a2c', '#4e4028', '#62502e', '#463a24'];
+  for (let x = -16; x < 16; x++) for (let z = -16; z < 16; z++) {
+    const d = Math.hypot(x, z); if (d > 16) continue;
+    const c = r() < 0.18 ? hojas[Math.floor(r() * 4)] : hierba[Math.floor(r() * 4)];
+    S.cubo('solido', (x + 0.5) * 0.25, -0.03 - r() * 0.01, (z + 0.5) * 0.25, 0.25, 0.06, 0.25, c);
+  }
+  S.mallas({ value: 0 }, { value: 0 }).forEach((m) => suelo.add(m));
+}
+escena.add(suelo);
+
+const estado = { pestana: 'animales', grupo: '', actual: null, modelo: null, auto: true, vel: 1, t: 0 };
+const orbita = { az: 0.6, el: 0.32, dist: 3, centro: new THREE.Vector3(), paneo: new THREE.Vector3() };
+
+function listaDe(p) { return p === 'animales' ? ANIMALES : p === 'plantas' ? PLANTAS : SETAS; }
+
+function pintarFiltro() {
+  const sel = $('grupo');
+  sel.innerHTML = '';
+  if (estado.pestana !== 'animales') { $('filtro').style.display = 'none'; return; }
+  $('filtro').style.display = '';
+  sel.append(new Option(T('Todos los grupos del motor', 'All engine groups'), ''));
+  for (const k of Object.keys(GRUPOS)) sel.append(new Option(grupoTxt(k), k));
+  sel.value = estado.grupo;
+}
+
+function pintarLista() {
+  const cont = $('lista'); cont.innerHTML = '';
+  const lista = listaDe(estado.pestana).filter((e) => !estado.grupo || e.grupo === estado.grupo);
+  const cats = [...new Set(lista.map((e) => e.cat))];
+  for (const cat of cats) {
+    const h = document.createElement('h3'); h.textContent = categoria(cat); cont.append(h);
+    for (const e of lista.filter((x) => x.cat === cat)) {
+      const b = document.createElement('button');
+      b.className = 'item'; b.dataset.id = e.id;
+      b.innerHTML = `${e.encaje ? `<span class="punto ${e.encaje}" title="${T('encaje con el motor', 'fit with the engine')}: ${e.encaje}"></span>` : ''}<span>${nombreEsp(e)}<small>${estado.pestana === 'animales' ? grupoTxt(e.grupo) : e.cientifico}</small></span>`;
+      b.addEventListener('click', () => elegir(e));
+      if (estado.actual?.id === e.id) b.setAttribute('aria-current', 'true');
+      cont.append(b);
+    }
+  }
+}
+
+function pintarInfo(e) {
+  const animal = estado.pestana === 'animales';
+  const filas = animal
+    ? [[T('Grupo del motor', 'Engine group'), grupoTxt(e.grupo)], [T('Dieta', 'Diet'), dato(e, 'dieta')], [T('Peso', 'Weight'), e.peso], [T('Dónde', 'Where'), dato(e, 'donde')],
+      [T('Encaje', 'Fit') + ayuda('Si el animal real cuadra con el grupo del motor (bueno), solo en parte (aproximado) o si no hay ninguno real y es un sustituto para poder dibujar el grupo.', 'Whether the real animal matches the engine group (good), only partly (approximate), or there is no real one and it is a stand-in so the group can be drawn.'),
+        T({ bueno: 'Bueno', aprox: 'Aproximado', sustituto: 'Sustituto (no hay uno real)' }[e.encaje], { bueno: 'Good', aprox: 'Approximate', sustituto: 'Stand-in (there is no real one)' }[e.encaje])]]
+    : [[T('En el motor', 'In the engine'), dato(e, 'grupo')], [T('Dónde', 'Where'), dato(e, 'donde')]];
+  filas.push([T('Cubos', 'Cubes'), num(estado.modelo.cubos ?? estado.modelo.raiz.children.length)]);
+  filas.push([T('Triángulos', 'Triangles'), num(triangulos(estado.modelo.raiz))]);
+  $('info').innerHTML = `<h2>${nombreEsp(e)}</h2><p class="cient">${e.cientifico}</p>
+    <dl>${filas.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    ${dato(e, 'nota') ? `<div class="nota">${dato(e, 'nota')}</div>` : ''}
+    ${e.fuente ? `<p><a href="${e.fuente}" target="_blank" rel="noopener">${T('Fuente', 'Source')}</a></p>` : `<p style="color:var(--muted)">${T('Sin fuente comprobada.', 'No checked source.')}</p>`}
+    ${animal ? `<div class="leyenda"><span><i class="punto bueno"></i>${T('encaja', 'fits')}</span><span><i class="punto aprox"></i>${T('aproximado', 'approximate')}</span><span><i class="punto sustituto"></i>${T('sustituto', 'stand-in')}</span></div>` : ''}`;
+}
+
+// los triángulos del modelo (con sus instancias, si las tiene)
+function triangulos(raiz) {
+  let n = 0;
+  raiz.traverse((o) => {
+    if (!o.isMesh || !o.geometry) return;
+    const g = o.geometry, t = (g.index ? g.index.count : g.attributes.position.count) / 3;
+    n += o.isInstancedMesh ? t * o.count : t;
+  });
+  return Math.round(n);
+}
+function pintarFoto(e) {
+  const f = FOTOS[e.id];
+  $('foto').classList.toggle('sin', !f);
+  if (!f) return;
+  $('fotoImg').src = f.foto; $('fotoImg').alt = f.nombre;
+  $('fotoAutor').textContent = `${T('Foto', 'Photo')}: ${creditoFoto(f.autor)}`;
+}
+$('foto').addEventListener('click', () => $('foto').classList.toggle('grande'));
+
+function pintarAnims() {
+  const cont = $('anims'); cont.innerHTML = '';
+  const m = estado.modelo;
+  for (const a of m.anims) {
+    const b = document.createElement('button');
+    b.textContent = T(NOMBRES_ANIMACION[a] || NOMBRES_ANIM_PLANTA[a] || a, ANIMACION_EN[a] || a);
+    b.setAttribute('aria-pressed', String(m.anim === a));
+    b.addEventListener('click', () => { m.poner(a, estado.t); pintarAnims(); });
+    cont.append(b);
+  }
+}
+
+function elegir(e) {
+  if (estado.modelo) {
+    escena.remove(estado.modelo.raiz);
+    estado.modelo.raiz.traverse((o) => { o.geometry?.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach((x) => x?.dispose?.()); });
+  }
+  estado.actual = e;
+  const animal = estado.pestana === 'animales';
+  const m = animal ? crearAnimal(e) : crearPlanta(e);
+  if (animal) { m.cubos = 0; m.raiz.traverse((o) => { if (o.isMesh) m.cubos++; }); }
+  estado.modelo = m;
+  escena.add(m.raiz);
+  const tam = Math.max(m.tam.x, m.tam.y, m.tam.z);
+  orbita.dist = tam * 2.4 + 0.15; orbita.centro.copy(m.centro); orbita.paneo.set(0, 0, 0);
+  orbita.el = animal ? 0.32 : 0.22;
+  suelo.scale.setScalar(Math.min(4, Math.max(0.05, tam / 3)));
+  visor.luces(escena, luz, Math.max(1.5, tam * 1.3));
+  cam.near = Math.max(0.005, tam * 0.01); cam.far = tam * 40 + 10; cam.updateProjectionMatrix();
+  pintarLista(); pintarInfo(e); pintarAnims(); pintarFoto(e);
+  // el letrero de arriba, ya con los triángulos (los FPS llegan en medio segundo)
+  $('fps').innerHTML = `<b>— FPS</b> · <b>${num(triangulos(m.raiz))}</b> ${T('triángulos', 'triangles')}`;
+  history.replaceState(null, '', `#${estado.pestana}/${e.id}`);
+}
+
+// pestañas y filtro
+for (const b of document.querySelectorAll('.pestanas button')) b.addEventListener('click', () => {
+  document.querySelectorAll('.pestanas button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+  estado.pestana = b.dataset.p; estado.grupo = '';
+  pintarFiltro(); elegir(listaDe(estado.pestana)[0]);
+});
+$('grupo').addEventListener('change', (ev) => {
+  estado.grupo = ev.target.value; pintarLista();
+  const primero = listaDe('animales').find((e) => !estado.grupo || e.grupo === estado.grupo);
+  if (primero) elegir(primero);
+});
+
+// botones del visor
+for (const b of document.querySelectorAll('[data-luz]')) b.addEventListener('click', () => {
+  luz = b.dataset.luz;
+  document.querySelectorAll('[data-luz]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  const tam = estado.modelo ? Math.max(estado.modelo.tam.x, estado.modelo.tam.y, estado.modelo.tam.z) : 2;
+  visor.luces(escena, luz, Math.max(1.5, tam * 1.3));
+});
+$('bPixel').addEventListener('click', () => { visor.pixel = visor.pixel % 4 + 1; $('bPixel').textContent = `${T('Píxel', 'Pixel')} ×${visor.pixel}`; });
+$('bGirar').addEventListener('click', () => { estado.auto = !estado.auto; $('bGirar').setAttribute('aria-pressed', String(estado.auto)); });
+const alternarUi = () => $('app').classList.toggle('sin-ui');
+$('bUi').addEventListener('click', alternarUi);
+$('bPantalla').addEventListener('click', () => pantallaCompleta(document.documentElement));
+$('vel').addEventListener('input', (ev) => { estado.vel = +ev.target.value; $('velTxt').textContent = `${estado.vel}×`; });
+window.addEventListener('keydown', (ev) => {
+  if (ev.key === 'h' || ev.key === 'H') alternarUi();
+  if (ev.key === 'f' || ev.key === 'F') pantallaCompleta(document.documentElement);
+});
+
+// órbita con el ratón: izquierdo gira, derecho desplaza, rueda acerca
+let arr = null;
+const lienzo = $('lienzo');
+lienzo.addEventListener('contextmenu', (e) => e.preventDefault());
+lienzo.addEventListener('pointerdown', (e) => { arr = { x: e.clientX, y: e.clientY, b: e.button }; lienzo.setPointerCapture(e.pointerId); });
+lienzo.addEventListener('pointerup', () => { arr = null; });
+lienzo.addEventListener('pointermove', (e) => {
+  if (!arr) return;
+  const dx = e.clientX - arr.x, dy = e.clientY - arr.y; arr.x = e.clientX; arr.y = e.clientY;
+  if (arr.b === 0) { orbita.az -= dx * 0.008; orbita.el = Math.min(1.45, Math.max(-0.1, orbita.el + dy * 0.006)); }
+  else {
+    const k = orbita.dist / lienzo.clientHeight;
+    const der = new THREE.Vector3(Math.cos(orbita.az), 0, -Math.sin(orbita.az));
+    orbita.paneo.addScaledVector(der, -dx * k).add(new THREE.Vector3(0, dy * k, 0));
+  }
+});
+lienzo.addEventListener('wheel', (e) => { e.preventDefault(); orbita.dist *= Math.exp(e.deltaY * 0.001); }, { passive: false });
+
+// bucle
+let ultimo = performance.now(), cuenta = 0, desde = ultimo;
+function bucle(ms) {
+  requestAnimationFrame(bucle);
+  const dt = Math.min(0.1, (ms - ultimo) / 1000); ultimo = ms;
+  estado.t += dt * estado.vel;
+  if (estado.auto && !arr) orbita.az += dt * 0.25;
+  const m = estado.modelo;
+  if (m) m.paso(estado.t);
+  const c = orbita.centro.clone().add(orbita.paneo);
+  cam.position.set(c.x + Math.sin(orbita.az) * Math.cos(orbita.el) * orbita.dist, c.y + Math.sin(orbita.el) * orbita.dist, c.z + Math.cos(orbita.az) * Math.cos(orbita.el) * orbita.dist);
+  cam.lookAt(c);
+  visor.pintar(escena, cam);
+  cuenta++;
+  if (ms - desde > 500) { $('fps').innerHTML = `<b>${Math.round(cuenta * 1000 / (ms - desde))} FPS</b> · <b>${num(estado.modelo ? triangulos(estado.modelo.raiz) : 0)}</b> ${T('triángulos', 'triangles')} · ${visor.objetivo.width} × ${visor.objetivo.height} px`; cuenta = 0; desde = ms; }
+}
+
+// arrancar: lo que diga la dirección (#animales/pantera-nebulosa) o el primero
+pintarFiltro();
+const [p0, id0] = location.hash.slice(1).split('/');
+if (p0 && ['animales', 'plantas', 'setas'].includes(p0)) {
+  estado.pestana = p0;
+  document.querySelectorAll('.pestanas button').forEach((x) => x.setAttribute('aria-selected', String(x.dataset.p === p0)));
+  pintarFiltro();
+}
+elegir(listaDe(estado.pestana).find((e) => e.id === id0) || listaDe(estado.pestana)[0]);
+requestAnimationFrame(bucle);
+window.__listo = true;
+</script>
+<link rel="stylesheet" href="../../../comun/comun.css">
+</body>
+</html>

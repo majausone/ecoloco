@@ -1,0 +1,29 @@
+name: Desplegar
+
+# Cada push a main publica la web en majaus.es/<carpeta>/ (sin login). Lo hace el desplegar.sh
+# de majaus.es: se trae este repo y copia a /srv/majaus/publico/<carpeta> solo lo que sirve la web.
+# Entra al OVH con la llave «despliegue-github-actions» (secreto DESPLIEGUE_SSH_KEY), que solo puede
+# lanzar ese despliegue (command= en authorized_keys). Si algo falla, este Action sale en rojo.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: desplegar-majaus
+  cancel-in-progress: false
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Desplegar en majaus.es
+        env:
+          LLAVE: ${{ secrets.DESPLIEGUE_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "$LLAVE" > ~/.ssh/despliegue
+          chmod 600 ~/.ssh/despliegue
+          echo "148.113.243.223 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA4h1NA0I/qZLn6B/BK8vkgmd8LW+IQRFxSVaLLkb13j" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/despliegue -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 ubuntu@148.113.243.223 majaus

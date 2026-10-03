@@ -1,0 +1,19 @@
+/* Lo común a todas las páginas de EcoLoco: la cabecera, el «?» con globo y los tamaños. */
+.ayuda { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; border:1px solid #6a5a4a; color:#e8a64a;
+  font:bold 11px/1 system-ui, sans-serif; cursor:help; position:relative; margin:0 3px; vertical-align:middle; background:rgba(20,16,15,.6); flex:none; }
+.ayuda:hover::after, .ayuda:focus::after { content:attr(data-globo); position:absolute; z-index:50; left:50%; top:calc(100% + 6px); transform:translateX(-50%);
+  width:max-content; max-width:280px; white-space:normal; text-align:left; background:#1d1815; color:#efe4d2; border:1px solid #e8a64a; border-radius:6px;
+  padding:6px 9px; font:12px/1.4 system-ui, sans-serif; box-shadow:0 4px 14px rgba(0,0,0,.5); }
+.ayuda.izq:hover::after, .ayuda.izq:focus::after { left:auto; right:0; transform:none; }
+.tamano { display:flex; align-items:center; gap:6px; }
+.tamano input[type=range] { flex:1; min-width:90px; accent-color:#e8a64a; }
+.tamano input[type=number] { width:64px; background:#1a1512; color:#efe4d2; border:1px solid #4a3c34; border-radius:4px; padding:2px 5px; font:inherit; }
+/* la cabecera común */
+.cabecera { position:fixed; top:0; left:0; right:0; height:34px; z-index:40; display:flex; align-items:center; gap:4px; padding:0 10px;
+  background:rgba(20,16,15,.92); border-bottom:1px solid #3a2f29; font:13px system-ui, sans-serif; color:#efe4d2; }
+.cabecera .cab-marca { color:#e8a64a; font-weight:700; margin-right:12px; text-decoration:none; font-size:15px; }
+.cabecera a.ir { color:#efe4d2; text-decoration:none; padding:4px 10px; border-radius:5px; }
+.cabecera a.ir:hover { background:#2a221e; } .cabecera a.ir.on { background:#e8a64a; color:#1a1410; }
+.cabecera .hueco { flex:1; }
+.cabecera select { background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-radius:5px; padding:2px 6px; font:inherit; }
+body.con-cabecera { padding-top:34px; box-sizing:border-box; }

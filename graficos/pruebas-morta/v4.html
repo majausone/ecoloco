@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoLoco · pruebas de estilo v4 (vóxeles de verdad)</title>
+<style>
+  :root { --bg:#14100f; --panel:#1f1916; --ink:#efe4d2; --muted:#a8998a; --line:#3a2f29; --accent:#e8a64a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.4 system-ui, sans-serif; }
+  header { padding:14px 20px 4px; }
+  h1 { margin:0; font-size:20px; }
+  header p { margin:4px 0 0; color:var(--muted); }
+  .rejilla { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; padding:14px 20px 24px; }
+  @media (max-width:1100px) { .rejilla { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:700px) { .rejilla { grid-template-columns:1fr; } }
+  figure { margin:0; background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  canvas { display:block; width:100%; aspect-ratio:16/9; image-rendering:pixelated; cursor:zoom-in; background:#000; }
+  figcaption { padding:8px 11px 10px; }
+  figcaption b { color:var(--accent); }
+  figcaption span { display:block; color:var(--muted); font-size:13px; margin-top:2px; }
+  .fps { position:fixed; top:8px; right:10px; z-index:20; background:rgba(20,16,15,.88); border:1px solid var(--line); border-radius:6px; padding:5px 10px; font:13px/1.35 ui-monospace, Consolas, monospace; color:var(--ink); text-align:right; }
+  .fps b { color:var(--accent); font-size:16px; }
+  .grande { position:fixed; inset:0; background:rgba(0,0,0,.92); display:none; align-items:center; justify-content:center; z-index:9; cursor:zoom-out; }
+  .grande.on { display:flex; }
+  .grande canvas { width:min(96vw, calc(96vh * 16 / 9)); height:auto; cursor:grab; }
+  .grande canvas:active { cursor:grabbing; }
+  .ayuda { position:fixed; left:50%; bottom:12px; transform:translateX(-50%); background:rgba(20,16,15,.85); border:1px solid var(--line); border-radius:6px; padding:6px 12px; color:var(--ink); font-size:13px; white-space:nowrap; }
+  .ayuda b { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pruebas de estilo v4: vóxeles de verdad (0,125), solo caras visibles y sombreado de esquinas, 1920×1080</h1>
+  <p>three.js con cubos, pintado a baja resolución y escalado sin suavizar. Pincha una para cargarla y verla grande; al cerrarla se suelta de la memoria. Todo se mueve: viento, agua, bichos y partículas.</p>
+</header>
+<div class="fps" id="fps"><b>– fps</b><br>– ms/fotograma</div>
+<main class="rejilla" id="rejilla"></main>
+<div class="grande" id="grande"><canvas id="lienzoGrande"></canvas>
+  <div class="ayuda"><b>Botón derecho</b> mantenido: mirar + <b>WASD</b> volar · <b>Q/E</b> bajar/subir · <b>Mayús</b> rápido · <b>rueda</b> acercar (volando: velocidad) · <b>botón central</b> desplazar · <b>Alt+izq.</b> orbitar · <b>F</b> encuadrar · <b>P</b> perspectiva/orto · <b>Esc</b> cerrar · <span id="modo">perspectiva</span></div></div>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+import { montar, retoque } from './escena-v4.js';
+
+const verde = { tierra:['#3b2a22','#5a3d2c','#6e4b33'], roca:['#3e3b44','#5f5a63','#8a8389'], hierba:['#2f5a2a','#4b7d33','#78a83f','#a9c75a'], suelo:['#6b4a2e','#8a6a3a','#5b7a2f'], tronco:['#3a2519','#5a3a24','#7a5232'], copa:['#183a26','#2d5e2c','#4e8a33','#86b845','#c7dc6a'], arbusto:['#1f4a26','#3f7a30','#6fa83e','#a6cc58'], flores:['#f2d35b','#f07a8a','#f4f1e6','#9ad3f0'], agua:['#1b4552','#2a6b78','#3f8e99'], arena:['#9c8457','#b99c62','#d0b878'], musgo:['#3c6b2b','#6c9a3a'], piedra:['#6a6660','#8d8780','#b3aca2'], helecho:['#2a5a2a','#4e8a33','#86b845'] };
+
+const PRUEBAS = [
+  {
+    titulo: '1 · Bosque a la hora dorada', nota: 'Vista 3/4 frontal, sol bajo cálido, rayos de luz y polvo en el aire. 1920×1080.',
+    semilla: 11, res: [1920, 1080], cielo:'#2a1c14', relieve: 4,
+    rio: { x: 0.62, ancho: 1.6, curva: 3, fase: 1 },
+    paleta: { ...verde, copa:['#1d3a22','#3a6a2c','#6e9a36','#b8c050','#f0d878'] },
+    bioma: { arboles:[['redondo',0.07],['pino',0.015]], arbustos:0.08, hierba:0.25, flores:0.06, setas:0.02, rocas:0.02, troncos:0.01, helechos:0.04 },
+    luz: { dir:[-0.8,0.55,0.35], sol:'#ffc27a', fuerza:3.68, cielo:'#c9a37a', suelo:'#3a2a1c', ambiente:1.12 },
+    niebla: { color:'#4a3020', cerca:68, lejos:120 },
+    camara: { elevacion: 52, azimut: 0, alto: 14 },
+    post: { contraste:1.12, saturacion:1.15, sombra:[0.42,0.25,0.5], luzTinte:[1.05,0.92,0.75], niveles:48, tramado:0, contorno:0.35, vineta:0 },
+    extras: { rayos: 7, polvo: 90, mariposas: 10, bichos:{ ciervo:2, conejo:3, pajaro:3 } },
+  },
+  {
+    titulo: '2 · Selva húmeda al mediodía', nota: 'Árboles gigantes con contrafuertes, palmeras, lianas y helechos. Verdes muy saturados. 1920×1080.',
+    semilla: 22, res: [1920, 1080], cielo:'#0f2a1c', relieve: 3,
+    rio: { x: 0.3, ancho: 2.2, curva: 4, fase: 0 },
+    paleta: { ...verde, hierba:['#1f5a2a','#2f7d33','#4fa83f','#7cc75a'], copa:['#0c3a20','#1a5e2a','#2f8a33','#5fb845','#a5e06a'], palma:['#1a5e2a','#3a8a33','#7cc045'], tronco:['#4a3a2a','#6a5640','#8a7656'], flores:['#ff5a7a','#ffb03a','#c070ff'], agua:['#1a4a3a','#24685a','#3a8a72'] },
+    bioma: { arboles:[['gigante',0.025],['palmera',0.05],['redondo',0.05]], arbustos:0.14, hierba:0.20, flores:0.05, setas:0.02, rocas:0.02, helechos:0.25 },
+    luz: { dir:[-0.3,0.9,0.4], sol:'#fff6d8', fuerza:2.99, cielo:'#a6d9a0', suelo:'#1a3a20', ambiente:1.44 },
+    camara: { elevacion: 55, azimut: 0, alto: 14 },
+    post: { contraste:1.1, saturacion:1.3, sombra:[0.2,0.35,0.35], luzTinte:[1,1,0.85], niveles:48, tramado:0, contorno:0.3, vineta:0 },
+    extras: { mariposas: 24, colorMariposas:'#5ad1ff', bichos:{ pajaro:5 }, colorPajaro:'#d23a2a', rayos: 3 },
+    viento: 0.6,
+  },
+  {
+    titulo: '3 · Niebla al amanecer', nota: 'Pinos y hayas entre niebla, luz rosa y azul, cielo frío. 1920×1080.',
+    semilla: 33, res: [1920, 1080], cielo:'#8fa0b8', relieve: 5,
+    paleta: { ...verde, hierba:['#3a5a4a','#557a5a','#7c9e74','#a6bf94'], copa:['#22383a','#3a5a50','#5e8268','#9ab48a','#d8d8b0'], pino:['#1a2e30','#2e4a44','#4e6e5c','#7e9a7c'] },
+    bioma: { arboles:[['pino',0.07],['redondo',0.03]], arbustos:0.05, hierba:0.23, flores:0.02, setas:0.03, rocas:0.04, troncos:0.015 },
+    luz: { dir:[0.7,0.45,0.5], sol:'#ffc8c8', fuerza:2.53, cielo:'#b8c6e0', suelo:'#3a3a4a', ambiente:1.76 },
+    niebla: { color:'#a8b4c8', cerca:60, lejos:108 },
+    camara: { elevacion: 48, azimut: 0, alto: 14 },
+    post: { contraste:1.0, saturacion:0.85, sombra:[0.4,0.42,0.6], luzTinte:[1.05,0.95,0.95], niveles:48, tramado:0, contorno:0.25, vineta:0 },
+    extras: { niebla: 140, bichos:{ ciervo:3 } },
+    viento: 0.4,
+  },
+  {
+    titulo: '4 · Otoño', nota: 'Copas naranjas y rojas, hojas cayendo, suelo de hojarasca. Vista isométrica diagonal. 1920×1080.',
+    semilla: 44, res: [1920, 1080], cielo:'#2a1810', relieve: 4,
+    rio: { x: 0.5, ancho: 1.3, curva: 5, fase: 2 },
+    paleta: { ...verde, hierba:['#5a4a24','#7a6a2e','#a08a3a','#c4a84a'], suelo:['#a0441c','#c46a24','#7a3a1a'], copa:['#5a1a12','#9a3a14','#d0661c','#f09a2a','#ffd060'], arbusto:['#5a2a14','#8a4a1c','#c07a2a'], flores:['#f2d35b','#e05a2a'] },
+    bioma: { arboles:[['redondo',0.08],['seco',0.01],['pino',0.01]], arbustos:0.07, hierba:0.15, flores:0.02, setas:0.05, rocas:0.03, troncos:0.02 },
+    luz: { dir:[-0.6,0.6,0.5], sol:'#ffd09a', fuerza:3.22, cielo:'#d0a070', suelo:'#3a2014', ambiente:1.28 },
+    camara: { elevacion: 35, azimut: 45, alto: 15 },
+    post: { contraste:1.12, saturacion:1.15, sombra:[0.45,0.28,0.35], luzTinte:[1.05,0.95,0.8], niveles:48, tramado:0, contorno:0.35, vineta:0 },
+    extras: { hojas: 160, bichos:{ jabali:2, conejo:2, pajaro:2 }, colorPajaro:'#2a2a2a' },
+  },
+  {
+    titulo: '5 · Noche de luciérnagas', nota: 'Luz de luna azul, luciérnagas y setas que brillan con luz propia. 1920×1080.',
+    semilla: 55, res: [1920, 1080], cielo:'#06080f', relieve: 4,
+    rio: { x: 0.7, ancho: 1.4, curva: 3, fase: 3 },
+    paleta: { ...verde, setaBrillo:'#6ff5e0', reflejo:'#9fd8ff' },
+    bioma: { arboles:[['redondo',0.07],['pino',0.02]], arbustos:0.08, hierba:0.25, flores:0.03, setas:0.06, rocas:0.03, troncos:0.02, helechos:0.06 },
+    luz: { dir:[0.4,0.75,0.5], sol:'#8fb0ff', fuerza:1.6, cielo:'#4a6090', suelo:'#0a0a14', ambiente:1.3 },
+    camara: { elevacion: 52, azimut: 0, alto: 14 },
+    post: { contraste:1.15, saturacion:1.05, sombra:[0.3,0.32,0.7], luzTinte:[0.9,1,1.1], niveles:48, tramado:0, contorno:0.3, vineta:0 },
+    extras: { luciernagas: 120, setasBrillo: true, lucesPuntuales: 8, colorLuces:'#ffd27a', bichos:{ conejo:3 } },
+    viento: 0.5,
+  },
+  {
+    titulo: '6 · Tormenta', nota: 'Lluvia, charcas, cielo plomizo y viento fuerte. 1920×1080.',
+    semilla: 66, res: [1920, 1080], cielo:'#2a3236', relieve: 3, charcas: true,
+    paleta: { ...verde, hierba:['#24402e','#365a3a','#4f7a46','#6e945a'], copa:['#14261e','#22402c','#355c3a','#55804a','#86a468'], agua:['#2a3a40','#3a525a','#56707a'], reflejo:'#c8d8e0' },
+    bioma: { arboles:[['redondo',0.07],['pino',0.03]], arbustos:0.08, hierba:0.25, flores:0.01, setas:0.03, rocas:0.03, troncos:0.02 },
+    luz: { dir:[-0.3,0.85,0.4], sol:'#c8d0d8', fuerza:1.38, cielo:'#8a9aa4', suelo:'#20282a', ambiente:1.60 },
+    niebla: { color:'#3a4448', cerca:64, lejos:115 },
+    camara: { elevacion: 50, azimut: 0, alto: 14 },
+    post: { contraste:1.05, saturacion:0.8, sombra:[0.3,0.36,0.42], luzTinte:[0.95,1,1.05], niveles:48, tramado:0, contorno:0.3, vineta:0 },
+    extras: { lluvia: 700, bichos:{ pajaro:2 }, colorPajaro:'#1a1a1a' },
+    viento: 2.4,
+  },
+  {
+    titulo: '7 · Pantano', nota: 'Agua oscura con nenúfares, árboles secos con musgo, setas y niebla verde. 1920×1080.',
+    semilla: 77, res: [1920, 1080], cielo:'#141a10', relieve: 2, charcas: true,
+    paleta: { ...verde, hierba:['#2a3a1a','#3e5222','#5a6e2e','#7a8a3e'], copa:['#1a2a14','#2e4220','#4a6030','#6e8040','#a0a85a'], agua:['#141e14','#1e2e1e','#2e402a'], tronco:['#2a2218','#3e3424','#524634'], musgo:['#4a6a2a','#7a9a3a','#a0b84a'], setaBrillo:'#b6ff6a', reflejo:'#d0e0a0' },
+    bioma: { arboles:[['seco',0.04],['redondo',0.03]], arbustos:0.08, hierba:0.28, flores:0.01, setas:0.08, rocas:0.02, troncos:0.04, nenufares:0.25 },
+    luz: { dir:[0.5,0.6,0.6], sol:'#d8e0a0', fuerza:2.07, cielo:'#7a8a60', suelo:'#14180c', ambiente:1.28 },
+    niebla: { color:'#3a4a2a', cerca:62, lejos:110 },
+    camara: { elevacion: 50, azimut: 0, alto: 14 },
+    post: { contraste:1.1, saturacion:1.0, sombra:[0.3,0.4,0.3], luzTinte:[1,1.02,0.85], niveles:48, tramado:0, contorno:0.35, vineta:0 },
+    extras: { niebla: 90, setasBrillo: true, luciernagas: 30, bichos:{ pajaro:2 }, colorPajaro:'#e8e8e8' },
+    viento: 0.4,
+  },
+  {
+    titulo: '8 · Claro con ciervos (más detalle)', nota: 'Luz moteada, flores y río. 1920×1080.',
+    semilla: 88, res: [1920, 1080], cielo:'#1c2416', relieve: 3,
+    rio: { x: 0.78, ancho: 1.5, curva: 2.5, fase: 1.5 },
+    claro: [ -2, 1, 5.5 ],
+    paleta: { ...verde },
+    bioma: { arboles:[['redondo',0.1],['pino',0.02]], arbustos:0.1, hierba:0.28, flores:0.1, setas:0.02, rocas:0.02, troncos:0.01, helechos:0.08 },
+    luz: { dir:[-0.5,0.75,0.45], sol:'#fff0c0', fuerza:3.45, cielo:'#b0c890', suelo:'#2a2a18', ambiente:1.20 },
+    camara: { elevacion: 55, azimut: 0, alto: 14 },
+    post: { contraste:1.1, saturacion:1.15, sombra:[0.3,0.3,0.5], luzTinte:[1.05,1,0.85], niveles:48, tramado:0, contorno:0.3, vineta:0 },
+    extras: { rayos: 5, mariposas: 16, polvo: 50, bichos:{ ciervo:4, conejo:4, pajaro:2 } },
+  },
+  {
+    titulo: '9 · Ruinas en la selva al atardecer', nota: 'Templo roto con un ídolo que brilla, cortado al fondo, cielo magenta. 1920×1080.',
+    semilla: 99, res: [1920, 1080], cielo:'#2a1028', relieve: 3, fondoAlto: true,
+    rio: { x: 0.82, ancho: 1.4, curva: 2, fase: 0.5 },
+    paleta: { ...verde, hierba:['#24502a','#367a33','#5aa03f','#8ac25a'], copa:['#0e3020','#1e5228','#357a30','#68a540','#b0d060'], palma:['#1e5228','#3a8a33','#7cc045'], piedra:['#5a5048','#8a7a68','#b8a48a'], setaBrillo:'#ffcf5a' },
+    bioma: { arboles:[['gigante',0.02],['palmera',0.04],['redondo',0.04]], arbustos:0.12, hierba:0.20, flores:0.04, setas:0.02, rocas:0.04, helechos:0.2 },
+    luz: { dir:[0.85,0.4,0.3], sol:'#ff9a6a', fuerza:3.45, cielo:'#c07aa0', suelo:'#2a1420', ambiente:1.12 },
+    niebla: { color:'#4a2038', cerca:66, lejos:118 },
+    extrasRuinas: true,
+    camara: { elevacion: 50, azimut: 0, alto: 14 },
+    post: { contraste:1.15, saturacion:1.2, sombra:[0.5,0.25,0.55], luzTinte:[1.08,0.9,0.85], niveles:48, tramado:0, contorno:0.35, vineta:0 },
+    extras: { ruinas: true, rayos: 4, polvo: 60, luciernagas: 25, bichos:{ pajaro:4 }, colorPajaro:'#f0d040' },
+  },
+];
+
+// Un solo renderizador para las nueve; cada una se pinta en su textura y se copia a su lienzo.
+const MAXW = 1920, MAXH = 1080;
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(MAXW, MAXH, false);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+
+const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), retoque());
+const escenaQuad = new THREE.Scene(); escenaQuad.add(quad);
+const camQuad = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+const rejilla = document.getElementById('rejilla');
+const grande = document.getElementById('grande'), lienzoGrande = document.getElementById('lienzoGrande');
+let ampliada = null;
+
+/* Nada se monta al abrir la página: cada escena se monta al pincharla y se suelta al cerrarla
+   (geometría, materiales y texturas fuera de la gráfica). En la rejilla se queda su último fotograma. */
+let pendiente = null;
+function rotulo(lienzo, texto) {
+  const g = lienzo.getContext('2d'), w = lienzo.width, h = lienzo.height;
+  g.fillStyle = '#0d0a09'; g.fillRect(0, 0, w, h);
+  g.fillStyle = '#e8a64a'; g.font = `${Math.round(h / 12)}px system-ui, sans-serif`;
+  g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(texto, w / 2, h / 2);
+}
+function cargar(v) {
+  const [w, h] = v.cfg.res;
+  v.objetivo = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, magFilter: THREE.NearestFilter, minFilter: THREE.NearestFilter });
+  v.objetivo.depthTexture = new THREE.DepthTexture(w, h);
+  v.mundo = montar(v.cfg);
+}
+function descargar(v) {
+  if (!v.mundo) return;
+  v.mundo.escena.traverse((o) => {
+    o.geometry?.dispose();
+    const m = o.material;
+    for (const x of Array.isArray(m) ? m : [m]) { x?.map?.dispose(); x?.dispose?.(); }
+  });
+  v.objetivo.depthTexture.dispose(); v.objetivo.dispose();
+  v.mundo = null; v.objetivo = null; v.camActiva = null;
+  renderer.renderLists.dispose();
+}
+function abrir(v) {
+  const [w, h] = v.cfg.res;
+  lienzoGrande.width = w; lienzoGrande.height = h;
+  rotulo(lienzoGrande, 'Cargando…');
+  grande.classList.add('on');
+  pendiente = v;
+  setTimeout(() => {               // deja que se pinte el «Cargando…» antes de montar
+    if (pendiente !== v) return;   // se cerró mientras tanto
+    cargar(v); ampliada = v; abrirLibre(v);
+  }, 30);
+}
+
+const vivas = PRUEBAS.map((cfg) => {
+  const fig = document.createElement('figure');
+  const lienzo = document.createElement('canvas');
+  lienzo.width = cfg.res[0]; lienzo.height = cfg.res[1];
+  const cap = document.createElement('figcaption');
+  cap.innerHTML = `<b>${cfg.titulo}</b><span>${cfg.nota}</span>`;
+  fig.append(lienzo, cap); rejilla.append(fig);
+  const v = { cfg, lienzo, ctx: lienzo.getContext('2d'), objetivo: null, mundo: null };
+  rotulo(lienzo, 'Pulsa para cargar');
+  lienzo.addEventListener('click', () => abrir(v));
+  return v;
+});
+
+/* ---- cámara libre como la vista de escena de Unity ----
+   Botón derecho apretado: mirar alrededor desde donde estás, y WASD vuela hacia donde miras
+   (Q/E bajar/subir, Mayús más rápido, la rueda cambia la velocidad mientras vuelas).
+   Rueda sin apretar: acercar/alejar. Botón central: desplazar. Alt + izquierdo: orbitar.
+   F: volver a encuadrar. P: perspectiva u ortográfica. */
+const deg = THREE.MathUtils.degToRad;
+let L = null;
+const teclas = new Set();
+function vistaInicial(v) {
+  const c = v.cfg.camara, yaw = deg(c.azimut), pitch = deg(c.elevacion), dist = 26;
+  // la cámara mira hacia el centro desde arriba, como la vista de la prueba
+  const pos = new THREE.Vector3(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)).multiplyScalar(dist);
+  return { pos, yaw: yaw + Math.PI, pitch: -pitch };
+}
+function abrirLibre(v) {
+  const ini = vistaInicial(v);
+  L = { v, ...ini, velocidad: 8, persp: true, acelera: 1, ortoAlto: 14,
+        camO: v.mundo.cam.clone(), camP: new THREE.PerspectiveCamera(55, 16 / 9, 0.1, 250) };
+  document.getElementById('modo').textContent = 'perspectiva';
+}
+function cerrar() { grande.classList.remove('on'); if (ampliada) descargar(ampliada); ampliada = null; pendiente = null; L = null; teclas.clear(); arrastre = null; }
+grande.addEventListener('click', (e) => { if (e.target === grande) cerrar(); });
+// hacia dónde mira (con la inclinación) y su derecha
+const mira = () => new THREE.Vector3(Math.sin(L.yaw) * Math.cos(L.pitch), Math.sin(L.pitch), Math.cos(L.yaw) * Math.cos(L.pitch));
+const derechaDe = () => new THREE.Vector3(-Math.cos(L.yaw), 0, Math.sin(L.yaw));
+function moverLibre(dt) {
+  if (!L) return;
+  const f = mira(), d = derechaDe(), arriba = new THREE.Vector3(0, 1, 0);
+  const moviendo = ['w', 'a', 's', 'd', 'q', 'e'].some((k) => teclas.has(k));
+  L.acelera = moviendo ? Math.min(4, L.acelera + dt * 0.8) : 1; // como Unity: si mantienes, acelera
+  const v = L.velocidad * L.acelera * (teclas.has('shift') ? 3 : 1) * dt;
+  if (teclas.has('w')) L.pos.addScaledVector(f, v);
+  if (teclas.has('s')) L.pos.addScaledVector(f, -v);
+  if (teclas.has('d')) L.pos.addScaledVector(d, v);
+  if (teclas.has('a')) L.pos.addScaledVector(d, -v);
+  if (teclas.has('e')) L.pos.addScaledVector(arriba, v);
+  if (teclas.has('q')) L.pos.addScaledVector(arriba, -v);
+  const objetivo = L.pos.clone().add(f);
+  if (L.persp) {
+    L.camP.position.copy(L.pos); L.camP.lookAt(objetivo);
+    L.v.camActiva = L.camP;
+  } else {
+    const c = L.camO;
+    const k = L.ortoAlto / 14;
+    c.left = -L.ortoAlto * 8 / 9; c.right = L.ortoAlto * 8 / 9; c.top = L.ortoAlto / 2; c.bottom = -L.ortoAlto / 2; c.zoom = 1;
+    c.updateProjectionMatrix();
+    // en ortográfica la cámara se echa atrás para que nada quede detrás de ella
+    c.position.copy(L.pos).addScaledVector(f, -60 * Math.max(1, k)); c.lookAt(objetivo); c.updateMatrixWorld();
+    L.v.camActiva = c;
+  }
+}
+let arrastre = null;
+lienzoGrande.addEventListener('contextmenu', (e) => e.preventDefault());
+lienzoGrande.addEventListener('mousedown', (e) => { if (e.button === 1) e.preventDefault(); });
+lienzoGrande.addEventListener('pointerdown', (e) => {
+  if (!L) return;
+  const modo = e.button === 2 ? 'mirar' : e.button === 1 ? 'desplazar' : e.altKey ? 'orbitar' : null;
+  if (!modo) return;
+  arrastre = { x: e.clientX, y: e.clientY, modo };
+  lienzoGrande.setPointerCapture(e.pointerId);
+  if (modo === 'mirar' && lienzoGrande.requestPointerLock) { try { lienzoGrande.requestPointerLock()?.catch?.(() => {}); } catch {} }
+});
+lienzoGrande.addEventListener('pointerup', () => { arrastre = null; teclas.delete('raton'); if (document.pointerLockElement) document.exitPointerLock(); });
+lienzoGrande.addEventListener('pointermove', (e) => {
+  if (!arrastre || !L) return;
+  const bloqueado = document.pointerLockElement === lienzoGrande;
+  const dx = bloqueado ? e.movementX : e.clientX - arrastre.x, dy = bloqueado ? e.movementY : e.clientY - arrastre.y;
+  arrastre.x = e.clientX; arrastre.y = e.clientY;
+  if (arrastre.modo === 'mirar') {
+    L.yaw -= dx * 0.0035;
+    L.pitch = Math.min(1.5, Math.max(-1.5, L.pitch - dy * 0.0035));
+  } else if (arrastre.modo === 'desplazar') {
+    const k = (L.persp ? 20 : L.ortoAlto) / lienzoGrande.clientHeight;
+    const arriba = new THREE.Vector3().crossVectors(derechaDe(), mira());
+    L.pos.addScaledVector(derechaDe(), -dx * k).addScaledVector(arriba, dy * k);
+  } else if (arrastre.modo === 'orbitar') {
+    // gira alrededor del punto que tiene delante, a 15 unidades
+    const centro = L.pos.clone().addScaledVector(mira(), 15);
+    L.yaw -= dx * 0.005;
+    L.pitch = Math.min(1.5, Math.max(-1.5, L.pitch - dy * 0.005));
+    L.pos.copy(centro).addScaledVector(mira(), -15);
+  }
+});
+lienzoGrande.addEventListener('wheel', (e) => {
+  e.preventDefault(); if (!L) return;
+  if (arrastre && arrastre.modo === 'mirar') { // volando: la rueda cambia la velocidad, como Unity
+    L.velocidad = Math.min(60, Math.max(1, L.velocidad * Math.exp(-e.deltaY * 0.0015)));
+    return;
+  }
+  if (L.persp) L.pos.addScaledVector(mira(), -e.deltaY * 0.02);
+  else L.ortoAlto = Math.min(60, Math.max(3, L.ortoAlto * Math.exp(e.deltaY * 0.0012)));
+}, { passive: false });
+window.addEventListener('keydown', (e) => {
+  if (!L) return;
+  const k = e.key.toLowerCase();
+  if (k === 'escape') return cerrar();
+  if (k === 'p') { L.persp = !L.persp; document.getElementById('modo').textContent = L.persp ? 'perspectiva' : 'ortográfica'; return; }
+  if (k === 'f' || k === 'r') { Object.assign(L, vistaInicial(L.v)); L.ortoAlto = 14; return; }
+  teclas.add(k); if (e.shiftKey) teclas.add('shift');
+});
+window.addEventListener('keyup', (e) => { teclas.delete(e.key.toLowerCase()); if (!e.shiftKey) teclas.delete('shift'); });
+window.addEventListener('blur', () => teclas.clear());
+
+
+function pintar(v, t) {
+  const { cfg, objetivo, mundo } = v;
+  const [w, h] = cfg.res;
+  mundo.paso(t);
+  renderer.setRenderTarget(objetivo);
+  renderer.setViewport(0, 0, w, h);
+  const cam = v.camActiva || mundo.cam;
+  renderer.render(mundo.escena, cam);
+  const u = quad.material.uniforms, p = cfg.post;
+  u.tColor.value = objetivo.texture; u.tProf.value = objetivo.depthTexture; u.res.value.set(w, h);
+  u.contraste.value = p.contraste; u.saturacion.value = p.saturacion;
+  u.sombra.value.setRGB(...p.sombra); u.luzTinte.value.setRGB(...p.luzTinte);
+  u.niveles.value = p.niveles; u.tramado.value = p.tramado; u.contorno.value = p.contorno; u.vineta.value = p.vineta;
+  u.lejos.value = cam.far - cam.near; u.cerca.value = cam.near; u.persp.value = cam.isPerspectiveCamera ? 1 : 0;
+  renderer.setRenderTarget(null);
+  renderer.setViewport(0, 0, w, h);
+  renderer.render(escenaQuad, camQuad);
+  // el viewport está abajo a la izquierda del lienzo de WebGL
+  v.ctx.drawImage(renderer.domElement, 0, MAXH - h, w, h, 0, 0, w, h);
+  if (ampliada === v) lienzoGrande.getContext('2d').drawImage(v.lienzo, 0, 0);
+}
+
+let cuenta = 0, tiempoPintar = 0, desde = performance.now();
+const fps = document.getElementById('fps');
+function bucle(ms) {
+  requestAnimationFrame(bucle);
+  const t0 = performance.now();
+  pintarTodo(ms);
+  renderer.getContext().finish(); // espera a la gráfica, para que el tiempo sea el de verdad
+  tiempoPintar += performance.now() - t0; cuenta++;
+  if (ms - desde > 500) {
+    const lista = ampliada ? [ampliada] : [];
+    const cubos = lista.reduce((n, v) => n + v.mundo.cubos, 0), tris = lista.reduce((n, v) => n + v.mundo.triangulos, 0);
+    fps.innerHTML = `<b>${Math.round(cuenta * 1000 / (ms - desde))} fps</b><br>${(tiempoPintar / cuenta).toFixed(1)} ms/fotograma<br>`
+      + `${ampliada ? '1 escena' : 'ninguna cargada'} · ${cubos.toLocaleString('es-ES')} vóxeles<br>${tris.toLocaleString('es-ES')} triángulos`;
+    cuenta = 0; tiempoPintar = 0; desde = ms;
+  }
+}
+function pintarTodo(ms) {
+  const t = ms / 1000;
+  moverLibre(Math.min(0.1, (ms - (pintarTodo.ult ?? ms)) / 1000) || 1 / 30); pintarTodo.ult = ms;
+  if (ampliada) pintar(ampliada, t);
+}
+requestAnimationFrame(bucle);
+window.__listo = true;
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+# Pesado o generado: no va a git
+repos/
+runs/
+tmp/
+node_modules/
+.venv/
+**/.venv/
+*.zarr/
+datos/vectores/*.bin
+.autoclaudio/
+graficos/pruebas-morta/**/*.png
+graficos/pruebas-morta/borneo/cap-*.png
+__pycache__/
+
+# Datos grandes que se regeneran con las herramientas del proyecto (no van a git):
+#   escenarios/diario.json      herramientas/suite.py diario (convertir_entradas.py)
+#   variantes/*/data/*.nc > 1MB herramientas/crear_variantes.py
+#   vectores/np.json            herramientas/vectores_np.py
+datos/escenarios/diario.json
+datos/variantes/diario/data/example_climate_data.nc
+datos/vectores/np.json
+# Generado y pesado: se rehace con herramientas/crear_variantes.py y herramientas/clima_maliau.py
+datos/escenarios/diario.json
+datos/escenarios/maliau.json
+datos/variantes/diario/
+datos/variantes/maliau/
+datos/clima/
+.worktrees/
+temp/
+
+# Las notas de los agentes de autoclaudio (encargos, bitácora, tareas): son de este PC, no del repo
+.teams/

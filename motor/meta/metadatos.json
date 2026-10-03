@@ -1,0 +1,5198 @@
+{
+ "variables": {
+  "population_densities": {
+   "description": "Density of animal populations.",
+   "unit": "individual m-2",
+   "variable_type": "float",
+   "axis": []
+  },
+  "air_heat_conductivity": {
+   "description": "Air heat conductivity between layers",
+   "unit": "mol m-2 s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "air_temperature": {
+   "description": "Air temperature profile",
+   "unit": "C",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "air_temperature_ref": {
+   "description": "Air temperature at reference height (2m)",
+   "unit": "C",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "diurnal_temperature_range": {
+   "description": "Diurnal air and soil temperature range",
+   "unit": "C",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "diurnal_temperature_range_ref": {
+   "description": "Diurnal air temperature range at reference height",
+   "unit": "C",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "total_animal_respiration": {
+   "description": "Animal respiration aggregated over all functional types",
+   "unit": "ppm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "atmospheric_co2": {
+   "description": "Atmospheric CO2 concentration profile",
+   "unit": "ppm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "atmospheric_co2_ref": {
+   "description": "Atmospheric CO2 concentration at reference height (above canopy)",
+   "unit": "ppm",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "atmospheric_pressure": {
+   "description": "Atmospheric pressure profile",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "atmospheric_pressure_ref": {
+   "description": "Atmospheric pressure at reference height (2m)",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "attenuation_coefficient": {
+   "description": "Wind attenuation coefficient",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "baseflow": {
+   "description": "Baseflow",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "bypass_flow": {
+   "description": "Bypass flow",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "shortwave_absorption": {
+   "description": "Shortwave radiation absorbed by individual canopy layers",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_height": {
+   "description": "Canopy height",
+   "unit": "m",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_temperature": {
+   "description": "Canopy temperature of individual layers",
+   "unit": "C",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "conductivity_from_ref_height": {
+   "description": "Conductivity from reference height",
+   "unit": "mol m-2 s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "conductivity_from_soil": {
+   "description": "Conductivity from soil",
+   "unit": "mol m-2 s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "condensation": {
+   "description": "Condensated water from supersaturation in the atmosphere",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "diabatic_correction_heat_above": {
+   "description": "Diabatic correction factor for heat above canopy",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "diabatic_correction_heat_canopy": {
+   "description": "Diabatic correction factor for heat in canopy",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "diabatic_correction_momentum_above": {
+   "description": "Diabatic correction factor for momentum above canopy",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "diabatic_correction_momentum_canopy": {
+   "description": "Diabatic correction factor for momentum in canopy",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "elevation": {
+   "description": "Elevation above sea level",
+   "unit": "m",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "transpiration": {
+   "description": "Transpiration from the canopy and subcanopy",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "friction_velocity": {
+   "description": "Friction velocity",
+   "unit": "m s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "ground_heat_flux": {
+   "description": "Ground heat flux",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "conductive_flux_understorey": {
+   "description": "Conductive flux between soil and understorey",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "groundwater_storage": {
+   "description": "Groundwater Storage",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "latent_heat_flux": {
+   "description": "Latent heat flux profile",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "latent_heat_flux_soil": {
+   "description": "Latent heat flux from topsoil layer",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "latent_heat_vapourisation": {
+   "description": "Latent heat of vapourisation",
+   "unit": "kJ kg-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "layer_heights": {
+   "description": "Heights of model layers",
+   "unit": "m",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "interception": {
+   "description": "Intercepted rainfall in canopy",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "leaf_air_heat_conductivity": {
+   "description": "Leaf air heat conductivity",
+   "unit": "mol m-2 s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "leaf_area_index": {
+   "description": "Leaf area index",
+   "unit": "m m-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "leaf_vapour_conductivity": {
+   "description": "Leaf vapour conductivity",
+   "unit": "mol m-2 s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "longwave_canopy": {
+   "description": "Longwave emission from individual canopy layers",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "longwave_emission_soil": {
+   "description": "Longwave emission from topsoil layer",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "longwave_emission": {
+   "description": "Longwave emission",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "absorbed_longwave_radiation": {
+   "description": "Absorbed longwave radiation in all flux layers",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "matric_potential": {
+   "description": "Matric potential",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "mean_annual_temperature": {
+   "description": "Mean annual temperature = temperature of deepest soil layer",
+   "unit": "C",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "mean_mixing_length": {
+   "description": "Mean mixing length",
+   "unit": "m",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "mixing_coefficient": {
+   "description": "Turbulent mixing coefficient",
+   "unit": "s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "ventilation_rate": {
+   "description": "ventilation rate between top of canopy and atmosphere above",
+   "unit": "s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "net_radiation": {
+   "description": "Net radiation",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "density_air": {
+   "description": "Temperature-dependent density of air",
+   "unit": "kg m-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "plant_net_co2_assimilation": {
+   "description": "Plant net CO2 assimilation",
+   "unit": "ppm",
+   "variable_type": "",
+   "axis": []
+  },
+  "downward_shortwave_radiation": {
+   "description": "Top of canopy downward shortwave radiation (DSR)",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "downward_longwave_radiation": {
+   "description": "Top of canopy downward longwave radiation (DLR)",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "precipitation": {
+   "description": "Precipitation input at the top of the canopy",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "precipitation_surface": {
+   "description": "Precipitation that reaches surface",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "relative_humidity": {
+   "description": "Relative humidity profile",
+   "unit": "%",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "relative_humidity_ref": {
+   "description": "Relative humidity at reference height (2m)",
+   "unit": "%",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "relative_turbulence_intensity": {
+   "description": "Relative turbulence intensity",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "river_discharge_rate": {
+   "description": "River discharge rate",
+   "unit": "m3 s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "aerodynamic_resistance_soil": {
+   "description": "Aerodynamic resistance soil",
+   "unit": "s m-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "aerodynamic_resistance_canopy": {
+   "description": "Aerodynamic resistance canopy",
+   "unit": "s m-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_evaporation": {
+   "description": "Canopy evaporation",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "roughness_length_momentum": {
+   "description": "Roughness length for momentum",
+   "unit": "m",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "saturated_vapour_pressure_ref": {
+   "description": "Saturated vapour pressure at reference height (2m)",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "sensible_heat_flux": {
+   "description": "Sensible heat flux profile",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "sensible_heat_flux_soil": {
+   "description": "Sensible heat flux from topsoil layer",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "shortwave_radiation_surface": {
+   "description": "Shortwave radiation at the surface",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_absorption": {
+   "description": "Shortwave radiation absorbed by topsoil layer",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_vapour_pressure": {
+   "description": "Soil vapour pressure",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subsurface_runoff_routed_plus_local": {
+   "description": "Subsurface flow contributing to river discharge in each grid cell",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subsurface_stormflow": {
+   "description": "Subsurface stormflow contributing to river discharge in each grid cell",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_evaporation": {
+   "description": "Soil evaporation",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_moisture": {
+   "description": "Soil moisture",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "snowfall": {
+   "description": "Snowfall as part of total precipitation",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "snow_water_equivalent": {
+   "description": "Snow water equivalent is the depth of liquid water that would result if an entire snowpack melted instantly",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "temperature_driven_snowmelt": {
+   "description": "Temperature driven snow melt",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "rain_driven_snowmelt": {
+   "description": "Rain driven snow melt",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "sublimation_snow": {
+   "description": "Sublimation is the process where snow turns directly from a solid (ice) into a gas (water vapor) without melting into liquid first",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_respiration": {
+   "description": "Soil respiration",
+   "unit": "ppm",
+   "variable_type": "",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_temperature": {
+   "description": "Soil temperature profile",
+   "unit": "C",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "specific_heat_air": {
+   "description": "Specific heat of air",
+   "unit": "J kg-1 K-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "specific_humidity": {
+   "description": "Specific humidity of air",
+   "unit": "g kg-1",
+   "variable_type": "",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "stomatal_conductance": {
+   "description": "Stomatal conductance",
+   "unit": "mol m-2 s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "stream_flow": {
+   "description": "Estimated stream flow",
+   "unit": "mm per time step",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subsurface_flow": {
+   "description": "Subsurface flow",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "surface_runoff": {
+   "description": "Surface runoff generated in each grid cell",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "surface_runoff_routed_plus_local": {
+   "description": "Surface runoff contributing to river discharge in each grid cell",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "topofcanopy_radiation": {
+   "description": "Top of canopy downward shortwave radiation",
+   "unit": "W m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "total_runoff": {
+   "description": "Total runoff through each grid cell",
+   "unit": "mm",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "vapour_pressure": {
+   "description": "Vapour pressure profile",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "vapour_pressure_ref": {
+   "description": "Vapour pressure at reference height (2m)",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "vapour_pressure_deficit": {
+   "description": "Vapour pressure deficit profile",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "vapour_pressure_deficit_ref": {
+   "description": "Vapour pressure deficit at reference height (2m)",
+   "unit": "kPa",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "vertical_flow": {
+   "description": "Vertical flow of water through soil column",
+   "unit": "mm per time step (currently day)",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "wind_speed": {
+   "description": "Wind profile within and below canopy",
+   "unit": "m s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "wind_speed_ref": {
+   "description": "Wind speed at reference height (10m)",
+   "unit": "m s-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial",
+    "time"
+   ]
+  },
+  "zero_plane_displacement": {
+   "description": "Zero plane displacement height",
+   "unit": "m",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_cnp_pool_lmwc": {
+   "description": "Soil low molecular weight organic pool. Carbon, nitrogen and phosphorous content",
+   "unit": "kg m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_cnp_pool_maom": {
+   "description": "Soil mineral associated organic matter pool. Carbon, nitrogen and phosphorous content",
+   "unit": "kg m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_c_pool_bacteria": {
+   "description": "Soil bacterial biomass (carbon) pool",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_c_pool_saprotrophic_fungi": {
+   "description": "Soil saprotrophic fungal biomass (carbon) pool",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_c_pool_arbuscular_mycorrhiza": {
+   "description": "Soil arbuscular mycorrhizal fungal biomass (carbon) pool",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_c_pool_ectomycorrhiza": {
+   "description": "Soil ectomycorrhizal fungal biomass (carbon) pool",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_cnp_pool_pom": {
+   "description": "Particulate organic matter pool. Carbon, nitrogen and phosphorous content",
+   "unit": "kg m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_cnp_pool_necromass": {
+   "description": "Necrotic organic matter pool. Carbon, nitrogen and phosphorous content",
+   "unit": "kg m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_n_pool_ammonium": {
+   "description": "Amount of nitrogen contained in the soil ammonium (NH4+) pool",
+   "unit": "kg{N} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_n_pool_nitrate": {
+   "description": "Amount of nitrogen contained in the soil nitrate (NO3-) pool",
+   "unit": "kg{N} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_p_pool_primary": {
+   "description": "Amount of phosphorus in a primary mineral form",
+   "unit": "kg{P} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_p_pool_secondary": {
+   "description": "Amount of inorganic phosphorus that is associated with secondary minerals",
+   "unit": "kg{P} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_p_pool_labile": {
+   "description": "Amount of inorganic phosphorus that is in a labile form",
+   "unit": "kg{P} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "pH": {
+   "description": "Soil pH values for each grid cell",
+   "unit": "pH",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_pool_above_metabolic_cnp": {
+   "description": "Above ground metabolic litter pool, carbon, nitrogen and phosphorus mass",
+   "unit": "kg m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_pool_above_structural_cnp": {
+   "description": "Above ground structural litter pool, carbon, nitrogen and phosphorus mass",
+   "unit": "kg m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_pool_woody_cnp": {
+   "description": "Woody litter pool, carbon, nitrogen and phosphorus mass",
+   "unit": "kg m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_pool_below_metabolic_cnp": {
+   "description": "Below ground metabolic litter pool, carbon, nitrogen and phosphorus mass",
+   "unit": "kg m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_pool_below_structural_cnp": {
+   "description": "Below ground structural litter pool, carbon, nitrogen and phosphorus mass",
+   "unit": "kg m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_mineralisation_rate_cnp": {
+   "description": "Rate of carbon, nitrogen and phosphorus addition to soil from litter",
+   "unit": "kg m^-3 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "lignin_above_structural": {
+   "description": "Proportion of above ground structural litter carbon which is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "lignin_below_structural": {
+   "description": "Proportion of below ground structural litter carbon which is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "lignin_woody": {
+   "description": "Proportion of dead wood carbon which is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "decomposed_excrement_cnp": {
+   "description": "Flow rates of carbon, nitrogen and phosphorous into the soil due to animal excrement decay",
+   "unit": "kg m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "decomposed_carcasses_cnp": {
+   "description": "Flow rates of carbon, nitrogen and phosphorous into the soil due to animal carcass decay",
+   "unit": "kg m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "herbivory_waste_above_cnp": {
+   "description": "Carbon, nitrogen and phosphorus mass added to the above ground litter due to herbivore mechanical inefficiency",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "herbivory_waste_above_lignin": {
+   "description": "Proportion of leaf carbon added to the above ground litter due to herbivore mechanical inefficiency that is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "herbivory_waste_below_cnp": {
+   "description": "Carbon, nitrogen and phosphorus mass added to the below ground litter due to herbivore mechanical inefficiency",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "herbivory_waste_below_lignin": {
+   "description": "Proportion of leaf carbon added to the below ground litter due to herbivore mechanical inefficiency that is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_consumed_above_metabolic_cnp": {
+   "description": "Amount of above-ground metabolic litter that has been consumed by animals, in carbon, nitrogen and phosphorus terms",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_consumed_above_structural_cnp": {
+   "description": "Amount of above-ground structural litter that has been consumed by animals, in carbon, nitrogen and phosphorus terms",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_consumed_woody_cnp": {
+   "description": "Amount of woody litter that has been consumed by animals, in carbon, nitrogen and phosphorus terms",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_consumed_below_metabolic_cnp": {
+   "description": "Amount of below-ground metabolic litter that has been consumed by animals, in carbon, nitrogen and phosphorus terms",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "litter_consumed_below_structural_cnp": {
+   "description": "Amount of below-ground structural litter that has been consumed by animals, in carbon, nitrogen and phosphorus terms",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "animal_pom_consumption_cnp": {
+   "description": "Rate at which carbon, nitrogen and phosphorus components of soil particulate organic matter are consumed by animals",
+   "unit": "kg m^-3 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "animal_bacteria_consumption": {
+   "description": "Rate at which soil bacteria are being consumed by animals",
+   "unit": "kg C m^-3 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "animal_saprotrophic_fungi_consumption": {
+   "description": "Rate at which saprotrophic soil fungi are being consumed by animals",
+   "unit": "kg C m^-3 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "animal_ectomycorrhiza_consumption": {
+   "description": "Rate at which ectomycorrhizal soil fungi are being consumed by animals",
+   "unit": "kg C m^-3 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "animal_arbuscular_mycorrhiza_consumption": {
+   "description": "Rate at which arbuscular mycorrhizal soil fungi are being consumed by animals",
+   "unit": "kg C m^-3 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fungal_fruiting_bodies_cnp": {
+   "description": "Density (of carbon, nitrogen and phosphorous) of fungal fruiting bodies growing from the soil",
+   "unit": "kg m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fungal_fruiting_bodies_consumed_cnp": {
+   "description": "Mass (carbon, nitrogen and phosphorous) of fungal fruiting bodies consumed by animals",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "plant_pft_propagules": {
+   "description": "Per cell counts of propagules for each plant functional type",
+   "unit": "count",
+   "variable_type": "integer",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "stem_lignin": {
+   "description": "Proportion of stem carbon that is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "senesced_leaf_lignin": {
+   "description": "Proportion of carbon in leaf turnover that is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "root_lignin": {
+   "description": "Proportion of carbon in root turnover that is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fruit_seed_c_n_ratio": {
+   "description": "Carbon:nitrogen ratio of plant reproductive tissue turnover",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fruit_seed_c_p_ratio": {
+   "description": "Carbon:phosphorus ratio of plant reproductive tissue turnover",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fruit_turnover_cnp": {
+   "description": "Biomasses (CNP) of plant fruit tissue turnover",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "seed_turnover_cnp": {
+   "description": "Biomasses of plant seed tissue turnover",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "plant_symbiote_carbon_supply": {
+   "description": "Rate at which plants are supplying carbon to their soil-living symbiotic partners",
+   "unit": "kg C m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "root_carbohydrate_exudation": {
+   "description": "Rate at which plants exude carbohydrates from their roots into the soil",
+   "unit": "kg C m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "dissolved_nitrate": {
+   "description": "Concentration of dissolved nitrate in the topsoil layer",
+   "unit": "kg{N} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "dissolved_ammonium": {
+   "description": "Concentration of dissolved ammonium in the topsoil layer",
+   "unit": "kg{N} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "dissolved_phosphorus": {
+   "description": "Concentration of dissolved labile inorganic phosphorus in the topsoil layer",
+   "unit": "kg{P} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "arbuscular_mycorrhizal_n_supply": {
+   "description": "Amount of nitrogen provided by arbuscular mycorrhizal fungi to their plant partners",
+   "unit": "kg{N}",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "arbuscular_mycorrhizal_p_supply": {
+   "description": "Amount of phosphorous provided by arbuscular mycorrhizal fungi to their plant partners",
+   "unit": "kg{P}",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "ectomycorrhizal_n_supply": {
+   "description": "Amount of nitrogen provided by ectomycorrhizal fungi to their plant partners",
+   "unit": "kg{N}",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "ectomycorrhizal_p_supply": {
+   "description": "Amount of phosphorous provided by ectomycorrhizal fungi to their plant partners",
+   "unit": "kg{P}",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "plant_ammonium_uptake": {
+   "description": "Rate at which plants uptake ammonium from the soil",
+   "unit": "kg N m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "plant_nitrate_uptake": {
+   "description": "Rate at which plants uptake nitrate from the soil",
+   "unit": "kg N m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "plant_phosphorus_uptake": {
+   "description": "Rate at which plants uptake labile inorganic phosphorus from the soil",
+   "unit": "kg P m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "clay_fraction": {
+   "description": "The fraction of clay in soil. This is a proportion between 0 and 1.",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "layer_fapar": {
+   "description": "The fraction of absorbed photosynthetically active radiation (f_APAR) in each model layer.",
+   "unit": "-",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_enzyme_pom_bacteria": {
+   "description": "Amount of bacterial enzyme class which breaks down particulate organic matter",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_enzyme_maom_bacteria": {
+   "description": "Amount of bacterial enzyme class which breaks down mineral associated organic matter",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_enzyme_pom_fungi": {
+   "description": "Amount of fungal enzyme class which breaks down particulate organic matter",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "soil_enzyme_maom_fungi": {
+   "description": "Amount of fungal enzyme class which breaks down mineral associated organic matter",
+   "unit": "kg{C} m^-3",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_vegetation_litter_lignin": {
+   "description": "Proportion of subcanopy vegetation litter carbon that is lignin carbon.",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_seedbank_litter_lignin": {
+   "description": "Proportion of subcanopy seedbank litter carbon that is lignin carbon",
+   "unit": "unitless",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_ammonium_uptake": {
+   "description": "Uptake of ammonium by subcanopy transpiration",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_nitrate_uptake": {
+   "description": "Uptake of nitrate by subcanopy transpiration",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_phosphorus_uptake": {
+   "description": "Uptake of phosphorous by subcanopy transpiration",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "stem_turnover_cnp": {
+   "description": "C, N, and P masses for stem turnover in a given timestep",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "foliage_turnover_cnp": {
+   "description": "C, N, and P masses for foliage turnover in a given timestep",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "root_turnover_cnp": {
+   "description": "C, N, and P masses for root turnover in a given timestep",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_vegetation_litter_cnp": {
+   "description": "C, N, and P masses for subcanopy turnover in a given timestep",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_vegetation_cnp": {
+   "description": "C, N, and P masses for subcanopy vegetation",
+   "unit": "kg m-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_vegetation_cnp_consumed": {
+   "description": "C, N, and P masses of subcanopy vegetation consumed by animals.",
+   "unit": "kg C m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_seedbank_litter_cnp": {
+   "description": "C, N, and P masses for the ground seedbank",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_seedbank_cnp_consumed": {
+   "description": "C, N, and P masses of subcanopy seedbank consumed by animals.",
+   "unit": "kg C m^-2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subcanopy_seedbank_cnp": {
+   "description": "C, N, and P masses for the subcanopy seedbank CNP",
+   "unit": "kg m2",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_seed_cnp": {
+   "description": "C, N, and P mass of each seed PFT",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_fruit_cnp": {
+   "description": "Average C, N, and P masses of each fruit per PFT in the canopy",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fallen_fruit_cnp": {
+   "description": "C, N, and P mass of fallen fruit for each PFT",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fallen_seeds_cnp": {
+   "description": "C, N, and P masses of fallen seeds for each a PFT",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_foliage_cnp": {
+   "description": "C, N, and P of canopy foliage",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_foliage_cnp_consumed": {
+   "description": "C, N, and P of canopy foliage consumed by animals",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_seed_cnp_consumed": {
+   "description": "C, N, and P of canopy seed consumed by animals",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_fruit_cnp_consumed": {
+   "description": "C, N, and P of canopy fruit consumed by animals",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fallen_seeds_cnp_consumed": {
+   "description": "C, N, and P masses of fallen seeds consumed by animals",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fallen_fruit_cnp_consumed": {
+   "description": "C, N, and P masses of fallen fruit consumed by animals",
+   "unit": "kg",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fallen_fruit_decay_cnp": {
+   "description": "Rate of decay (C, N, and P) of fallen fruit into the soil",
+   "unit": "kg m^-2 day^-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "light_use_efficiency": {
+   "description": "Light use efficiency of the P Model.",
+   "unit": "gC mol-1",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "fallen_n_propagules": {
+   "description": "NEEDS DESCRIPTION",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_n_propagules": {
+   "description": "NEEDS DESCRIPTION",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "canopy_non_propagule_c_mass": {
+   "description": "NEEDS DESCRIPTION",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "sensible_heat_flux_topofcanopy": {
+   "description": "NEEDS DESCRIPTION",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "surface_runoff_accumulated": {
+   "description": "NEEDS DESCRIPTION",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "molar_density_air": {
+   "description": "NEEDS DESCRIPTION",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "subsurface_flow_accumulated": {
+   "description": "NEEDS DESCRIPTION - I THINK THIS MIGHT BE AN OUTDATED INPUT INTO ANIMALS",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "zero_displacement_height": {
+   "description": "NEEDS DESCRIPTION - I THINK THIS MIGHT BE AN OUTDATED INPUT INTO ANIMALS",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "aerodynamic_resistance_surface": {
+   "description": "NEEDS DESCRIPTION - I THINK THIS MIGHT BE AN OUTDATED INPUT INTO ANIMALS",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "absorbed_radiation": {
+   "description": "NEEDS DESCRIPTION - I THINK THIS MIGHT BE AN OUTDATED INPUT INTO ANIMALS",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  },
+  "evapotranspiration": {
+   "description": "NEEDS DESCRIPTION - I THINK THIS MIGHT BE AN OUTDATED INPUT INTO ANIMALS",
+   "unit": "NEEDS UNIT",
+   "variable_type": "float",
+   "axis": [
+    "spatial"
+   ]
+  }
+ },
+ "modelos": {
+  "plants": {
+   "vars_required_for_init": [
+    "downward_shortwave_radiation",
+    "plant_pft_propagules",
+    "subcanopy_seedbank_cnp",
+    "subcanopy_vegetation_cnp"
+   ],
+   "vars_populated_by_init": [
+    "layer_fapar",
+    "layer_heights",
+    "leaf_area_index",
+    "shortwave_absorption",
+    "subcanopy_seedbank_litter_cnp",
+    "subcanopy_vegetation_litter_cnp",
+    "fallen_seeds_cnp",
+    "fallen_fruit_cnp",
+    "canopy_seed_cnp",
+    "canopy_fruit_cnp",
+    "canopy_foliage_cnp",
+    "stem_turnover_cnp",
+    "foliage_turnover_cnp",
+    "root_turnover_cnp",
+    "seed_turnover_cnp",
+    "fruit_turnover_cnp",
+    "subcanopy_vegetation_cnp_consumed",
+    "subcanopy_seedbank_cnp_consumed",
+    "canopy_foliage_cnp_consumed",
+    "canopy_seed_cnp_consumed",
+    "canopy_fruit_cnp_consumed",
+    "fallen_seeds_cnp_consumed",
+    "fallen_fruit_cnp_consumed",
+    "root_lignin",
+    "senesced_leaf_lignin",
+    "stem_lignin",
+    "subcanopy_seedbank_litter_lignin",
+    "subcanopy_vegetation_litter_lignin"
+   ],
+   "vars_required_for_update": [
+    "air_temperature",
+    "atmospheric_co2",
+    "atmospheric_pressure",
+    "dissolved_ammonium",
+    "dissolved_nitrate",
+    "dissolved_phosphorus",
+    "downward_shortwave_radiation",
+    "plant_pft_propagules",
+    "subcanopy_vegetation_cnp",
+    "subcanopy_seedbank_cnp",
+    "vapour_pressure_deficit",
+    "arbuscular_mycorrhizal_n_supply",
+    "arbuscular_mycorrhizal_p_supply",
+    "ectomycorrhizal_n_supply",
+    "ectomycorrhizal_p_supply",
+    "soil_moisture"
+   ],
+   "vars_updated": [
+    "stem_turnover_cnp",
+    "foliage_turnover_cnp",
+    "root_turnover_cnp",
+    "seed_turnover_cnp",
+    "fruit_turnover_cnp",
+    "canopy_fruit_cnp",
+    "canopy_seed_cnp",
+    "fallen_fruit_cnp",
+    "fallen_seeds_cnp",
+    "canopy_foliage_cnp",
+    "subcanopy_seedbank_litter_cnp",
+    "subcanopy_vegetation_litter_cnp",
+    "subcanopy_vegetation_cnp",
+    "subcanopy_seedbank_cnp",
+    "layer_fapar",
+    "layer_heights",
+    "leaf_area_index",
+    "plant_ammonium_uptake",
+    "plant_nitrate_uptake",
+    "plant_phosphorus_uptake",
+    "plant_symbiote_carbon_supply",
+    "root_carbohydrate_exudation",
+    "shortwave_absorption",
+    "transpiration",
+    "subcanopy_ammonium_uptake",
+    "subcanopy_nitrate_uptake",
+    "subcanopy_phosphorus_uptake",
+    "light_use_efficiency",
+    "fallen_fruit_decay_cnp"
+   ],
+   "vars_populated_by_first_update": [
+    "plant_ammonium_uptake",
+    "plant_nitrate_uptake",
+    "plant_phosphorus_uptake",
+    "plant_symbiote_carbon_supply",
+    "root_carbohydrate_exudation",
+    "transpiration",
+    "subcanopy_ammonium_uptake",
+    "subcanopy_nitrate_uptake",
+    "subcanopy_phosphorus_uptake",
+    "light_use_efficiency",
+    "fallen_fruit_decay_cnp"
+   ],
+   "model_update_bounds": [
+    "1 day",
+    "1 year"
+   ]
+  },
+  "animal": {
+   "vars_required_for_init": [
+    "subcanopy_vegetation_cnp",
+    "subcanopy_seedbank_cnp",
+    "canopy_foliage_cnp",
+    "canopy_seed_cnp",
+    "canopy_fruit_cnp",
+    "fallen_seeds_cnp",
+    "fallen_fruit_cnp",
+    "litter_pool_above_metabolic_cnp",
+    "litter_pool_above_structural_cnp",
+    "litter_pool_woody_cnp",
+    "litter_pool_below_metabolic_cnp",
+    "litter_pool_below_structural_cnp",
+    "fungal_fruiting_bodies_cnp",
+    "subcanopy_vegetation_cnp_consumed",
+    "subcanopy_seedbank_cnp_consumed",
+    "canopy_foliage_cnp_consumed",
+    "canopy_seed_cnp_consumed",
+    "canopy_fruit_cnp_consumed",
+    "fallen_seeds_cnp_consumed",
+    "fallen_fruit_cnp_consumed",
+    "subcanopy_vegetation_litter_lignin",
+    "subcanopy_seedbank_litter_lignin",
+    "senesced_leaf_lignin"
+   ],
+   "vars_populated_by_init": [
+    "total_animal_respiration",
+    "population_densities",
+    "litter_consumed_above_metabolic_cnp",
+    "litter_consumed_above_structural_cnp",
+    "litter_consumed_woody_cnp",
+    "litter_consumed_below_metabolic_cnp",
+    "litter_consumed_below_structural_cnp",
+    "fungal_fruiting_bodies_consumed_cnp"
+   ],
+   "vars_required_for_update": [
+    "canopy_temperature",
+    "air_temperature",
+    "soil_temperature",
+    "diurnal_temperature_range",
+    "litter_pool_above_metabolic_cnp",
+    "litter_pool_above_structural_cnp",
+    "litter_pool_woody_cnp",
+    "litter_pool_below_metabolic_cnp",
+    "litter_pool_below_structural_cnp",
+    "fungal_fruiting_bodies_cnp",
+    "soil_cnp_pool_pom",
+    "soil_c_pool_bacteria",
+    "soil_c_pool_saprotrophic_fungi",
+    "soil_c_pool_arbuscular_mycorrhiza",
+    "soil_c_pool_ectomycorrhiza",
+    "subcanopy_vegetation_cnp",
+    "subcanopy_vegetation_litter_lignin",
+    "subcanopy_seedbank_cnp",
+    "subcanopy_seedbank_litter_lignin"
+   ],
+   "vars_updated": [
+    "decomposed_excrement_cnp",
+    "decomposed_carcasses_cnp",
+    "herbivory_waste_above_cnp",
+    "herbivory_waste_above_lignin",
+    "herbivory_waste_below_cnp",
+    "herbivory_waste_below_lignin",
+    "total_animal_respiration",
+    "litter_consumed_above_metabolic_cnp",
+    "litter_consumed_above_structural_cnp",
+    "litter_consumed_woody_cnp",
+    "litter_consumed_below_metabolic_cnp",
+    "litter_consumed_below_structural_cnp",
+    "fungal_fruiting_bodies_consumed_cnp",
+    "animal_pom_consumption_cnp",
+    "animal_bacteria_consumption",
+    "animal_saprotrophic_fungi_consumption",
+    "animal_ectomycorrhiza_consumption",
+    "animal_arbuscular_mycorrhiza_consumption",
+    "subcanopy_vegetation_cnp_consumed",
+    "subcanopy_seedbank_cnp_consumed",
+    "canopy_foliage_cnp_consumed",
+    "canopy_seed_cnp_consumed",
+    "canopy_fruit_cnp_consumed",
+    "fallen_seeds_cnp_consumed",
+    "fallen_fruit_cnp_consumed"
+   ],
+   "vars_populated_by_first_update": [
+    "decomposed_excrement_cnp",
+    "decomposed_carcasses_cnp",
+    "herbivory_waste_above_cnp",
+    "herbivory_waste_above_lignin",
+    "herbivory_waste_below_cnp",
+    "herbivory_waste_below_lignin",
+    "animal_pom_consumption_cnp",
+    "animal_bacteria_consumption",
+    "animal_saprotrophic_fungi_consumption",
+    "animal_ectomycorrhiza_consumption",
+    "animal_arbuscular_mycorrhiza_consumption"
+   ],
+   "model_update_bounds": [
+    "1 day",
+    "1 month"
+   ]
+  },
+  "hydrology": {
+   "vars_required_for_init": [
+    "layer_heights",
+    "elevation",
+    "air_temperature_ref",
+    "atmospheric_pressure_ref"
+   ],
+   "vars_populated_by_init": [
+    "soil_moisture",
+    "matric_potential",
+    "groundwater_storage",
+    "aerodynamic_resistance_soil",
+    "aerodynamic_resistance_canopy",
+    "specific_heat_air",
+    "stomatal_conductance",
+    "latent_heat_vapourisation",
+    "density_air",
+    "condensation",
+    "snowfall",
+    "snow_water_equivalent",
+    "temperature_driven_snowmelt",
+    "rain_driven_snowmelt",
+    "sublimation_snow"
+   ],
+   "vars_required_for_update": [
+    "air_temperature",
+    "relative_humidity",
+    "atmospheric_pressure",
+    "vapour_pressure_deficit",
+    "precipitation",
+    "wind_speed",
+    "leaf_area_index",
+    "layer_heights",
+    "soil_moisture",
+    "transpiration",
+    "density_air",
+    "aerodynamic_resistance_canopy",
+    "specific_heat_air",
+    "stomatal_conductance",
+    "net_radiation",
+    "condensation"
+   ],
+   "vars_updated": [
+    "interception",
+    "canopy_evaporation",
+    "precipitation_surface",
+    "soil_moisture",
+    "surface_runoff",
+    "vertical_flow",
+    "soil_evaporation",
+    "surface_runoff_routed_plus_local",
+    "subsurface_runoff_routed_plus_local",
+    "total_runoff",
+    "river_discharge_rate",
+    "matric_potential",
+    "groundwater_storage",
+    "subsurface_flow",
+    "subsurface_stormflow",
+    "baseflow",
+    "bypass_flow",
+    "aerodynamic_resistance_soil",
+    "snow_water_equivalent",
+    "temperature_driven_snowmelt",
+    "rain_driven_snowmelt",
+    "sublimation_snow",
+    "snowfall"
+   ],
+   "vars_populated_by_first_update": [
+    "interception",
+    "precipitation_surface",
+    "surface_runoff",
+    "bypass_flow",
+    "soil_evaporation",
+    "vertical_flow",
+    "subsurface_flow",
+    "subsurface_stormflow",
+    "baseflow",
+    "surface_runoff_routed_plus_local",
+    "subsurface_runoff_routed_plus_local",
+    "river_discharge_rate",
+    "total_runoff",
+    "canopy_evaporation"
+   ],
+   "model_update_bounds": [
+    "1 day",
+    "1 month"
+   ]
+  },
+  "litter": {
+   "vars_required_for_init": [
+    "litter_pool_above_metabolic_cnp",
+    "litter_pool_above_structural_cnp",
+    "litter_pool_woody_cnp",
+    "litter_pool_below_metabolic_cnp",
+    "litter_pool_below_structural_cnp",
+    "lignin_above_structural",
+    "lignin_woody",
+    "lignin_below_structural"
+   ],
+   "vars_populated_by_init": [],
+   "vars_required_for_update": [
+    "litter_pool_above_metabolic_cnp",
+    "litter_pool_above_structural_cnp",
+    "litter_pool_woody_cnp",
+    "litter_pool_below_metabolic_cnp",
+    "litter_pool_below_structural_cnp",
+    "lignin_above_structural",
+    "lignin_woody",
+    "lignin_below_structural",
+    "stem_turnover_cnp",
+    "root_turnover_cnp",
+    "foliage_turnover_cnp",
+    "subcanopy_vegetation_litter_cnp",
+    "subcanopy_seedbank_litter_cnp",
+    "stem_lignin",
+    "senesced_leaf_lignin",
+    "root_lignin",
+    "subcanopy_vegetation_litter_lignin",
+    "subcanopy_seedbank_litter_lignin",
+    "herbivory_waste_above_cnp",
+    "herbivory_waste_above_lignin",
+    "herbivory_waste_below_cnp",
+    "herbivory_waste_below_lignin",
+    "litter_consumed_above_metabolic_cnp",
+    "litter_consumed_above_structural_cnp",
+    "litter_consumed_woody_cnp",
+    "litter_consumed_below_metabolic_cnp",
+    "litter_consumed_below_structural_cnp",
+    "air_temperature",
+    "soil_temperature",
+    "matric_potential"
+   ],
+   "vars_updated": [
+    "litter_pool_above_metabolic_cnp",
+    "litter_pool_above_structural_cnp",
+    "litter_pool_woody_cnp",
+    "litter_pool_below_metabolic_cnp",
+    "litter_pool_below_structural_cnp",
+    "lignin_above_structural",
+    "lignin_woody",
+    "lignin_below_structural",
+    "litter_mineralisation_rate_cnp"
+   ],
+   "vars_populated_by_first_update": [
+    "litter_mineralisation_rate_cnp"
+   ],
+   "model_update_bounds": [
+    "30 minute",
+    "3 month"
+   ]
+  },
+  "abiotic": {
+   "vars_required_for_init": [
+    "air_temperature_ref",
+    "atmospheric_co2_ref",
+    "atmospheric_pressure_ref",
+    "layer_heights",
+    "leaf_area_index",
+    "mean_annual_temperature",
+    "relative_humidity_ref",
+    "shortwave_absorption",
+    "wind_speed_ref",
+    "diurnal_temperature_range_ref",
+    "downward_longwave_radiation",
+    "aerodynamic_resistance_canopy",
+    "specific_heat_air",
+    "latent_heat_vapourisation",
+    "density_air",
+    "condensation"
+   ],
+   "vars_populated_by_init": [
+    "soil_temperature",
+    "vapour_pressure_ref",
+    "vapour_pressure_deficit_ref",
+    "air_temperature",
+    "relative_humidity",
+    "vapour_pressure_deficit",
+    "wind_speed",
+    "atmospheric_pressure",
+    "atmospheric_co2",
+    "canopy_temperature",
+    "sensible_heat_flux",
+    "latent_heat_flux",
+    "ground_heat_flux",
+    "net_radiation",
+    "longwave_emission",
+    "vapour_pressure",
+    "diurnal_temperature_range",
+    "absorbed_longwave_radiation"
+   ],
+   "vars_required_for_update": [
+    "air_temperature_ref",
+    "relative_humidity_ref",
+    "vapour_pressure_deficit_ref",
+    "atmospheric_pressure_ref",
+    "atmospheric_co2_ref",
+    "wind_speed_ref",
+    "diurnal_temperature_range_ref",
+    "leaf_area_index",
+    "layer_heights",
+    "downward_shortwave_radiation",
+    "stomatal_conductance",
+    "shortwave_absorption",
+    "downward_longwave_radiation",
+    "aerodynamic_resistance_soil",
+    "soil_evaporation",
+    "canopy_evaporation",
+    "transpiration",
+    "condensation",
+    "soil_moisture"
+   ],
+   "vars_updated": [
+    "air_temperature",
+    "canopy_temperature",
+    "soil_temperature",
+    "vapour_pressure",
+    "vapour_pressure_deficit",
+    "relative_humidity",
+    "wind_speed",
+    "sensible_heat_flux",
+    "latent_heat_flux",
+    "ground_heat_flux",
+    "density_air",
+    "specific_heat_air",
+    "latent_heat_vapourisation",
+    "aerodynamic_resistance_canopy",
+    "net_radiation",
+    "longwave_emission",
+    "diurnal_temperature_range",
+    "condensation",
+    "absorbed_longwave_radiation"
+   ],
+   "vars_populated_by_first_update": [],
+   "model_update_bounds": [
+    "1 hour",
+    "1 month"
+   ]
+  },
+  "abiotic_simple": {
+   "vars_required_for_init": [
+    "air_temperature_ref",
+    "atmospheric_co2_ref",
+    "atmospheric_pressure_ref",
+    "layer_heights",
+    "leaf_area_index",
+    "mean_annual_temperature",
+    "relative_humidity_ref",
+    "shortwave_absorption",
+    "wind_speed_ref",
+    "diurnal_temperature_range_ref"
+   ],
+   "vars_populated_by_init": [
+    "soil_temperature",
+    "vapour_pressure",
+    "vapour_pressure_ref",
+    "vapour_pressure_deficit_ref",
+    "net_radiation",
+    "air_temperature",
+    "relative_humidity",
+    "vapour_pressure_deficit",
+    "atmospheric_pressure",
+    "atmospheric_co2",
+    "wind_speed",
+    "canopy_temperature",
+    "diurnal_temperature_range"
+   ],
+   "vars_required_for_update": [
+    "air_temperature_ref",
+    "relative_humidity_ref",
+    "vapour_pressure_deficit_ref",
+    "atmospheric_pressure_ref",
+    "atmospheric_co2_ref",
+    "wind_speed_ref",
+    "diurnal_temperature_range_ref",
+    "leaf_area_index",
+    "layer_heights",
+    "mean_annual_temperature",
+    "shortwave_absorption"
+   ],
+   "vars_updated": [
+    "air_temperature",
+    "relative_humidity",
+    "vapour_pressure_deficit",
+    "soil_temperature",
+    "atmospheric_pressure",
+    "atmospheric_co2",
+    "wind_speed",
+    "net_radiation",
+    "vapour_pressure"
+   ],
+   "vars_populated_by_first_update": [],
+   "model_update_bounds": [
+    "1 day",
+    "1 month"
+   ]
+  },
+  "soil": {
+   "vars_required_for_init": [
+    "soil_cnp_pool_maom",
+    "soil_cnp_pool_lmwc",
+    "soil_cnp_pool_pom",
+    "soil_cnp_pool_necromass",
+    "soil_c_pool_bacteria",
+    "soil_c_pool_saprotrophic_fungi",
+    "soil_c_pool_arbuscular_mycorrhiza",
+    "soil_c_pool_ectomycorrhiza",
+    "fungal_fruiting_bodies_cnp",
+    "soil_enzyme_pom_bacteria",
+    "soil_enzyme_maom_bacteria",
+    "soil_enzyme_pom_fungi",
+    "soil_enzyme_maom_fungi",
+    "soil_n_pool_ammonium",
+    "soil_n_pool_nitrate",
+    "soil_p_pool_primary",
+    "soil_p_pool_secondary",
+    "soil_p_pool_labile",
+    "pH",
+    "clay_fraction",
+    "matric_potential",
+    "soil_temperature",
+    "air_temperature"
+   ],
+   "vars_populated_by_init": [
+    "dissolved_nitrate",
+    "dissolved_ammonium",
+    "dissolved_phosphorus",
+    "arbuscular_mycorrhizal_n_supply",
+    "arbuscular_mycorrhizal_p_supply",
+    "ectomycorrhizal_n_supply",
+    "ectomycorrhizal_p_supply"
+   ],
+   "vars_required_for_update": [
+    "soil_cnp_pool_maom",
+    "soil_cnp_pool_lmwc",
+    "soil_cnp_pool_pom",
+    "soil_cnp_pool_necromass",
+    "soil_c_pool_bacteria",
+    "soil_c_pool_saprotrophic_fungi",
+    "soil_c_pool_arbuscular_mycorrhiza",
+    "soil_c_pool_ectomycorrhiza",
+    "fungal_fruiting_bodies_cnp",
+    "soil_enzyme_pom_bacteria",
+    "soil_enzyme_maom_bacteria",
+    "soil_enzyme_pom_fungi",
+    "soil_enzyme_maom_fungi",
+    "soil_n_pool_ammonium",
+    "soil_n_pool_nitrate",
+    "soil_p_pool_primary",
+    "soil_p_pool_secondary",
+    "soil_p_pool_labile",
+    "pH",
+    "clay_fraction",
+    "matric_potential",
+    "vertical_flow",
+    "soil_temperature",
+    "air_temperature",
+    "soil_moisture",
+    "litter_mineralisation_rate_cnp",
+    "plant_symbiote_carbon_supply",
+    "root_carbohydrate_exudation",
+    "plant_ammonium_uptake",
+    "plant_nitrate_uptake",
+    "plant_phosphorus_uptake",
+    "subcanopy_ammonium_uptake",
+    "subcanopy_nitrate_uptake",
+    "subcanopy_phosphorus_uptake",
+    "animal_pom_consumption_cnp",
+    "animal_bacteria_consumption",
+    "animal_saprotrophic_fungi_consumption",
+    "animal_ectomycorrhiza_consumption",
+    "animal_arbuscular_mycorrhiza_consumption",
+    "fungal_fruiting_bodies_consumed_cnp",
+    "decomposed_excrement_cnp",
+    "decomposed_carcasses_cnp",
+    "fallen_fruit_decay_cnp"
+   ],
+   "vars_updated": [
+    "soil_cnp_pool_maom",
+    "soil_cnp_pool_lmwc",
+    "soil_cnp_pool_pom",
+    "soil_cnp_pool_necromass",
+    "soil_c_pool_bacteria",
+    "soil_c_pool_saprotrophic_fungi",
+    "soil_c_pool_arbuscular_mycorrhiza",
+    "soil_c_pool_ectomycorrhiza",
+    "fungal_fruiting_bodies_cnp",
+    "soil_enzyme_pom_bacteria",
+    "soil_enzyme_maom_bacteria",
+    "soil_enzyme_pom_fungi",
+    "soil_enzyme_maom_fungi",
+    "soil_n_pool_ammonium",
+    "soil_n_pool_nitrate",
+    "soil_p_pool_primary",
+    "soil_p_pool_secondary",
+    "soil_p_pool_labile",
+    "dissolved_nitrate",
+    "dissolved_ammonium",
+    "dissolved_phosphorus",
+    "arbuscular_mycorrhizal_n_supply",
+    "arbuscular_mycorrhizal_p_supply",
+    "ectomycorrhizal_n_supply",
+    "ectomycorrhizal_p_supply"
+   ],
+   "vars_populated_by_first_update": [],
+   "model_update_bounds": [
+    "30 minute",
+    "3 month"
+   ]
+  }
+ },
+ "parametros": {
+  "core": [
+   {
+    "nombre": "constants",
+    "descripcion": "Constants for the core module",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "standard_pressure",
+      "descripcion": "Standard atmospheric pressure, [kPa]",
+      "tipo": "float",
+      "defecto": 101.325
+     },
+     {
+      "nombre": "standard_mole",
+      "descripcion": "Moles of ideal gas in 1 m^3 air at standard atmosphere.",
+      "tipo": "float",
+      "defecto": 44.642
+     },
+     {
+      "nombre": "molar_heat_capacity_air",
+      "descripcion": "Molar heat capacity of air, [J mol-1 K-1].",
+      "tipo": "float",
+      "defecto": 29.19
+     },
+     {
+      "nombre": "gravity",
+      "descripcion": "Newtonian constant of gravitation, [m s-1].",
+      "tipo": "float",
+      "defecto": 6.6743e-11
+     },
+     {
+      "nombre": "boltzmann_constant",
+      "descripcion": "The Boltzmann constant, [J K-1]",
+      "tipo": "float",
+      "defecto": 1.380649e-23
+     },
+     {
+      "nombre": "stefan_boltzmann_constant",
+      "descripcion": "Stefan-Boltzmann constant, [W m-2 K-4].\n\nThe Stefan-Boltzmann constant relates the energy radiated by a black body to its\ntemperature.",
+      "tipo": "float",
+      "defecto": 5.6703744191844314e-08
+     },
+     {
+      "nombre": "von_karmans_constant",
+      "descripcion": "Von Karman's constant, [unitless].\n\nThe von Karman's constant describes the logarithmic velocity profile of a turbulent\nfluid near a no-slip boundary.",
+      "tipo": "float",
+      "defecto": 0.4
+     },
+     {
+      "nombre": "microbial_simulation_depth",
+      "descripcion": "Depth to which soil-microbial simulation extents [m].\n\nAs the soil-microbial model is a topsoil model the maximum soil depth included in\nthe simulation needs to be set. This is then used to identify which of the\nconfigured soil layers are sufficiently close to the surface to be included in the\ncalculations of the soil-microbial model. The default value is taken from\n:cite:t:`fatichi_mechanistic_2019`. No empirical source is provided for this value.",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "meters_to_mm",
+      "descripcion": "Factor to convert variable unit from meters to millimeters.",
+      "tipo": "float",
+      "defecto": 1000.0
+     },
+     {
+      "nombre": "mm_to_kg",
+      "descripcion": "Factor to convert variable unit from millimeters to kilograms of water per square\nmetre.",
+      "tipo": "float",
+      "defecto": 0.001
+     },
+     {
+      "nombre": "molecular_weight_air",
+      "descripcion": "Molecular weight of air, [g mol-1].",
+      "tipo": "float",
+      "defecto": 28.96
+     },
+     {
+      "nombre": "gas_constant_water_vapour",
+      "descripcion": "Gas constant for water vapour, [J kg-1 K-1]",
+      "tipo": "float",
+      "defecto": 461.51
+     },
+     {
+      "nombre": "seconds_to_day",
+      "descripcion": "Factor to convert variable unit from seconds to day.",
+      "tipo": "float",
+      "defecto": 86400.0
+     },
+     {
+      "nombre": "seconds_to_hour",
+      "descripcion": "Factor to convert variable unit from seconds to hours.",
+      "tipo": "float",
+      "defecto": 3600.0
+     },
+     {
+      "nombre": "seconds_to_minute",
+      "descripcion": "Factor to convert variable unit from seconds to minutes.",
+      "tipo": "float",
+      "defecto": 60.0
+     },
+     {
+      "nombre": "hours_per_day",
+      "descripcion": "Number of hours per day.",
+      "tipo": "int",
+      "defecto": 24
+     },
+     {
+      "nombre": "characteristic_dimension_leaf",
+      "descripcion": "Characteristic dimension of leaf, typically around 0.7 * leaf width, [m].",
+      "tipo": "float",
+      "defecto": 0.01
+     },
+     {
+      "nombre": "specific_gas_constant_dry_air",
+      "descripcion": "Specific gas constant for dry air, [J kg-1 K-1].",
+      "tipo": "float",
+      "defecto": 287.05
+     },
+     {
+      "nombre": "molecular_weight_ratio_water_to_dry_air",
+      "descripcion": "The molecular weight ratio of water to dry air.\n\nThe ratio of the molar mass of water vapour (18.015 g/mol) to the molar mass of dry\nair (28.964 g/mol), which is approximately 0.622. This ratio is used in atmospheric\ncalculations, particularly in determining the mixing ratio of water vapour to dry\nair.",
+      "tipo": "float",
+      "defecto": 0.622
+     },
+     {
+      "nombre": "conductance_to_resistance_conversion_factor",
+      "descripcion": "Conductance to resistance conversion factor.\n\nThis factor is used to convert between stomatal conductance in mmol m-2 s-1 and\nstomatal resistance in s m-1.",
+      "tipo": "float",
+      "defecto": 40.9
+     },
+     {
+      "nombre": "density_water",
+      "descripcion": "Density of water, [kg m-3].",
+      "tipo": "float",
+      "defecto": 1000.0
+     },
+     {
+      "nombre": "specific_heat_capacity_water",
+      "descripcion": "Specific heat capacity of water, [J kg-1 K-1].",
+      "tipo": "float",
+      "defecto": 4180.0
+     },
+     {
+      "nombre": "air_volumetric_heat_capacity",
+      "descripcion": "Volumetric heat capacity of air at constant pressure, [J m-3 K-1].\n\nThis represents the amount of heat energy required to raise the temperature \nof one cubic meter of air by 1 Kelvin.",
+      "tipo": "float",
+      "defecto": 1200.0
+     },
+     {
+      "nombre": "initial_aerodynamic_resistance_canopy",
+      "descripcion": "Initial aerodynamic resistance of the canopy, [s m-1].\n\nThis parameter is an initial estimate of the resistance to the transfer of momentum,\nheat, and water vapour between the leaf surface and the atmosphere. The value is\nbased on Australian evergreen forest, taken from :cite:t:`su_aerodynamic_2021`;\nnote that this assumes a dense canopy.",
+      "tipo": "float",
+      "defecto": 12.1
+     }
+    ]
+   },
+   {
+    "nombre": "grid",
+    "descripcion": "Configuration of the spatial grid",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "grid_type",
+      "descripcion": "The grid cell type. The value must be one of the options supported by the \n:data:`~virtual_ecosystem.core.grid.GRID_REGISTRY`.",
+      "tipo": "str",
+      "defecto": "square"
+     },
+     {
+      "nombre": "cell_area",
+      "descripcion": "The area of each grid cell (m^2)",
+      "tipo": "float",
+      "defecto": 8100.0
+     },
+     {
+      "nombre": "cell_nx",
+      "descripcion": "Number of grid cells in x direction",
+      "tipo": "int",
+      "defecto": 9
+     },
+     {
+      "nombre": "cell_ny",
+      "descripcion": "Number of grid cells in y direction",
+      "tipo": "int",
+      "defecto": 9
+     },
+     {
+      "nombre": "xoff",
+      "descripcion": "The x offset of the grid origin",
+      "tipo": "float",
+      "defecto": -45.0
+     },
+     {
+      "nombre": "yoff",
+      "descripcion": "The x offset of the grid origin",
+      "tipo": "float",
+      "defecto": -45.0
+     }
+    ]
+   },
+   {
+    "nombre": "data_output_options",
+    "descripcion": "Configuration of the output of the Virtual Ecosystem model state",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "out_path",
+      "descripcion": "Directory path for output files",
+      "tipo": "Path",
+      "defecto": "<DIRPATH_PLACEHOLDER>"
+     },
+     {
+      "nombre": "output_data_file_name",
+      "descripcion": "The output file name for the model data.",
+      "tipo": "str",
+      "defecto": "model_data.zarr"
+     },
+     {
+      "nombre": "save_compiled_configuration",
+      "descripcion": "Whether to save a TOML file containing the compiled configuration for a model",
+      "tipo": "bool",
+      "defecto": true
+     },
+     {
+      "nombre": "compiled_configuration_file_name",
+      "descripcion": "The output file name for the compiled configuration TOML file.",
+      "tipo": "str",
+      "defecto": "compiled_configuration.toml"
+     },
+     {
+      "nombre": "variables_to_save",
+      "descripcion": "A list of output variables to save from the model. If this list is empty then all\nvariables will be saved.",
+      "tipo": "tuple",
+      "defecto": []
+     }
+    ]
+   },
+   {
+    "nombre": "layers",
+    "descripcion": "Configuration of the layers in the vertical structure",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "soil_layers",
+      "descripcion": "A list of negative float values that provides the depth in metres of the soil\nhorizons to be used in the simulation, hence also setting the number of soil layers\nand the horizon depth for each layer relative to the surface. The values must be\nunique and strictly decreasing.",
+      "tipo": "list",
+      "defecto": [
+       -0.25,
+       -1.0
+      ]
+     },
+     {
+      "nombre": "canopy_layers",
+      "descripcion": "The maximum number of canopy layers to simulate. This is used to control the \nnumber of layers with the ``canopy`` role. Not all of these layers necessarily\ncontain canopy during a simulation as the canopy structure within these layers is\ndynamic.",
+      "tipo": "int",
+      "defecto": 10
+     },
+     {
+      "nombre": "above_canopy_height_offset",
+      "descripcion": "A height offset relative to the canopy top that is used as the measurement height\nof reference climate data. It sets the the height above the canopy top of the first\nlayer role ``above`` (metres).",
+      "tipo": "float",
+      "defecto": 2.0
+     },
+     {
+      "nombre": "subcanopy_layer_height",
+      "descripcion": "The height above ground level of the ground surface atmospheric layer, used to\ncalculate subcanopy microclimate conditions (metres).",
+      "tipo": "float",
+      "defecto": 1.5
+     },
+     {
+      "nombre": "surface_layer_height",
+      "descripcion": "The height above ground level of the ground surface atmospheric layer\n(metres).",
+      "tipo": "float",
+      "defecto": 0.1
+     }
+    ]
+   },
+   {
+    "nombre": "timing",
+    "descripcion": "Configuration of the model run and step lengths",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "start_date",
+      "descripcion": "The simulation start date.",
+      "tipo": "date",
+      "defecto": "2013-01-01"
+     },
+     {
+      "nombre": "update_interval",
+      "descripcion": "The interval at which all models are updated.",
+      "tipo": "str",
+      "defecto": "1 month"
+     },
+     {
+      "nombre": "run_length",
+      "descripcion": "The total run length of the simulation.",
+      "tipo": "str",
+      "defecto": "2 years"
+     }
+    ]
+   },
+   {
+    "nombre": "data",
+    "descripcion": "Configuration of the input variables and data sources.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "variable",
+      "descripcion": "",
+      "tipo": "tuple",
+      "defecto": [
+       {
+        "file_path": "<FILEPATH_PLACEHOLDER>",
+        "var_name": "variable_name_placeholder_one"
+       },
+       {
+        "file_path": "<FILEPATH_PLACEHOLDER>",
+        "var_name": "variable_name_placeholder_two"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "nombre": "debug",
+    "descripcion": "Configuration of debugging options.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "truncate_run_at_update",
+      "descripcion": "This option can be used to exit a simulation at a particular update index. This\ncan be useful for testing settings on a model and dataset without having to create a\nspecific temporal subset. If the value is less than 1, then no truncation occurs.",
+      "tipo": "int",
+      "defecto": -1
+     }
+    ]
+   },
+   {
+    "nombre": "pyrealm",
+    "descripcion": "Constant dataclasses for the pyrealm package.\n\nAt present, the pyrealm configuration settings are excluded from model serialisation\nbecause of issues with serialising numpy arrays. This is a problem for replicating\nsimulations where these settings have been altered.",
+    "tipo": "PyrealmConfig",
+    "defecto": {
+     "core": {
+      "k_R": 8.3145,
+      "k_co": 209476.0,
+      "k_c_molmass": 12.0107,
+      "k_water_molmass": 18.01258,
+      "k_Po": 101325.0,
+      "k_To": 298.15,
+      "k_L": 0.0065,
+      "k_G": 9.80665,
+      "k_Ma": 0.028963,
+      "k_Mv": 0.01802,
+      "k_CtoK": 273.15,
+      "visible_light_albedo": 0.03,
+      "swdown_to_ppfd_factor": 2.04,
+      "transmissivity_coef": [
+       0.25,
+       0.5,
+       2.67e-05
+      ],
+      "net_longwave_radiation_coef_sf": [
+       107.0,
+       -1.0,
+       0.2,
+       0.2
+      ],
+      "net_longwave_radiation_coef_sw": [
+       91.86328,
+       1.95974,
+       0.2012435,
+       0.0883289
+      ],
+      "shortwave_albedo": 0.17,
+      "solar_constant": 1360.8,
+      "day_seconds": 86400,
+      "equation_of_time_coef": [
+       7.5e-05,
+       0.001868,
+       -0.032077,
+       -0.014615,
+       -0.04089,
+       229.18
+      ],
+      "solar_eccentricity": 0.0167,
+      "solar_obliquity": 23.44,
+      "solar_perihelion": 283.0,
+      "magnus_coef": "[611.2   17.62 243.12]",
+      "mwr": 0.622,
+      "magnus_option": null,
+      "water_density_method": "jones_harris_eq6",
+      "fisher_dial_lambda": "[ 1.788316e+03  2.155053e+01 -4.695911e-01  3.096363e-03 -7.341182e-06]",
+      "fisher_dial_Po": "[ 5.9184990e+03  5.8052670e+01 -1.1253317e+00  6.6123869e-03\n -1.4661625e-05]",
+      "fisher_dial_Vinf": "[ 6.980547e-01 -7.435626e-04  3.704258e-05 -6.315724e-07  9.829576e-09\n -1.197269e-10  1.005461e-12 -5.437898e-15  1.699460e-17 -2.295063e-20]",
+      "chen_po": "[ 9.9983952e-01  6.7882600e-05 -9.0865900e-06  1.0221300e-07\n -1.3543900e-09  1.4711500e-11 -1.1166300e-13  5.0440700e-16\n -1.0065900e-18]",
+      "chen_ko": "[ 1.965217e+04  1.481830e+02 -2.299950e+00  1.281000e-02 -4.915640e-05\n  1.035530e-07]",
+      "chen_ca": "[ 3.26138e+00  5.22300e-04  1.32400e-04 -7.65500e-07  8.58400e-10]",
+      "chen_cb": "[ 7.2061e-05 -5.8948e-06  8.6990e-08 -1.0100e-09  4.3220e-12]",
+      "density_kell": [
+       [
+        999.83952,
+        16.945176,
+        -0.0079870401,
+        -4.6170461e-05,
+        1.0556302e-07,
+        -2.8054253e-10
+       ],
+       0.01689785
+      ],
+      "density_jones_harris_rho": [
+       999.84847,
+       0.06337563,
+       -0.008523829,
+       6.943248e-05,
+       -3.821216e-07
+      ],
+      "density_jones_harris_kappa": [
+       5.083101e-07,
+       -3.68293e-09,
+       7.263725e-11,
+       -6.597702e-13,
+       2.87767e-15
+      ],
+      "water_viscosity_method": "vogel",
+      "huber_tk_ast": 647.096,
+      "huber_rho_ast": 322.0,
+      "huber_mu_ast": 1e-06,
+      "huber_H_i": "[ 1.67752    2.20462    0.6366564 -0.241605 ]",
+      "huber_H_ij": "[[ 5.20094e-01  8.50895e-02 -1.08374e+00 -2.89555e-01  0.00000e+00\n   0.00000e+00]\n [ 2.22531e-01  9.99115e-01  1.88797e+00  1.26613e+00  0.00000e+00\n   1.20573e-01]\n [-2.81378e-01 -9.06851e-01 -7.72479e-01 -4.89837e-01 -2.57040e-01\n   0.00000e+00]\n [ 1.61913e-01  2.57399e-01  0.00000e+00  0.00000e+00  0.00000e+00\n   0.00000e+00]\n [-3.25372e-02  0.00000e+00  0.00000e+00  6.98452e-02  0.00000e+00\n   0.00000e+00]\n [ 0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00  8.72102e-03\n   0.00000e+00]\n [ 0.00000e+00  0.00000e+00  0.00000e+00 -4.35673e-03  0.00000e+00\n  -5.93264e-04]]"
+     },
+     "pmodel": {
+      "sandoval_max_phi0": 0.1111111111111111,
+      "sandoval_peak_phio": [
+       4.090556,
+       0.121122
+      ],
+      "sandoval_kinetics": {
+       "entropy_method": "power",
+       "entropy_intercept": 3468.185,
+       "entropy_slope": -0.6680158,
+       "ha": 70885.39,
+       "hd": 295
+      },
+      "tc_ref": 25.0,
+      "tk_ref": 298.15,
+      "heskel_rd": [
+       0.1012,
+       0.0005
+      ],
+      "arrhenius_vcmax": {
+       "simple": {
+        "ha": 65330
+       },
+       "kattge_knorr": {
+        "entropy_method": "linear",
+        "entropy_intercept": 668.39,
+        "entropy_slope": -1.07,
+        "ha": 71513,
+        "hd": 200000
+       }
+      },
+      "arrhenius_jmax": {
+       "simple": {
+        "ha": 43900
+       },
+       "kattge_knorr": {
+        "entropy_method": "linear",
+        "entropy_intercept": 659.7,
+        "entropy_slope": -0.75,
+        "ha": 49884,
+        "hd": 200000
+       }
+      },
+      "kphio_C4": [
+       -0.064,
+       0.03,
+       -0.000464
+      ],
+      "kphio_C3": [
+       0.352,
+       0.022,
+       -0.00034
+      ],
+      "bernacchi_kmm": {
+       "dhac": 79430.0,
+       "dhao": 36380.0,
+       "kc25": 39.97,
+       "ko25": 27480.0
+      },
+      "maximum_phi0": 0.125,
+      "bernacchi_gs": {
+       "dha": 37830.0,
+       "gs25_0": 4.332
+      },
+      "soilmstress_stocker": {
+       "theta0": 0,
+       "thetastar": 0.6,
+       "a": 0.0,
+       "b": 0.733
+      },
+      "soilmstress_mengoli": {
+       "psi_a": 0.34,
+       "psi_b": -0.6,
+       "y_a": 0.62,
+       "y_b": -0.45
+      },
+      "beta_cost_ratio_c3": "[146.]",
+      "beta_cost_ratio_c4": "[16.22222222]",
+      "lavergne_2020_c3": [
+       4.55,
+       1.73
+      ],
+      "lavergne_2020_c4": [
+       2.3527754226637803,
+       1.73
+      ],
+      "wang17_c": 0.41,
+      "smith19_coef": [
+       0.85,
+       0.05336251
+      ]
+     }
+    }
+   }
+  ],
+  "plants": [
+   {
+    "nombre": "static",
+    "descripcion": "The model static mode setting.",
+    "tipo": "bool",
+    "defecto": false
+   },
+   {
+    "nombre": "pft_definitions_path",
+    "descripcion": "A file path to a data file of plant functional type definitions",
+    "tipo": "Path",
+    "defecto": "<FILEPATH_PLACEHOLDER>"
+   },
+   {
+    "nombre": "cohort_data_path",
+    "descripcion": "A file path to a file of initial cohort data",
+    "tipo": "Path",
+    "defecto": "<FILEPATH_PLACEHOLDER>"
+   },
+   {
+    "nombre": "community_data_export",
+    "descripcion": "Configuration of plant community data export settings.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "cohort_attributes",
+      "descripcion": "A list of the cohort attributes that should be exported or the ALL keyword.",
+      "tipo": "Union",
+      "defecto": []
+     },
+     {
+      "nombre": "community_canopy_attributes",
+      "descripcion": "A list of the community canopy attributes that should be exported or the ALL\nkeyword.",
+      "tipo": "Union",
+      "defecto": []
+     },
+     {
+      "nombre": "stem_canopy_attributes",
+      "descripcion": "A list of stem canopy attributes that should be exported or the ALL keyword.",
+      "tipo": "Union",
+      "defecto": []
+     },
+     {
+      "nombre": "float_format",
+      "descripcion": "A float format string to control data precision in export files.",
+      "tipo": "str",
+      "defecto": "%0.5f"
+     }
+    ]
+   },
+   {
+    "nombre": "constants",
+    "descripcion": "Constants for the plants model",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "per_stem_annual_mortality_probability",
+      "descripcion": "Basic annual mortality rate for plants.",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "per_propagule_annual_recruitment_probability",
+      "descripcion": "Basic annual recruitment rate from plant propagules.",
+      "tipo": "float",
+      "defecto": 0.2
+     },
+     {
+      "nombre": "dsr_to_ppfd",
+      "descripcion": "Convert from downward shortwave radiation to photosynthetic photon flux density.\n\nConverting DSR in W m-2 to PPFD in µmol m-2 s-1. 1 W m-2 of sunlight is roughly 4.57\nµmol m-2 s-1 of full spectrum sunlight, of which about 4.57 * 46% = 2.04  µmol m-2\ns-1 is PPFD.",
+      "tipo": "float",
+      "defecto": 2.04
+     },
+     {
+      "nombre": "stem_lignin",
+      "descripcion": "Fraction of stem biomass that is lignin.",
+      "tipo": "float",
+      "defecto": 0.545
+     },
+     {
+      "nombre": "senesced_leaf_lignin",
+      "descripcion": "Fraction of senesced leaf biomass that is lignin.",
+      "tipo": "float",
+      "defecto": 0.05
+     },
+     {
+      "nombre": "root_lignin",
+      "descripcion": "Fraction of root biomass that is lignin.",
+      "tipo": "float",
+      "defecto": 0.2
+     },
+     {
+      "nombre": "subcanopy_extinction_coef",
+      "descripcion": "The extinction coefficient of subcanopy vegetation (unitless).",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "subcanopy_leaf_fraction",
+      "descripcion": "The fraction of subcanopy vegetation biomass allocated to leaf tissue rather than\nto stems and other structural tissue (unitless).",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "subcanopy_specific_leaf_area",
+      "descripcion": "The specific leaf area of subcanopy vegetation (m2 kg-1).",
+      "tipo": "float",
+      "defecto": 14
+     },
+     {
+      "nombre": "subcanopy_maximum_leaf_area_index",
+      "descripcion": "A cap on the maximum leaf area index from the subcanopy. This is a temporary\nsafeguard to prevent subcanopy dynamics from driving unrealistic abiotic conditions\nand should be replaced by biological limitations on subcanopy growth (m2 m-2).",
+      "tipo": "float",
+      "defecto": 5
+     },
+     {
+      "nombre": "subcanopy_respiration_fraction",
+      "descripcion": "The fraction of gross primary productivity used in respiration (unitless).",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "subcanopy_yield",
+      "descripcion": "The yield fraction of net primary productivity in subcanopy vegetation\n(unitless).",
+      "tipo": "float",
+      "defecto": 0.6
+     },
+     {
+      "nombre": "subcanopy_reproductive_allocation",
+      "descripcion": "The fraction of subcanopy net primary productivity that is allocated to subcanopy\nseedbank mass (unitless).",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "subcanopy_sprout_rate",
+      "descripcion": "The rate at which new subcanopy biomass sprouts from the subcanopy seedbank mass\n(kg kg-1 m-2 y-1).",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "subcanopy_sprout_yield",
+      "descripcion": "The fraction of subcanopy seedbank mass that is realised as subcanopy vegetation\nmass (kg kg-1).",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "subcanopy_vegetation_turnover",
+      "descripcion": "The annual fraaction of subcanopy vegetative biomass turnover (kg kg-1 m-2\ny-1).",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "subcanopy_seedbank_turnover",
+      "descripcion": "The annual fraction of subcanopy seedbank biomass turnover (kg kg-1 m-2 y-1).",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "subcanopy_seedbank_c_n_ratio",
+      "descripcion": "The ideal mass ratio of nitrogen in subcanopy seedbank biomass (-).",
+      "tipo": "float",
+      "defecto": 20
+     },
+     {
+      "nombre": "subcanopy_seedbank_c_p_ratio",
+      "descripcion": "The ideal mass ratio of phosphorous in subcanopy seedbank biomass (-).",
+      "tipo": "float",
+      "defecto": 50
+     },
+     {
+      "nombre": "subcanopy_vegetation_c_n_ratio",
+      "descripcion": "The ideal mass ratio of nitrogen in subcanopy vegetation biomass (-).",
+      "tipo": "float",
+      "defecto": 20
+     },
+     {
+      "nombre": "subcanopy_vegetation_c_p_ratio",
+      "descripcion": "The ideal mass ratio of phosphorous in subcanopy vegetation biomass (-).",
+      "tipo": "float",
+      "defecto": 50
+     },
+     {
+      "nombre": "subcanopy_vegetation_lignin",
+      "descripcion": "The proportion of lignin in subcanopy vegetation.",
+      "tipo": "float",
+      "defecto": 0.2
+     },
+     {
+      "nombre": "subcanopy_seedbank_lignin",
+      "descripcion": "The proportion of lignin in subcanopy seedbank.",
+      "tipo": "float",
+      "defecto": 0.2
+     },
+     {
+      "nombre": "root_exudates",
+      "descripcion": "Fraction of GPP topslice allocated to root exudates.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "fallen_fruit_decay_rate",
+      "descripcion": "Rate at which fruit that has fallen from the canopy decays [°C^-1 day^-1].\n\nThis rate is measured relative to degree days (with a basis of 0 °C) so that\ndecay happens faster at higher temperatures and doesn't happen at sub-zero\ntemperatures.",
+      "tipo": "float",
+      "defecto": 0.0075
+     }
+    ]
+   }
+  ],
+  "animal": [
+   {
+    "nombre": "static",
+    "descripcion": "The model static mode setting.",
+    "tipo": "bool",
+    "defecto": false
+   },
+   {
+    "nombre": "functional_group_definitions_path",
+    "descripcion": "A file path to a data file of animal functional group definitions",
+    "tipo": "Path",
+    "defecto": "<FILEPATH_PLACEHOLDER>"
+   },
+   {
+    "nombre": "constants",
+    "descripcion": "The constants class for the animal model.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "density_scaling_method",
+      "descripcion": "The density scaling method to use within a simulation.",
+      "tipo": "Literal",
+      "defecto": "madingley"
+     },
+     {
+      "nombre": "total_heterotroph_biomass_density_kg_m2",
+      "descripcion": "Total heterotroph biomass density in the system, used for normalizing density.",
+      "tipo": "float",
+      "defecto": 0.151
+     },
+     {
+      "nombre": "damuths_law_terms",
+      "descripcion": "Damuth Law terms, structured by taxonomic type and broad diet category.",
+      "tipo": "dict",
+      "defecto": {
+       "TaxaType.MAMMAL": {
+        "DietType.HERBIVORE": [
+         -0.75,
+         4.23
+        ],
+        "DietType.CARNIVORE": [
+         -0.75,
+         1.0
+        ],
+        "DietType.OMNIVORE": [
+         -0.75,
+         3.0
+        ]
+       },
+       "TaxaType.BIRD": {
+        "DietType.HERBIVORE": [
+         -0.75,
+         5.0
+        ],
+        "DietType.CARNIVORE": [
+         -0.75,
+         2.0
+        ],
+        "DietType.OMNIVORE": [
+         -0.75,
+         3.0
+        ]
+       },
+       "TaxaType.INVERTEBRATE": {
+        "DietType.HERBIVORE": [
+         -0.75,
+         5.0
+        ],
+        "DietType.CARNIVORE": [
+         -0.75,
+         2.0
+        ],
+        "DietType.OMNIVORE": [
+         -0.75,
+         3.0
+        ]
+       },
+       "TaxaType.AMPHIBIAN": {
+        "DietType.HERBIVORE": [
+         -0.75,
+         5.0
+        ],
+        "DietType.CARNIVORE": [
+         -0.75,
+         2.0
+        ],
+        "DietType.OMNIVORE": [
+         -0.75,
+         3.0
+        ]
+       },
+       "TaxaType.REPTILE": {
+        "DietType.HERBIVORE": [
+         -0.75,
+         5.0
+        ],
+        "DietType.CARNIVORE": [
+         -0.75,
+         2.0
+        ],
+        "DietType.OMNIVORE": [
+         -0.75,
+         3.0
+        ]
+       }
+      }
+     },
+     {
+      "nombre": "madingley_biomass_scaling_terms",
+      "descripcion": "Biomass scaling terms from the Madingley model.",
+      "tipo": "tuple",
+      "defecto": [
+       0.6,
+       300000.0
+      ]
+     },
+     {
+      "nombre": "metabolic_scaling_coefficients",
+      "descripcion": "Metabolic rate scaling coefficients.\n\nThese are the coefficients of Madingley style scaling of metabolic rate with  mass\nand temperature, assuming a power-law relationship with mass and an exponential\nrelationship with temperature. The three values are:\n\n* :math:`E_s` - energy to mass conversion constant (g/kJ)\n* :math:`E_a` - aggregate activation energy of metabolic reactions",
+      "tipo": "tuple",
+      "defecto": [
+       0.037,
+       0.69
+      ]
+     },
+     {
+      "nombre": "metabolic_rate_terms",
+      "descripcion": "Parameters from Madingley, mass-based metabolic rates",
+      "tipo": "dict",
+      "defecto": {
+       "MetabolicType.ENDOTHERMIC": {
+        "basal": [
+         41900000000.0,
+         0.69
+        ],
+        "field": [
+         908000000000.0,
+         0.7
+        ]
+       },
+       "MetabolicType.ECTOTHERMIC": {
+        "basal": [
+         41900000000.0,
+         0.69
+        ],
+        "field": [
+         149000000000.0,
+         0.88
+        ]
+       }
+      }
+     },
+     {
+      "nombre": "energy_density",
+      "descripcion": "Energy densities of different food sources [J/g]",
+      "tipo": "dict",
+      "defecto": {
+       "meat": 7000.0,
+       "plant": 18200000.0
+      }
+     },
+     {
+      "nombre": "conversion_efficiency",
+      "descripcion": "Conversion efficiencies by broad diet categories.",
+      "tipo": "dict",
+      "defecto": {
+       "DietType.HERBIVORE": 0.1,
+       "DietType.CARNIVORE": 0.25,
+       "DietType.OMNIVORE": 0.175
+      }
+     },
+     {
+      "nombre": "mechanical_efficiency",
+      "descripcion": "Mechanical efficiencies by broad diet categories.",
+      "tipo": "dict",
+      "defecto": {
+       "DietType.HERBIVORE": 0.9,
+       "DietType.CARNIVORE": 0.8,
+       "DietType.OMNIVORE": 0.85
+      }
+     },
+     {
+      "nombre": "prey_mass_scaling_terms",
+      "descripcion": "Prey mass scaling terms by metabolic type.",
+      "tipo": "dict",
+      "defecto": {
+       "MetabolicType.ENDOTHERMIC": {
+        "TaxaType.MAMMAL": [
+         1.0,
+         1.0
+        ],
+        "TaxaType.BIRD": [
+         1.0,
+         1.0
+        ]
+       },
+       "MetabolicType.ECTOTHERMIC": {
+        "TaxaType.INVERTEBRATE": [
+         1.0,
+         1.0
+        ],
+        "TaxaType.AMPHIBIAN": [
+         1.0,
+         1.0
+        ],
+        "TaxaType.REPTILE": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     {
+      "nombre": "cnp_proportion_terms",
+      "descripcion": "Stoichiometric proportions structured by taxon type.",
+      "tipo": "dict",
+      "defecto": {
+       "TaxaType.MAMMAL": {
+        "C": 0.5,
+        "N": 0.3,
+        "P": 0.2
+       },
+       "TaxaType.BIRD": {
+        "C": 0.4,
+        "N": 0.3,
+        "P": 0.3
+       },
+       "TaxaType.INVERTEBRATE": {
+        "C": 0.4,
+        "N": 0.2,
+        "P": 0.4
+       },
+       "TaxaType.AMPHIBIAN": {
+        "C": 0.4,
+        "N": 0.2,
+        "P": 0.4
+       },
+       "TaxaType.REPTILE": {
+        "C": 0.4,
+        "N": 0.2,
+        "P": 0.4
+       }
+      }
+     },
+     {
+      "nombre": "birth_mass_threshold",
+      "descripcion": "Mass threshold for reproduction",
+      "tipo": "float",
+      "defecto": 1.5
+     },
+     {
+      "nombre": "flow_to_reproductive_mass_threshold",
+      "descripcion": "Threshold of trophic flow to reproductive mass.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "dispersal_mass_threshold",
+      "descripcion": "Mass threshold for dispersal.",
+      "tipo": "float",
+      "defecto": 0.8
+     },
+     {
+      "nombre": "energy_percentile_threshold",
+      "descripcion": "Energy threshold for initiating migration.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "tau_f",
+      "descripcion": "Proportion of time for which functional group is active.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "alpha_0_herb",
+      "descripcion": "Effective rate per unit mass at which a herbivore searches its environment.",
+      "tipo": "float",
+      "defecto": 1e-11
+     },
+     {
+      "nombre": "alpha_0_pred",
+      "descripcion": "Effective rate per unit mass at which a predator searches its environment.",
+      "tipo": "float",
+      "defecto": 1e-06
+     },
+     {
+      "nombre": "b_herb",
+      "descripcion": "Herbivore exponent of the power-law function relating the handling time of\nautotroph matter to herbivore mass.",
+      "tipo": "float",
+      "defecto": 0.7
+     },
+     {
+      "nombre": "b_pred",
+      "descripcion": "Carnivore exponent of the power-law relationship between the handling time of\nprey and the ratio of prey to predator body mass.",
+      "tipo": "float",
+      "defecto": 0.7
+     },
+     {
+      "nombre": "M_herb_ref",
+      "descripcion": "Reference mass for herbivore handling time.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "h_herb_0",
+      "descripcion": "Time [d] that it would take a herbivore of body mass equal to the reference mass,\nto handle one gram of autotroph biomass",
+      "tipo": "float",
+      "defecto": 0.7
+     },
+     {
+      "nombre": "M_pred_ref",
+      "descripcion": "The reference value for predator mass.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "sigma_opt_pred_prey",
+      "descripcion": "Standard deviation of the normal distribution describing realized attack rates\naround the optimal predator-prey body mass ratio.",
+      "tipo": "float",
+      "defecto": 0.7
+     },
+     {
+      "nombre": "theta_opt_min_f",
+      "descripcion": "The minimum optimal prey-predator body mass ratio.",
+      "tipo": "float",
+      "defecto": 0.01
+     },
+     {
+      "nombre": "theta_opt_f",
+      "descripcion": "The mean optimal prey-predator body mass ratio, from which actual cohort optima\nare drawn.",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "sigma_opt_f",
+      "descripcion": "The standard deviation of optimal predator-prey mass ratios among cohorts.",
+      "tipo": "float",
+      "defecto": 0.02
+     },
+     {
+      "nombre": "N_sigma_opt_pred_prey",
+      "descripcion": "The standard deviations of the realized attack rates around the optimal\npredator-prey body mass ratio for which to calculate predator specific cumulative\nprey densities.",
+      "tipo": "float",
+      "defecto": 3.0
+     },
+     {
+      "nombre": "h_pred_0",
+      "descripcion": "Time [d] that it would take a predator of body mass equal to the reference mass,\nto handle a prey individual of body mass equal to one gram.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "m_tol",
+      "descripcion": "Slope of the relationship between monthly temperature variability and the upper\ncritical temperature limit relative to annual mean temperature, for terrestrial\nectothermic functional groups.",
+      "tipo": "float",
+      "defecto": 1.6
+     },
+     {
+      "nombre": "c_tol",
+      "descripcion": "Intercept of the relationship between monthly temperature variability and the\nupper critical temperature limit relative to annual mean temperature, for\nterrestrial ectothermic functional groups.",
+      "tipo": "float",
+      "defecto": 6.61
+     },
+     {
+      "nombre": "m_tsm",
+      "descripcion": "Slope of the relationship between monthly temperature variability and the optimal\ntemperature relative to annual mean temperature, for terrestrial ectothermic\nfunctional groups.",
+      "tipo": "float",
+      "defecto": 1.53
+     },
+     {
+      "nombre": "c_tsm",
+      "descripcion": "Intercept of the relationship between monthly temperature variability and the\noptimal temperature relative to annual mean temperature, for terrestrial\nectothermic functional groups.",
+      "tipo": "float",
+      "defecto": 1.51
+     },
+     {
+      "nombre": "placeholder_annual_temp_terms",
+      "descripcion": "Placeholder per-stratum annual reference temperature terms for the ectotherm\nactivity window, keyed by vertical occupancy.\n\nEach stratum provides two terms in degrees Celsius: ``mean_temp``, the annual mean\ntemperature the functional group is adapted to, and ``temp_sd``, the standard\ndeviation of monthly temperatures across the climatological year. They are consumed\nby :func:`~virtual_ecosystem.models.animal.scaling_functions.activity_window` to\nderive a group's thermal tolerance window\n(``T_opt``, ``T_min_crit``, ``T_max_crit``),\nagainst which each cohort's experienced microclimate is compared to set\n``sigma_f_t``. For multi-stratum groups the terms are averaged across occupied\nstrata at :class:`~virtual_ecosystem.models.animal.functional_group.FunctionalGroup`\nconstruction.\n\nThese are toy placeholders anchored to an observed microclimate and should be\nreplaced once the abiotic model supplies real per-stratum annual statistics. See the\ninline comment above for the derivation and the reasoning behind the per-stratum\noffsets.",
+      "tipo": "dict",
+      "defecto": {
+       "VerticalOccupancy.CANOPY": {
+        "mean_temp": 23.0,
+        "temp_sd": 1.0
+       },
+       "VerticalOccupancy.GROUND": {
+        "mean_temp": 20.0,
+        "temp_sd": 1.0
+       },
+       "VerticalOccupancy.SOIL": {
+        "mean_temp": 16.5,
+        "temp_sd": 1.0
+       }
+      }
+     },
+     {
+      "nombre": "thermal_habitat_selection",
+      "descripcion": "Whether dispersal responds to the per-cell thermal microclimate.\n\nWhen ``False``, the thermal suitability grid is never built and cohort dispersal\nuses the uniform destination choice over the reachable set. Endothermic cohorts\nare unaffected by this setting either way, as their activity window is 1.0 in\nevery cell.",
+      "tipo": "bool",
+      "defecto": true
+     },
+     {
+      "nombre": "thermal_dispersal_threshold",
+      "descripcion": "Activity window fraction below which a cohort attempts thermal escape.\n\nA cohort whose ``sigma_f_t`` falls below this value has a probability of\ndispersing that ramps linearly with the severity of the shortfall, mirroring the\ntreatment of starvation-driven dispersal.",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "thermal_selection_exponent",
+      "descripcion": "Exponent applied to cell suitability when weighting destination choice.\n\nHigher values concentrate dispersal into the most suitable reachable cells. A\nvalue of 0.0 recovers uniform selection and is useful as a sensitivity control.",
+      "tipo": "float",
+      "defecto": 2.0
+     },
+     {
+      "nombre": "thermal_suitability_floor",
+      "descripcion": "Minimum weight assigned to a reachable cell during destination selection.\n\nPrevents a degenerate all-zero weight set when every reachable cell is thermally\nlethal, in which case the cohort still disperses but selects blindly.",
+      "tipo": "float",
+      "defecto": 0.01
+     },
+     {
+      "nombre": "M_disp_ref",
+      "descripcion": "The reference mass for calculating diffusive juvenile dispersal in grams.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "V_disp",
+      "descripcion": "Diffusive dispersal speed on an individual of body-mass equal to M_disp_ref\nin km/month.",
+      "tipo": "float",
+      "defecto": 0.0278
+     },
+     {
+      "nombre": "o_disp",
+      "descripcion": "Power law exponent for the scaling relationship between body-mass and dispersal\ndistance as mediated by a reference mass, M_disp_ref.",
+      "tipo": "float",
+      "defecto": 0.48
+     },
+     {
+      "nombre": "beta_responsive_bodymass",
+      "descripcion": "Ratio of current body-mass to adult body-mass at which starvation-response\ndispersal is attempted.",
+      "tipo": "float",
+      "defecto": 0.8
+     },
+     {
+      "nombre": "semelparity_mass_loss",
+      "descripcion": "The proportion of non-reproductive mass lost in semelparous reproduction.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "u_bg",
+      "descripcion": "The constant background mortality faced by all animal.",
+      "tipo": "float",
+      "defecto": 0.001
+     },
+     {
+      "nombre": "lambda_se",
+      "descripcion": "The instantaneous rate of senescence mortality at the point of maturity.",
+      "tipo": "float",
+      "defecto": 0.003
+     },
+     {
+      "nombre": "lambda_max",
+      "descripcion": "The maximum possible instantaneous fractional starvation mortality rate.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "J_st",
+      "descripcion": "Determines the inflection point of the logistic function describing ratio of the\nrealised mortality rate to the maximum rate.",
+      "tipo": "float",
+      "defecto": 0.6
+     },
+     {
+      "nombre": "zeta_st",
+      "descripcion": "The scaling parameter of the logistic function describing the ratio of the \nrealised starvation mortality rate to the maximum starvation mortality rate.",
+      "tipo": "float",
+      "defecto": 0.05
+     },
+     {
+      "nombre": "metamorph_mortality",
+      "descripcion": "The mortality proportion inflicted on a larval cohort undergoing\nmetamorphosis.",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "carbon_excreta_proportion",
+      "descripcion": "The proportion of metabolic wastes that are carbonaceous. This is a temporary\nfix to facilitate building the machinery and will be updated with stoichiometry.",
+      "tipo": "float",
+      "defecto": 0.9
+     },
+     {
+      "nombre": "nitrogen_excreta_proportion",
+      "descripcion": "The proportion of metabolic wastes that are nitrogenous. This is a temporary\nfix to facilitate building the machinery and will be updated with stoichiometry.",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "decay_rate_excrement",
+      "descripcion": "Rate at which excrement decays due to microbial activity [day^-1].\n\nIn reality this should not be constant, but as a simplifying assumption it is.",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "scavenging_rate_excrement",
+      "descripcion": "Rate at which excrement is scavenged by animals [day^-1].\n\nUsed along with :attr:`AnimalConstants.decay_rate_excrement` to calculate the split\nof excrement between scavengable excrement and flow into the soil. In reality this\nshould be a constant, but as a simplifying assumption it is.",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "decay_rate_carcasses",
+      "descripcion": "Rate at which carcasses decay due to microbial activity [day^-1].\n\nIn reality this should not be constant, but as a simplifying assumption it is.",
+      "tipo": "float",
+      "defecto": 0.0625
+     },
+     {
+      "nombre": "scavenging_rate_carcasses",
+      "descripcion": "Rate at which carcasses are scavenged by animals [day^-1].\n\nUsed along with :attr:`AnimalConstants.decay_rate_carcasses` to calculate the split\nof carcass biomass between scavengable carcass biomass and flow into the soil. In\nreality this should be a constant, but as a simplifying assumption it is.",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "migration_mortality",
+      "descripcion": "Proportion of mortality that occurs on return from a migration [unitless].",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "aquatic_mortality",
+      "descripcion": "Proportion of mortality that occurs on return from aquatic status [unitless].",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "aquatic_residence_time",
+      "descripcion": "Amount of time a new cohort spends living in aquatic environment [days].",
+      "tipo": "float",
+      "defecto": 60.0
+     },
+     {
+      "nombre": "migration_residence_time",
+      "descripcion": "Amount of time a migrated cohort spends away [days].",
+      "tipo": "float",
+      "defecto": 60.0
+     },
+     {
+      "nombre": "seasonal_migration_probability",
+      "descripcion": "The probability a seasonal migration event occurs per time step (month).",
+      "tipo": "float",
+      "defecto": 0.083
+     },
+     {
+      "nombre": "territory_size_terms",
+      "descripcion": "Territory size scaling terms (intercept, exponent) by metabolic and taxa type.\n\nTuple entries are (intercept, exponent) for the log-log relationship:\n    ln(territory_ha) = intercept + exponent * ln(BM_g)\n\nAll entries currently use the Ofstad et al. (2016) closed-habitat ungulate\nparameters as a placeholder. The data team should replace these with\ntaxon-specific fits as they become available.\n\nReference:\n    Ofstad EG et al. 2016 Proc. R. Soc. B 283: 20161234.\n    https://doi.org/10.1098/rspb.2016.1234",
+      "tipo": "dict",
+      "defecto": {
+       "MetabolicType.ENDOTHERMIC": {
+        "TaxaType.MAMMAL": [
+         -6.09,
+         1.13
+        ],
+        "TaxaType.BIRD": [
+         -6.09,
+         1.13
+        ]
+       },
+       "MetabolicType.ECTOTHERMIC": {
+        "TaxaType.INVERTEBRATE": [
+         -6.09,
+         1.13
+        ],
+        "TaxaType.AMPHIBIAN": [
+         -6.09,
+         1.13
+        ],
+        "TaxaType.REPTILE": [
+         -6.09,
+         1.13
+        ]
+       }
+      }
+     }
+    ]
+   },
+   {
+    "nombre": "cohort_data_export",
+    "descripcion": "Export settings for animal cohort CSV output.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "enabled",
+      "descripcion": "",
+      "tipo": "bool",
+      "defecto": false
+     },
+     {
+      "nombre": "cohort_attributes",
+      "descripcion": "",
+      "tipo": "tuple",
+      "defecto": []
+     },
+     {
+      "nombre": "float_format",
+      "descripcion": "",
+      "tipo": "str",
+      "defecto": "%0.5f"
+     }
+    ]
+   },
+   {
+    "nombre": "resource_pool_export",
+    "descripcion": "Export settings for resource pool CSV output.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "enabled",
+      "descripcion": "",
+      "tipo": "bool",
+      "defecto": false
+     },
+     {
+      "nombre": "float_format",
+      "descripcion": "",
+      "tipo": "str",
+      "defecto": "%0.5f"
+     }
+    ]
+   }
+  ],
+  "hydrology": [
+   {
+    "nombre": "static",
+    "descripcion": "The model static mode setting.",
+    "tipo": "bool",
+    "defecto": false
+   },
+   {
+    "nombre": "initial_soil_moisture",
+    "descripcion": "Initial soil moisture for all layers",
+    "tipo": "float",
+    "defecto": 0.5
+   },
+   {
+    "nombre": "initial_groundwater_saturation",
+    "descripcion": "Initial ground water saturation for all layers, unitless",
+    "tipo": "float",
+    "defecto": 0.9
+   },
+   {
+    "nombre": "p_wet_wet",
+    "descripcion": "Probability a wet day follows a wet day",
+    "tipo": "float",
+    "defecto": 0.6
+   },
+   {
+    "nombre": "p_wet_dry",
+    "descripcion": "Probability a wet day follows a dry day",
+    "tipo": "float",
+    "defecto": 0.3
+   },
+   {
+    "nombre": "rainfall_shape_parameter",
+    "descripcion": "Shape parameter of the Gamma distribution controlling rainfall variability",
+    "tipo": "float",
+    "defecto": 1.5
+   },
+   {
+    "nombre": "rainfall_scale_parameter",
+    "descripcion": "Scale parameter of the Gamma distribution controlling magnitude of rainfall",
+    "tipo": "float",
+    "defecto": 1.0
+   },
+   {
+    "nombre": "constants",
+    "descripcion": "Constants values for hydrology model.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "soil_moisture_residual",
+      "descripcion": "Residual soil moisture, unitless.\n\nThe residual soil moisture refers to the water that remains in the soil after\nprolonged drainage due to the force of gravity. It is the water that is tightly held\nby soil particles and is not easily available for plant roots to extract. The value\nis soil specific, the format here is volumentic relative water content (unitless,\nbetween 0 and 1). Average value of different soil textures across tropical regions\n:cite:p:`hodnett_marked_2002`.",
+      "tipo": "float",
+      "defecto": 0.175
+     },
+     {
+      "nombre": "soil_moisture_saturation",
+      "descripcion": "Soil moisture saturation, unitless.\n\nMaximum amount of water a soil can hold when all its pores are completely filled\nwith water — that is, the soil is fully saturated and contains no air in the pore\nspaces. Average value of different soil textures across tropical regions\n:cite:p:`hodnett_marked_2002`\n.",
+      "tipo": "float",
+      "defecto": 0.51
+     },
+     {
+      "nombre": "saturated_hydraulic_conductivity",
+      "descripcion": "Saturated hydraulic conductivity, [m s-1].\n\nThe saturated hydraulic conductivity is the measure of a soil's ability to transmit\nwater through its pores. More specifically, is defined as the volumetric flow rate\nof water passing through a unit cross-sectional area of soil under a unit hydraulic\ngradient (pressure difference). Value for average tropical rainforest taken from\n:cite:t:`gupta_global_2022`.",
+      "tipo": "float",
+      "defecto": 3.5e-05
+     },
+     {
+      "nombre": "van_genuchten_nonlinearily_parameter",
+      "descripcion": "Nonlinearity parameter n (dimensionless) in Mualem-van Genuchten model.\n\nThis parameter is a fitting shape parameters of soil water retention curve, see\n:cite:p:`van_genuchten_closed-form_1980`. Average value of different soil textures\nacross tropical regions \nis taken from :cite:t:`hodnett_marked_2002`.",
+      "tipo": "float",
+      "defecto": 1.598
+     },
+     {
+      "nombre": "intercept_parameters",
+      "descripcion": "Interception parameters, unitless.\n\nParameters in equation that estimates maximum canopy interception capacity after\n:cite:t:`von_hoyningen-huene_interzeption_1981`.",
+      "tipo": "tuple",
+      "defecto": [
+       0.935,
+       0.498,
+       0.00575
+      ]
+     },
+     {
+      "nombre": "veg_density_param",
+      "descripcion": "Parameter to estimate vegetation density for maximum interception, unitless.\n\nThis parameter is used to estimate the water holding capacity of a canopy after\n:cite:t:`von_hoyningen-huene_interzeption_1981`. The value is taken from\n:cite:t:`van_der_knijff_lisflood_2010`.",
+      "tipo": "float",
+      "defecto": 0.046
+     },
+     {
+      "nombre": "groundwater_capacity",
+      "descripcion": "Ground water storage capacity, [mm].\n\nThis parameter indicates how much water can be stored in the ground water reservoir\nwhich affects the vertical flow of water and the horizontal sub-surface flow. This\nparameter is currently set to an arbitrary value; we are working on getting a best\nestimate.",
+      "tipo": "float",
+      "defecto": 500
+     },
+     {
+      "nombre": "bypass_flow_coefficient",
+      "descripcion": "Empirical bypass flow coefficient, unitless.\n\nThis parameter affects how much of the water available for infiltration goes\ndirectly to groundwater via preferential bypass flow. A value of\n0 means all surface water goes directly to groundwater, a value of 1 gives a linear\nrelation between soil moisture and bypass flow.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "extinction_coefficient_global_radiation",
+      "descripcion": "Extinction coefficient for global radiation, [unitless].\n\nThis constant is used to reduce potential evaporation for bare soil to maximum\nshaded evaporation.\nTypical values are 0.4 to 0.7 for monocotyledons and 0.65 to 1.1 for broad leaved\ndicotyledons :cite:t:`monteith_light_1969`. The value for tropical forest is taken\nfrom :cite:t:`saldarriaga_solar_1991`. The extinction coefficient can be\nestimated from measurements of PAR above and below a canopy with a known LAI.",
+      "tipo": "float",
+      "defecto": 0.74
+     },
+     {
+      "nombre": "max_percolation_rate_uzlz",
+      "descripcion": "Maximum percolation rate between upper and lower groundwater zone, [mm d-1].\n\nValues for tropical rainforest are taken from :cite:t:`brink_modelling_2009`.",
+      "tipo": "float",
+      "defecto": 2.7
+     },
+     {
+      "nombre": "groundwater_loss",
+      "descripcion": "Constant ground water loss, [mm].\n\nThis parameter defines the constant amount of water that never rejoins the river\nchannel and is lost beyond the catchment boundaries or to deep groundwater systems.",
+      "tipo": "float",
+      "defecto": 1
+     },
+     {
+      "nombre": "reservoir_const_upper_groundwater",
+      "descripcion": "Reservoir constant for the upper groundwater layer, [days].\n\nThis parameter defines the residence time (in days) of water in the upper\ngroundwater zone before contributing to streamflow, with typical values for tropical\ncatchments ranging from 5 to 30 days depending on soil permeability and slope.\nThis parameter is currently set to an arbitrary value; we are working on getting a\nbetter estimate.",
+      "tipo": "float",
+      "defecto": 20
+     },
+     {
+      "nombre": "reservoir_const_lower_groundwater",
+      "descripcion": "Reservoir constant for the lower groundwater layer, [days].\n\nThis reservoir constant, measured in days, determines the residence time of water in\nthe lower groundwater zone. It influences how quickly water exits the lower zone as\nbaseflow. Typical values range from 10 to 5000 depending on catchment\ncharacteristics. This parameter is currently set to an arbitrary value; we are\nworking on getting a better estimate.",
+      "tipo": "float",
+      "defecto": 20
+     },
+     {
+      "nombre": "initial_aerodynamic_resistance_soil",
+      "descripcion": "Initial aerodynamic resistance at the soil surface, [s m-1].\n\nThis parameter is an initial estimate of the resistance to the transfer of momentum,\nheat, and water vapour between the soil surface and the atmosphere. The value is\nbased on Australian evergreen forest, taken from :cite:t:`su_aerodynamic_2021`;\nnote that this assumes a dense canopy.",
+      "tipo": "float",
+      "defecto": 12.5
+     },
+     {
+      "nombre": "drag_coefficient_evaporation",
+      "descripcion": "Drag coefficient for evaporation, dimensionless.\n\nRepresents the efficiency of turbulent transport of water vapour from a surface to\nthe atmosphere.",
+      "tipo": "float",
+      "defecto": 0.2
+     },
+     {
+      "nombre": "initial_stomatal_conductance",
+      "descripcion": "Initial stomatal conductance, [mmol m-2 s-1].\n\nInitial estimate of the rate at which water vapor and carbon dioxide pass\nthrough the stomata of plant leaves, reflecting how open the stomata are and\nregulating both transpiration and gas exchange.",
+      "tipo": "float",
+      "defecto": 1000.0
+     },
+     {
+      "nombre": "pore_connectivity_parameter",
+      "descripcion": "Pore connectivity parameter, dimensionless.\n\nDimensionless parameter used in van Genuchten-Mualem model to calculate unsaturated\nhydraulic conductivity.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "air_entry_potential_inverse",
+      "descripcion": "Inverse of air entry potential (parameter alpha in van Genuchten), [m-1].\n\nThe inverse of air entry potential describes how quickly soil water retention\ndecreases with increasing soil suction, with higher values indicating coarser soils\nthat drain more readily. Average value of different soil textures across tropical\nregions :cite:p:`hodnett_marked_2002`.",
+      "tipo": "float",
+      "defecto": 0.042
+     },
+     {
+      "nombre": "m_to_kpa",
+      "descripcion": "Factor to convert matric potential from m to kPa.",
+      "tipo": "float",
+      "defecto": 9.804
+     },
+     {
+      "nombre": "denominator_tolerance",
+      "descripcion": "Small value to prevent division by zero.",
+      "tipo": "float",
+      "defecto": 1e-12
+     },
+     {
+      "nombre": "saturation_exponent",
+      "descripcion": "Saturation exponent for lateral subsurface stormflow calculation.",
+      "tipo": "float",
+      "defecto": 2.0
+     },
+     {
+      "nombre": "stormflow_coefficient",
+      "descripcion": "Sormflow coefficient for lateral subsurface stormflow calculation.",
+      "tipo": "float",
+      "defecto": 0.05
+     },
+     {
+      "nombre": "temperature_threshold_snow",
+      "descripcion": "Temperature below which all precipitation falls as snow, [°C]\n\nValue of 0°C is used as a threshold for snow formation, meaning that when the air\ntemperature is at or below this point, precipitation is assumed to fall as snow\nrather than rain. This threshold is based on the freezing point of water, which is\n0°C under standard atmospheric conditions. Value from\n:cite:t:`jennings_spatial_2018`.",
+      "tipo": "float",
+      "defecto": 0.0
+     },
+     {
+      "nombre": "temperature_threshold_rain",
+      "descripcion": "Temperature above which all precipitation falls as rain, [°C]\n\nValue of 2°C is used as a threshold for rain formation, meaning that when the air\ntemperature is at or above this point, precipitation is assumed to fall as rain\nrather than snow. This threshold is slightly above the freezing point of water to\naccount for the fact that snow can still occur at temperatures slightly above 0°C\ndue to factors such as supercooling and local atmospheric conditions. Value from\n:cite:t:`jennings_spatial_2018`.",
+      "tipo": "float",
+      "defecto": 2.0
+     }
+    ]
+   }
+  ],
+  "litter": [
+   {
+    "nombre": "static",
+    "descripcion": "The model static mode setting.",
+    "tipo": "bool",
+    "defecto": false
+   },
+   {
+    "nombre": "constants",
+    "descripcion": "Model constant for the hydrology model",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "litter_decomp_reference_temp",
+      "descripcion": "Reference temperature for litter decomposition [Celsius].\n\nValue is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 40.0
+     },
+     {
+      "nombre": "litter_decomp_offset_temp",
+      "descripcion": "Offset temperature for litter decomposition [Celsius].\n\nValue is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 31.79
+     },
+     {
+      "nombre": "litter_decomp_temp_response",
+      "descripcion": "Parameter controlling the temperature response strength of litter decomposition.\n\n[unitless]. Value is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 3.36
+     },
+     {
+      "nombre": "litter_decay_water_potential_optimum",
+      "descripcion": "The water potential at which below ground litter decay is maximised [kPa].\n\nValue is taken from :cite:t:`moyano_responses_2013`.",
+      "tipo": "float",
+      "defecto": -10.0
+     },
+     {
+      "nombre": "litter_decay_water_potential_halt",
+      "descripcion": "The water potential at which below ground litter decay stops entirely [kPa].\n\nValue is taken from :cite:t:`moyano_responses_2013`.",
+      "tipo": "float",
+      "defecto": -28800.0
+     },
+     {
+      "nombre": "moisture_response_curvature",
+      "descripcion": "Curvature of the litter decay moisture response function [unitless].\n\nValue is taken from :cite:t:`moyano_responses_2013`.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "litter_decay_constant_metabolic_above",
+      "descripcion": "Decay constant for the above ground metabolic litter pool [day^-1].\n\nValue is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 0.08
+     },
+     {
+      "nombre": "litter_decay_constant_structural_above",
+      "descripcion": "Decay constant for the above ground structural litter pool [day^-1].\n\nValue is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 0.021714285714285714
+     },
+     {
+      "nombre": "litter_decay_constant_woody",
+      "descripcion": "Decay constant for the woody litter pool [day^-1].\n\nValue is taken from :cite:t:`kirschbaum_modelling_2002` as the average of fine wood\nand coarse wood decay.",
+      "tipo": "float",
+      "defecto": 0.006666666666666667
+     },
+     {
+      "nombre": "litter_decay_constant_metabolic_below",
+      "descripcion": "Decay constant for the below ground metabolic litter pool [day^-1].\n\nValue is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "litter_decay_constant_structural_below",
+      "descripcion": "Decay constant for the below ground structural litter pool [day^-1].\n\nValue is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 0.02702702702702703
+     },
+     {
+      "nombre": "cue_metabolic",
+      "descripcion": "Carbon use efficiency of metabolic litter decay [unitless].\n\nThe value given here is taken from :cite:t:`fatichi_mechanistic_2019`, but I can't\ntrack down an empirical source. This carbon use efficiency is constant with\ntemperature, soil moisture and substrate stoichiometry. These assumptions are not\nmade in the soil model, but are used for the sake of simplicity here. If an improved\nversion of the litter model gets made, this is a key area to address.",
+      "tipo": "float",
+      "defecto": 0.45
+     },
+     {
+      "nombre": "cue_structural_above_ground",
+      "descripcion": "Carbon use efficiency of aboveground structural litter decay [unitless].\n\nThe value given here is taken from :cite:t:`fatichi_mechanistic_2019`; see\ndocumentation for :attr:`LitterConstants.cue_metabolic` for details.",
+      "tipo": "float",
+      "defecto": 0.55
+     },
+     {
+      "nombre": "cue_woody",
+      "descripcion": "Carbon use efficiency of woody litter decay [unitless].\n\nThe value given here is taken from :cite:t:`fatichi_mechanistic_2019`; see\ndocumentation for :attr:`LitterConstants.cue_metabolic` for details.",
+      "tipo": "float",
+      "defecto": 0.55
+     },
+     {
+      "nombre": "cue_structural_below_ground",
+      "descripcion": "Carbon use efficiency of belowground structural litter decay [unitless].\n\nThe value given here is taken from :cite:t:`fatichi_mechanistic_2019`; see\ndocumentation for :attr:`LitterConstants.cue_metabolic` for details.",
+      "tipo": "float",
+      "defecto": 0.45
+     },
+     {
+      "nombre": "lignin_inhibition_factor",
+      "descripcion": "Exponential factor expressing the extent that lignin inhibits litter breakdown.\n\n[unitless]. The more negative this value the greater the strength of the inhibition.\nThis value is taken from :cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": -5.0
+     },
+     {
+      "nombre": "max_metabolic_fraction_of_input",
+      "descripcion": "Maximum proportion of input plant biomass that can go to metabolic litter.\n\n[unitless]. The value is taken from :cite:t:`krinner_dynamic_2005`.",
+      "tipo": "float",
+      "defecto": 0.85
+     },
+     {
+      "nombre": "metabolic_split_nitrogen_sensitivity",
+      "descripcion": "Sensitivity to nitrogen of the split between metabolic and structural litter.\n\ni.e. how much the split of input biomass between these two litter pools changes in\nresponse to changes in the product of the nitrogen and lignin concentrations\n[unitless]. These factors are combined as lignin is assumed to colimit litter\nbreakdown along with limiting nutrients. The value is taken from\n:cite:t:`krinner_dynamic_2005`.",
+      "tipo": "float",
+      "defecto": 0.018
+     },
+     {
+      "nombre": "metabolic_split_phosphorus_sensitivity",
+      "descripcion": "Sensitivity to phosphorus of the split between metabolic and structural litter.\n\ni.e. how much the split of input biomass between these two litter pools changes in\nresponse to changes in the product of the phosphorus and lignin concentrations\n[unitless]. These factors are combined as lignin is assumed to colimit litter\nbreakdown along with limiting nutrients.\n\nThe default value was calculated following :cite:t:`orwin_organic_2011`, by\nrescaling the sensitivity constant for nitrogen by how limiting phosphorus is\nrelative to nitrogen. For this we used, an (atomic) C:N:P ratio of soil microbial\nbiomass of 60:7:1, we took this from :cite:t:`cleveland_cnp_2007`. This was then\nconverted to a mass terms ratio by using their atomic masses.",
+      "tipo": "float",
+      "defecto": 0.0011613
+     },
+     {
+      "nombre": "metabolic_to_structural_n_ratio",
+      "descripcion": "Ratio of nitrogen concentrations for input to metabolic and structural litter.\n\nFollowing :cite:t:`kirschbaum_modelling_2002`, we assume that the nitrogen\nconcentrations (relative to the carbon mass) of inputs to the metabolic and\nstructural litter pools are in a fixed proportion. This parameter sets how many\ntimes higher the nitrogen concentration is for inputs to the metabolic pool relative\nto inputs to the corresponding structural pool. The default value is also taken from\n:cite:t:`kirschbaum_modelling_2002`.",
+      "tipo": "float",
+      "defecto": 5.0
+     },
+     {
+      "nombre": "metabolic_to_structural_p_ratio",
+      "descripcion": "Ratio of phosphorus concentrations for input to metabolic and structural litter.\n\nThis follows the same logic as for phosphorus (see\n:attr:`LitterConstants.metabolic_to_structural_n_ratio`). The default value used is\nthe same as for the nitrogen case as we saw no sense treating them differently.",
+      "tipo": "float",
+      "defecto": 5.0
+     }
+    ]
+   }
+  ],
+  "abiotic": [
+   {
+    "nombre": "static",
+    "descripcion": "The model static mode setting.",
+    "tipo": "bool",
+    "defecto": false
+   },
+   {
+    "nombre": "constants",
+    "descripcion": "Constants for the abiotic model",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "leaf_emissivity",
+      "descripcion": "Leaf emissivity, unitless.\n\nLeaf emissivity is a measure of how efficiently a leaf emits thermal radiation\ncompared to a perfect blackbody, typically ranging from 0.95 to 0.99. Value for\ntropical vegetation is taken from :cite:t:`ma_an_2019`.",
+      "tipo": "float",
+      "defecto": 0.98
+     },
+     {
+      "nombre": "soil_emissivity",
+      "descripcion": "Soil emissivity, dimensionless.\n\nSoil emissivity is a measure of how efficiently the soil surface emits thermal\nradiation compared to a perfect blackbody, with values typically ranging from 0.90\nto 0.98 depending on soil texture, moisture, and surface roughness. Value taken\nfrom :cite:t:`molders_plant_2005`.",
+      "tipo": "float",
+      "defecto": 0.95
+     },
+     {
+      "nombre": "measurement_height",
+      "descripcion": "Height below canopy at which atmospheric variables are measured, [m].",
+      "tipo": "float",
+      "defecto": 1.5
+     },
+     {
+      "nombre": "leaf_albedo",
+      "descripcion": "Leaf albedo, unitless.\n\nLeaf albedo is the fraction of incoming solar radiation that a leaf reflects,\ntypically ranging from 0.12 to 0.18 in tropical forests due to their dark, broadleaf\nsurfaces. Value here is taken from :cite:t:`su_aerodynamic_2021`.",
+      "tipo": "float",
+      "defecto": 0.15
+     },
+     {
+      "nombre": "bulk_density_soil",
+      "descripcion": "Bulk density of soil, [kg m-3].\n\nBulk density describes the mass of dry soil per unit volume, including both the\nsolid soil particles and the pore spaces between them. Value for average rainforest\nsoil is taken from :cite:t:`gupta_soilksatdb_2021`.",
+      "tipo": "float",
+      "defecto": 1175.0
+     },
+     {
+      "nombre": "soil_porosity",
+      "descripcion": "Soil porosity, [m3 m-3].\n\nSoil porosity is the fraction of the total volume of soil that is occupied by pores.\nIt is a measure of the soil's ability to hold water and air, with higher porosity\nindicating more space for water and air. TODO: This value is a placeholder and\nshould be replaced with a more accurate value.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "coarse_kersten_factor",
+      "descripcion": "Empirical factor for adjusting Kersten numbers for coarse-textured soils.\n\nThe coarse_kersten_factor is used to modify the Kersten number calculation for\ncoarse-textured soils, which have different thermal properties compared to\nfine-textured soils when using the Johansen model.",
+      "tipo": "float",
+      "defecto": 0.7
+     },
+     {
+      "nombre": "wind_reference_height",
+      "descripcion": "Reference height for wind speed above the canopy, [m].\n\nThe reference height for horizontal wind is typically 10m above ground compared to\n2m for other atmospheric variables such as temperature and relative humidity. We\nassume here that the reference height is above the canopy, please check the input\ndata carefully and be aware of limitations.",
+      "tipo": "float",
+      "defecto": 10.0
+     },
+     {
+      "nombre": "latent_heat_vap_equ_factors",
+      "descripcion": "Factors in calculation of latent heat of vapourisation.\n\nImplementation after :cite:t:`maclean_microclimc_2021`, value is taken from\n:cite:t:`henderson-sellers_new_1984`.",
+      "tipo": "tuple",
+      "defecto": [
+       1918460.0,
+       33.91
+      ]
+     },
+     {
+      "nombre": "zero_plane_scaling_parameter",
+      "descripcion": "Control parameter for scaling zero displacement to height, dimensionless.\n\nImplementation after :cite:t:`maclean_microclimc_2021`, value is taken from\n:cite:t:`raupach_simplified_1994`.",
+      "tipo": "float",
+      "defecto": 7.5
+     },
+     {
+      "nombre": "substrate_surface_roughness_length",
+      "descripcion": "Substrate-surface roughness length, m.\n\nThe substrate-surface roughness length is the \"baseline roughness\" of the ground\nitself before adding vegetation on top. Implementation and value from\n:cite:t:`maclean_microclimc_2021`.",
+      "tipo": "float",
+      "defecto": 0.003
+     },
+     {
+      "nombre": "roughness_element_drag_coefficient",
+      "descripcion": "Roughness-element drag coefficient, dimensionless.\n\nThe roughness-element drag coefficient refers to the dimensionless coefficient\nused to quantify the drag force exerted by individual roughness elements (such as\nbuildings, trees, or surface irregularities) on airflow, influencing the overall\naerodynamic characteristics of a surface within the atmospheric boundary layer.\nImplementation and value from :cite:t:`maclean_microclimc_2021`.",
+      "tipo": "float",
+      "defecto": 0.3
+     },
+     {
+      "nombre": "roughness_sublayer_depth_parameter",
+      "descripcion": "Parameter characterizes the roughness sublayer depth.\n\nThe roughness sublayer depth refers to the layer near the surface where the\neffects of surface roughness significantly influence airflow, turbulence, momentum\ntransfer, typically extending up to about 10% of the height of the roughness\nelements or features on the surface. This layer is characterized by intense\nturbulence and rapid velocity changes due to surface irregularities.\nImplementation and value taken from :cite:p:`maclean_microclimc_2021`.",
+      "tipo": "float",
+      "defecto": 0.193
+     },
+     {
+      "nombre": "max_ratio_wind_to_friction_velocity",
+      "descripcion": "Maximum ratio of wind velocity to friction velocity, dimensionless.\n\nThe maximum ratio of wind velocity to friction velocity refers to the highest\nobserved or theoretical value of the ratio between the wind speed at a given height\nand the surface friction velocity (u*), indicating the efficiency of momentum\ntransfer from the atmosphere to the surface. Implementation and value from\n:cite:t:`maclean_microclimc_2021`.",
+      "tipo": "float",
+      "defecto": 0.3
+     },
+     {
+      "nombre": "min_windspeed_below_canopy",
+      "descripcion": "Minimum wind speed below the canopy or in absence of vegetation, [m s-1].",
+      "tipo": "float",
+      "defecto": 0.1
+     },
+     {
+      "nombre": "min_roughness_length",
+      "descripcion": "Minimum roughness length, [m].\n\nThe minimum roughness length represents the lowest height at which the surface\nroughness significantly affects the wind flow over a particular terrain or\nsurface. Implementation and value from :cite:t:`maclean_microclimc_2021`.",
+      "tipo": "float",
+      "defecto": 0.01
+     },
+     {
+      "nombre": "soil_thermal_conductivity_dry",
+      "descripcion": "Dry soil thermal conductivity, [W m-1 K-1].\n\nSoil thermal conductivity is a measure of the soil's ability to conduct heat,\ninfluenced by factors such as moisture content, texture, and density. Dry soil\nthermal conductivity value is estimated from :cite:t:`xiong_anew_2023`.\nTODO: This value is a placeholder and should be replaced with a more accurate value.",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "soil_thermal_conductivity_saturated",
+      "descripcion": "Saturated soil thermal conductivity, [W m-1 K-1].\n\nSoil thermal conductivity is a measure of the soil's ability to conduct heat,\ninfluenced by factors such as moisture content, texture, and density. Value at\nsaturation is estimated from :cite:t:`xiong_anew_2023`.\nTODO: This value is a placeholder and should be replaced with a more accurate value.",
+      "tipo": "float",
+      "defecto": 2.5
+     },
+     {
+      "nombre": "specific_heat_capacity_soil",
+      "descripcion": "Specific heat capacity of soil, [J kg-1 K-1].\n\nSpecific heat capacity of soil is the amount of heat required to raise the\ntemperature of a unit mass of soil by one degree Celsius (or Kelvin), and depends on\nsoil composition, moisture content, and organic matter. Value taken from\n:cite:t:`molders_plant_2005`.",
+      "tipo": "float",
+      "defecto": 881
+     },
+     {
+      "nombre": "surface_albedo",
+      "descripcion": "Mean surface albedo of a tropical rainforest in South East Asia, dimensionless.\n\nThe value is takes from a study that compares changes in surface albedo before and\nafter deforestation in South East Asia :cite:p:`wilson_role_2020`.",
+      "tipo": "float",
+      "defecto": 0.125
+     },
+     {
+      "nombre": "saturated_pressure_slope_parameters",
+      "descripcion": "List of parameters to calculate the slope of saturated vapour pressure curve.",
+      "tipo": "tuple",
+      "defecto": [
+       4098.0,
+       0.6108,
+       17.27,
+       237.3
+      ]
+     },
+     {
+      "nombre": "dry_air_factor",
+      "descripcion": "Dry air factor, dimensionless.\n\nThis term accounts for the proportion of dry air when computing the partitioning\nof total air pressure. It is the complement of the\n`molecular_weight_ratio_water_to_dry_air` in core.constants.",
+      "tipo": "float",
+      "defecto": 0.378
+     },
+     {
+      "nombre": "initial_flux_value",
+      "descripcion": "Initial non-zero fill value for energy fluxes, [W m-2].",
+      "tipo": "float",
+      "defecto": 0.001
+     },
+     {
+      "nombre": "aerodynamic_resistance_canopy_night",
+      "descripcion": "Aerodynamic resistance of the canopy at night, [s m-1].",
+      "tipo": "float",
+      "defecto": 100.0
+     },
+     {
+      "nombre": "aerodynamic_resistance_soil_night",
+      "descripcion": "Aerodynamic resistance of the soil at night, [s m-1].",
+      "tipo": "float",
+      "defecto": 500.0
+     },
+     {
+      "nombre": "aerodynamic_resistance_canopy_day",
+      "descripcion": "Aerodynamic resistance of the canopy during the day, [s m-1].",
+      "tipo": "float",
+      "defecto": 20.0
+     },
+     {
+      "nombre": "max_mixing_coefficient",
+      "descripcion": "Maximum turbulent mixing coefficients, [m2 s-1].",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "fraction_par_used_for_photosynthesis",
+      "descripcion": "Fraction of photosynthetically active radiation used for photosynthesis,\ndimensionless.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "leaf_absorptance_non_par",
+      "descripcion": "Leaf absorptance for non-photosynthetically active radiation, dimensionless.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "par_fraction_of_shortwave_radiation",
+      "descripcion": "Fraction of shortwave radiation that is photosynthetically active,\ndimensionless.\n\nValue is taken from the P-Model:\n\nConvert from downward shortwave radiation [W m-2] to photosynthetic photon flux\ndensity (PPFD)[µmol m-2 s-1]. 1 W m-2 of sunlight is roughly 4.57 µmol m-2 s-1 of\nfull spectrum sunlight, of which about 4.57 * 46% = 2.04 µmol m-2 s-1 is PPFD.",
+      "tipo": "float",
+      "defecto": 0.46
+     },
+     {
+      "nombre": "maxiter_air_secant_solver",
+      "descripcion": "Maximum number of iterations to solve for air temperature.",
+      "tipo": "int",
+      "defecto": 20
+     },
+     {
+      "nombre": "maxiter_secant_solver",
+      "descripcion": "Maximum number of secant iterations to solve for canopy temperature.",
+      "tipo": "int",
+      "defecto": 8
+     },
+     {
+      "nombre": "convergence_tolerance_secant_solver",
+      "descripcion": "Convergence tolerance for secant solver, in max absolute update.",
+      "tipo": "float",
+      "defecto": 0.01
+     },
+     {
+      "nombre": "small_perturbation_second_guess_secant_solver",
+      "descripcion": "Small perturbation for second initial guess in secant solver.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "denominator_tolerance",
+      "descripcion": "Small value to prevent division by zero.",
+      "tipo": "float",
+      "defecto": 1e-12
+     },
+     {
+      "nombre": "min_specific_humidity",
+      "descripcion": "Minimum value for specific humidity to avoid dividion by zero, [kg kg-1].",
+      "tipo": "float",
+      "defecto": 0.001
+     },
+     {
+      "nombre": "understorey_ventilation_rate",
+      "descripcion": "Understorey ventilation rate, comes into place when there is no canopy, [s-1].",
+      "tipo": "float",
+      "defecto": 0.001
+     },
+     {
+      "nombre": "extinction_coefficient_longwave",
+      "descripcion": "Extinction coefficient for longwave radiation, dimensionless.",
+      "tipo": "float",
+      "defecto": 0.5
+     },
+     {
+      "nombre": "minimum_mixing_depth",
+      "descripcion": "Minimum mixing depth for lowest canopy layer, [m].\n\nThis is to prevent unrealistically low mixing depths and therefore high temperatures\nin the lowest canopy layer when the layer height is very low. Note that this is an\nartificial inflation of the mixing depth.",
+      "tipo": "float",
+      "defecto": 1.5
+     },
+     {
+      "nombre": "integration_time_interval",
+      "descripcion": "Initial integration time interval for air temperature update, [s].",
+      "tipo": "float",
+      "defecto": 300.0
+     },
+     {
+      "nombre": "min_temperature_change",
+      "descripcion": "Minimum temperature change for flexible integration time step, [C]",
+      "tipo": "float",
+      "defecto": 2.0
+     },
+     {
+      "nombre": "max_temperature_change",
+      "descripcion": "Maximum temperature change for flexible integration time step, [C]",
+      "tipo": "float",
+      "defecto": 10.0
+     },
+     {
+      "nombre": "integration_time_modifier",
+      "descripcion": "Integration time modifier for adaptable time integration of air temperature.",
+      "tipo": "float",
+      "defecto": 0.2
+     }
+    ]
+   },
+   {
+    "nombre": "bounds",
+    "descripcion": "Bounds for abiotic variables.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "air_temperature",
+      "descripcion": "Bounds and gradient for air temperature, [C].\n\nGradient for linear regression to calculate air temperature as a function of\nleaf area index from :cite:t:`hardwick_relationship_2015`.",
+      "tipo": "tuple",
+      "defecto": [
+       -20.0,
+       80.0,
+       -1.27
+      ]
+     },
+     {
+      "nombre": "relative_humidity",
+      "descripcion": "Bounds and gradient for relative humidity, dimensionless.\n\nGradient for linear regression to calculate relative humidity as a function of\nleaf area index from :cite:t:`hardwick_relationship_2015`.",
+      "tipo": "tuple",
+      "defecto": [
+       0.001,
+       99.999,
+       5.4
+      ]
+     },
+     {
+      "nombre": "vapour_pressure_deficit",
+      "descripcion": "Bounds and gradient for vapour pressure deficit, [kPa].\n\nGradient for linear regression to calculate vapour pressure deficit as a function of\nleaf area index from :cite:t:`hardwick_relationship_2015`.",
+      "tipo": "tuple",
+      "defecto": [
+       0.001,
+       10.0,
+       -252.24
+      ]
+     },
+     {
+      "nombre": "wind_speed",
+      "descripcion": "Bounds and gradient for wind speed, [m s-1].\n\nGradient for linear regression to calculate wind speed as a function of\nleaf area index. The value is choses arbitrarily and needs to be replaced with\nobservations.",
+      "tipo": "tuple",
+      "defecto": [
+       0.001,
+       100.0,
+       -0.1
+      ]
+     },
+     {
+      "nombre": "soil_temperature",
+      "descripcion": "Bounds for soil temperature, [C].",
+      "tipo": "tuple",
+      "defecto": [
+       -10.0,
+       50.0
+      ]
+     }
+    ]
+   },
+   {
+    "nombre": "simple_constants",
+    "descripcion": "Constants used for the simple abiotic model, used to set up initial\nconditions.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "leaf_emissivity",
+      "descripcion": "Leaf emissivity, unitless.\n\nLeaf emissivity is a measure of how efficiently a leaf emits thermal radiation\ncompared to a perfect blackbody, typically ranging from 0.95 to 0.99. Value for\ntropical vegetation is taken from :cite:t:`ma_an_2019`.",
+      "tipo": "float",
+      "defecto": 0.98
+     },
+     {
+      "nombre": "soil_emissivity",
+      "descripcion": "Soil emissivity, dimensionless.\n\nSoil emissivity is a measure of how efficiently the soil surface emits thermal\nradiation compared to a perfect blackbody, with values typically ranging from 0.90\nto 0.98 depending on soil texture, moisture, and surface roughness. Value taken\nfrom :cite:t:`molders_plant_2005`.",
+      "tipo": "float",
+      "defecto": 0.95
+     },
+     {
+      "nombre": "measurement_height",
+      "descripcion": "Height below canopy at which atmospheric variables are measured, [m].",
+      "tipo": "float",
+      "defecto": 1.5
+     },
+     {
+      "nombre": "placeholder",
+      "descripcion": "Placeholder value for test.",
+      "tipo": "float",
+      "defecto": 10.0
+     }
+    ]
+   },
+   {
+    "nombre": "latitude",
+    "descripcion": "Latitude in degrees. This is required to generate the diurnal cycle.",
+    "tipo": "float",
+    "defecto": 0.0
+   }
+  ],
+  "abiotic_simple": [
+   {
+    "nombre": "static",
+    "descripcion": "The model static mode setting.",
+    "tipo": "bool",
+    "defecto": false
+   },
+   {
+    "nombre": "constants",
+    "descripcion": "",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "leaf_emissivity",
+      "descripcion": "Leaf emissivity, unitless.\n\nLeaf emissivity is a measure of how efficiently a leaf emits thermal radiation\ncompared to a perfect blackbody, typically ranging from 0.95 to 0.99. Value for\ntropical vegetation is taken from :cite:t:`ma_an_2019`.",
+      "tipo": "float",
+      "defecto": 0.98
+     },
+     {
+      "nombre": "soil_emissivity",
+      "descripcion": "Soil emissivity, dimensionless.\n\nSoil emissivity is a measure of how efficiently the soil surface emits thermal\nradiation compared to a perfect blackbody, with values typically ranging from 0.90\nto 0.98 depending on soil texture, moisture, and surface roughness. Value taken\nfrom :cite:t:`molders_plant_2005`.",
+      "tipo": "float",
+      "defecto": 0.95
+     },
+     {
+      "nombre": "measurement_height",
+      "descripcion": "Height below canopy at which atmospheric variables are measured, [m].",
+      "tipo": "float",
+      "defecto": 1.5
+     },
+     {
+      "nombre": "placeholder",
+      "descripcion": "Placeholder value for test.",
+      "tipo": "float",
+      "defecto": 10.0
+     }
+    ]
+   },
+   {
+    "nombre": "bounds",
+    "descripcion": "",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "air_temperature",
+      "descripcion": "Bounds and gradient for air temperature, [C].\n\nGradient for linear regression to calculate air temperature as a function of\nleaf area index from :cite:t:`hardwick_relationship_2015`.",
+      "tipo": "tuple",
+      "defecto": [
+       -20.0,
+       80.0,
+       -1.27
+      ]
+     },
+     {
+      "nombre": "relative_humidity",
+      "descripcion": "Bounds and gradient for relative humidity, dimensionless.\n\nGradient for linear regression to calculate relative humidity as a function of\nleaf area index from :cite:t:`hardwick_relationship_2015`.",
+      "tipo": "tuple",
+      "defecto": [
+       0.001,
+       99.999,
+       5.4
+      ]
+     },
+     {
+      "nombre": "vapour_pressure_deficit",
+      "descripcion": "Bounds and gradient for vapour pressure deficit, [kPa].\n\nGradient for linear regression to calculate vapour pressure deficit as a function of\nleaf area index from :cite:t:`hardwick_relationship_2015`.",
+      "tipo": "tuple",
+      "defecto": [
+       0.001,
+       10.0,
+       -252.24
+      ]
+     },
+     {
+      "nombre": "wind_speed",
+      "descripcion": "Bounds and gradient for wind speed, [m s-1].\n\nGradient for linear regression to calculate wind speed as a function of\nleaf area index. The value is choses arbitrarily and needs to be replaced with\nobservations.",
+      "tipo": "tuple",
+      "defecto": [
+       0.001,
+       100.0,
+       -0.1
+      ]
+     },
+     {
+      "nombre": "soil_temperature",
+      "descripcion": "Bounds for soil temperature, [C].",
+      "tipo": "tuple",
+      "defecto": [
+       -10.0,
+       50.0
+      ]
+     }
+    ]
+   }
+  ],
+  "soil": [
+   {
+    "nombre": "static",
+    "descripcion": "The model static mode setting.",
+    "tipo": "bool",
+    "defecto": false
+   },
+   {
+    "nombre": "enzyme_class_definition_path",
+    "descripcion": "Path to a CSV file of microbial enzyme class definitions. Not yet implemented.",
+    "tipo": "str",
+    "defecto": ""
+   },
+   {
+    "nombre": "microbial_group_definition_path",
+    "descripcion": "Path to a CSV file of microbial functional group definitions. Not yet\nimplemented.",
+    "tipo": "str",
+    "defecto": ""
+   },
+   {
+    "nombre": "constants",
+    "descripcion": "Constants values for soil model.",
+    "tipo": "grupo",
+    "campos": [
+     {
+      "nombre": "reference_cue_logit",
+      "descripcion": "Logit of carbon use efficiency of microbial community at reference temperature\n[unitless]. Parameter estimated from a beta-logit GLMM using the data from\n:cite:t:`Qiao2019`.",
+      "tipo": "float",
+      "defecto": 0.094
+     },
+     {
+      "nombre": "cue_reference_temp",
+      "descripcion": "Reference temperature for carbon use efficiency [Celsius]. Default value taken\nfrom :cite:t:`Qiao2019`.",
+      "tipo": "float",
+      "defecto": 20.0
+     },
+     {
+      "nombre": "logit_cue_with_temperature",
+      "descripcion": "Change in the logit of carbon use efficiency with unit increase in temperature\n[Celsius^-1]. Parameter estimated from a beta-logit GLMM using the data from \n:cite:t:`Qiao2019`.",
+      "tipo": "float",
+      "defecto": -0.039
+     },
+     {
+      "nombre": "soil_microbe_water_potential_optimum",
+      "descripcion": "The water potential at which soil microbial rates are maximised [kPa]. Value is\ntaken from :cite:t:`moyano_responses_2013`.",
+      "tipo": "float",
+      "defecto": -3.0
+     },
+     {
+      "nombre": "soil_microbe_water_potential_halt",
+      "descripcion": "The water potential at which soil microbial activity stops entirely [kPa]. Value\nis taken from :cite:t:`moyano_responses_2013`.",
+      "tipo": "float",
+      "defecto": -15800.0
+     },
+     {
+      "nombre": "microbial_water_response_curvature",
+      "descripcion": "Curvature of function for response of soil microbial rates to water potential\n[unitless]. Value is taken from :cite:t:`moyano_responses_2013`.",
+      "tipo": "float",
+      "defecto": 1.47
+     },
+     {
+      "nombre": "min_pH_microbes",
+      "descripcion": "Soil pH below which microbial activity is completely inhibited [unitless]. This\nvalue cannot be larger than :attr:`SoilConstants.lowest_optimal_pH_microbes`. The\ndefault value was obtained by averaging the fungi and bacteria specific values given\nin :cite:t:`orwin_organic_2011`.",
+      "tipo": "float",
+      "defecto": 2.5
+     },
+     {
+      "nombre": "lowest_optimal_pH_microbes",
+      "descripcion": "Soil pH above which microbial activity is not inhibited at all [unitless]. This\nvalue cannot be smaller than :attr:`SoilConstants.min_pH_microbes` or larger than\n:attr:`SoilConstants.highest_optimal_pH_microbes`. The default value was obtained by\naveraging the fungi and bacteria specific values given in\n:cite:t:`orwin_organic_2011`.",
+      "tipo": "float",
+      "defecto": 4.5
+     },
+     {
+      "nombre": "highest_optimal_pH_microbes",
+      "descripcion": "Soil pH below which microbial activity is not inhibited at all [unitless]. This\nvalue cannot be smaller than :attr:`SoilConstants.lowest_optimal_pH_microbes` or\nlarger than :attr:`SoilConstants.max_pH_microbes`. The default value was obtained by\naveraging the fungi and bacteria specific values given in\n:cite:t:`orwin_organic_2011`.",
+      "tipo": "float",
+      "defecto": 7.5
+     },
+     {
+      "nombre": "max_pH_microbes",
+      "descripcion": "Soil pH above which microbial activity is completely inhibited [unitless]. This\nvalue cannot be smaller than :attr:`SoilConstants.highest_optimal_pH_microbes`. The\ndefault value was obtained by averaging the fungi and bacteria specific values given\nin :cite:t:`orwin_organic_2011`.",
+      "tipo": "float",
+      "defecto": 11.0
+     },
+     {
+      "nombre": "base_soil_protection",
+      "descripcion": "Basal change in saturation constants due to soil structure [unitless]. This value\nis multiplicative and is taken from :cite:t:`fatichi_mechanistic_2019`.",
+      "tipo": "float",
+      "defecto": 0.694
+     },
+     {
+      "nombre": "soil_protection_with_clay",
+      "descripcion": "Rate at which soil protection of carbon increases with clay content [unitless].\nThis protection contributes multiplicatively to the effective saturation constant. \nThe value of this constant is taken from :cite:t:`fatichi_mechanistic_2019`.",
+      "tipo": "float",
+      "defecto": 1.36
+     },
+     {
+      "nombre": "solubility_coefficient_lmwc",
+      "descripcion": "Solubility coefficient for low molecular weight organic carbon [unitless]. Value\ntaken from :cite:t:`fatichi_mechanistic_2019`, where it is estimated in quite a\nloose manner.",
+      "tipo": "float",
+      "defecto": 0.05
+     },
+     {
+      "nombre": "solubility_coefficient_ammonium",
+      "descripcion": "Solubility coefficient for ammonium in soil [unitless]. Value taken from\n:cite:t:`fatichi_mechanistic_2019`, where it is estimated in quite a loose manner.",
+      "tipo": "float",
+      "defecto": 0.05
+     },
+     {
+      "nombre": "solubility_coefficient_nitrate",
+      "descripcion": "Solubility coefficient for nitrate in soil [unitless]. Value taken from\n:cite:t:`fatichi_mechanistic_2019`, where it is estimated in quite a loose manner.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "solubility_coefficient_labile_p",
+      "descripcion": "Solubility coefficient for labile inorganic phosphorus [unitless]. Value taken\nfrom :cite:t:`fatichi_mechanistic_2019`, where it is estimated in quite a loose\nmanner.",
+      "tipo": "float",
+      "defecto": 0.005
+     },
+     {
+      "nombre": "necromass_decay_rate",
+      "descripcion": "Rate at which microbial necromass decays to low molecular weight carbon [day^-1].\nI have not been able to track down any data on this, so for now choosing a rate that\ncorresponds to halving every three days. This parameter is a key target for tracking\ndown data for and for sensitivity analysis.",
+      "tipo": "float",
+      "defecto": 0.23104906018664842
+     },
+     {
+      "nombre": "maom_desorption_rate",
+      "descripcion": "Rate constant for mineral associated organic matter desorption [day^-1]. The\ndefault value of this rate is not based on data. It was instead chosen to be \nsmall relative to the rate at which microbes breakdown LMWC. This is another key\ntarget for sensitivity analysis.",
+      "tipo": "float",
+      "defecto": 1e-05
+     },
+     {
+      "nombre": "lmwc_sorption_rate",
+      "descripcion": "Rate constant for low molecular weight carbon sorption to minerals [day^-1]. The\ndefault value of this rate is not based on data. It was instead chosen so that \nthe ratio of :term:`LMWC` to :term:`MAOM` would tend to 1/100, in the absence of\nmicrobes. This is another key target for sensitivity analysis.",
+      "tipo": "float",
+      "defecto": 0.001
+     },
+     {
+      "nombre": "necromass_sorption_rate",
+      "descripcion": "Rate constant for necromass sorption to minerals [day^-1]. The default value was\nchosen to be three times the value of :attr:`SoilConstants.necromass_decay_rate`,\nthis means that 75% of necromass becomes MAOM with the remainder becoming LMWC.\nReplacing this with a function that depends on environmental conditions is a post\nrelease goal.",
+      "tipo": "float",
+      "defecto": 0.6931471805599453
+     },
+     {
+      "nombre": "litter_leaching_fraction_carbon",
+      "descripcion": "Fraction of carbon mineralisation from litter that occurs by leaching [unitless].\nThe remainder of the mineralisation consists of particulates. Value is an order of\nmagnitude estimate taken from :cite:t:`fatichi_mechanistic_2019`.",
+      "tipo": "float",
+      "defecto": 0.0015
+     },
+     {
+      "nombre": "litter_leaching_fraction_nitrogen",
+      "descripcion": "Fraction of nitrogen mineralisation from litter that occurs by leaching.\n[unitless]. The remainder of the mineralisation consists of particulates. Value is\nan order of magnitude estimate taken from :cite:t:`fatichi_mechanistic_2019`.",
+      "tipo": "float",
+      "defecto": 0.0015
+     },
+     {
+      "nombre": "litter_leaching_fraction_phosphorus",
+      "descripcion": "Fraction of phosphorus mineralisation from litter that occurs by leaching.\n[unitless]. The remainder of the mineralisation consists of particulates. Value is\nan order of magnitude estimate taken from :cite:t:`fatichi_mechanistic_2019`.",
+      "tipo": "float",
+      "defecto": 0.0001
+     },
+     {
+      "nombre": "organic_proportion_litter_nitrogen_leaching",
+      "descripcion": "Fraction of leached nitrogen from litter mineralisation that is organic form.\n[unitless]. The remainder of the leaching consists of ammonium. Value is taken from\n:cite:t:`fatichi_mechanistic_2019`, where it is assumed that nitrogen leaches from\nlitter solely in organic form.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "organic_proportion_litter_phosphorus_leaching",
+      "descripcion": "Fraction of leached phosphorus from litter mineralisation that is organic form.\n[unitless]. The remainder of the leaching consists of inorganic phosphorus. Value is\ntaken from :cite:t:`fatichi_mechanistic_2019`, where it is assumed that phosphorus\nleaches from litter solely in organic form.",
+      "tipo": "float",
+      "defecto": 1.0
+     },
+     {
+      "nombre": "ammonium_mineralisation_proportion",
+      "descripcion": "Proportion of microbially mineralised nitrogen that takes the form of ammonium.\n[unitless]. The remainder gets mineralised as nitrate. Estimate taken from\n:cite:t:`fatichi_mechanistic_2019`, but the way it was obtained wasn't made\nparticularly clear.",
+      "tipo": "float",
+      "defecto": 0.9
+     },
+     {
+      "nombre": "tectonic_uplift_rate_phosphorus",
+      "descripcion": "Rate at which tectonic uplift exposes new primary phosphorus [kg{P} m^-3 day^-1].\nThis rate is essentially zero for decadal simulations. We have only included to give\nthe flexibility to run longer term test scenarios. This variable is site specific,\nyou will need to decide on an appropriate value for it if you are setting up a new\nsite.",
+      "tipo": "float",
+      "defecto": 0.0
+     },
+     {
+      "nombre": "ammonia_volatilisation_rate_constant",
+      "descripcion": "Rate constant for ammonia volatilisation from ammonium [day^-1]. Following\n:cite:t:`dickinson_nitrogen_2002`, linear kinetics are assumed. We also take our\ndefault value from there.",
+      "tipo": "float",
+      "defecto": 8.64e-05
+     },
+     {
+      "nombre": "nitrification_rate_constant",
+      "descripcion": "Rate constant for nitrification from ammonium [day^-1]. Following\n:cite:t:`dickinson_nitrogen_2002`, linear kinetics are assumed. We also take our\ndefault value from there.",
+      "tipo": "float",
+      "defecto": 0.08639999999999999
+     },
+     {
+      "nombre": "denitrification_rate_constant",
+      "descripcion": "Rate constant for denitrification from nitrate [day^-1]. Following\n:cite:t:`dickinson_nitrogen_2002`, linear kinetics are assumed. We also take our\ndefault value from there.",
+      "tipo": "float",
+      "defecto": 0.21600000000000003
+     },
+     {
+      "nombre": "nitrification_optimum_temperature",
+      "descripcion": "Soil temperature at which nitrification is maximised [Kelvin]. Value taken from\n:cite:t:`xu-ri_terrestrial_2008`. This value should not be varied independently of\n:attr:`SoilConstants.nitrification_maximum_temperature` and\n:attr:`SoilConstants.nitrification_thermal_sensitivity`!",
+      "tipo": "float",
+      "defecto": 311.15
+     },
+     {
+      "nombre": "nitrification_maximum_temperature",
+      "descripcion": "Temperature at which our empirical nitrification model stops working [Kelvin].\nThis is well outside field values so this should be too much of a problem. Value\ntaken from :cite:t:`xu-ri_terrestrial_2008`. This value should not be varied\nindependently of :attr:`SoilConstants.nitrification_optimum_temperature` and\n:attr:`SoilConstants.nitrification_thermal_sensitivity`!",
+      "tipo": "float",
+      "defecto": 343.15
+     },
+     {
+      "nombre": "nitrification_thermal_sensitivity",
+      "descripcion": "Sensitivity of nitrification rate to changes in temperature [unitless]. Value\ntaken from :cite:t:`xu-ri_terrestrial_2008`. This value should not be varied \nindependently of :attr:`SoilConstants.nitrification_optimum_temperature` and\n:attr:`SoilConstants.nitrification_maximum_temperature`!",
+      "tipo": "int",
+      "defecto": 12
+     },
+     {
+      "nombre": "denitrification_infinite_temperature_factor",
+      "descripcion": "Denitrification temperature factor at infinite temperature [unitless]. Value is\nobtained from :cite:t:`xu-ri_terrestrial_2008`, by taking the exponential of the\nconstant part of the expression. This value should not be varied independently of\n:attr:`SoilConstants.denitrification_minimum_temperature` and\n:attr:`SoilConstants.denitrification_thermal_sensitivity`!",
+      "tipo": "float",
+      "defecto": 93.34598
+     },
+     {
+      "nombre": "denitrification_minimum_temperature",
+      "descripcion": "Temperature at which denitrification stops entirely [Kelvin]. Value is obtained\nfrom :cite:t:`xu-ri_terrestrial_2008`, and converted to Kelvin. The expression we\nare using does not function below this temperature, but this is not a major problem\nas it is a very low temperature. This value should not be varied independently of\n:attr:`SoilConstants.denitrification_infinite_temperature_factor` and\n:attr:`SoilConstants.denitrification_thermal_sensitivity`!",
+      "tipo": "float",
+      "defecto": 227.12999999999997
+     },
+     {
+      "nombre": "denitrification_thermal_sensitivity",
+      "descripcion": "Sensitivity of denitrification rate to changes in temperature [Kelvin]. Value is\nobtained from :cite:t:`xu-ri_terrestrial_2008`. This value should not be varied\nindependently of :attr:`SoilConstants.denitrification_infinite_temperature_factor`\nand :attr:`SoilConstants.denitrification_minimum_temperature`!",
+      "tipo": "float",
+      "defecto": 308.56
+     },
+     {
+      "nombre": "nitrogen_fixation_cost_zero_celcius",
+      "descripcion": "Cost (in carbon) that plants pay to their symbiotic partners at zero Celsius\n[kg{C} kg{N}^-1]. This is cost per unit of nitrogen received, and will be higher \nthan the symbiotic partners actually spend to fix the nitrogen. Value is obtained \nfrom :cite:t:`brzostek_modeling_2014`.",
+      "tipo": "float",
+      "defecto": 59.19651970522086
+     },
+     {
+      "nombre": "nitrogen_fixation_cost_infinite_temp_offset",
+      "descripcion": "Difference in nitrogen fixation cost between zero Celsius and infinite limit.\nUnits of [kg{C} kg{N}^-1]. This limit of infinite temperature is not biologically\nmeaningful and is instead just a way of characterising the form of the empirical\nfunction. A negative value means that the cost in the infinite temperature limit is\nhigher than at zero Celsius. Value is obtained from\n:cite:t:`brzostek_modeling_2014`.",
+      "tipo": "float",
+      "defecto": -0.8034802947791453
+     },
+     {
+      "nombre": "nitrogen_fixation_cost_thermal_sensitivity",
+      "descripcion": "Sensitivity of symbiotic nitrogen fixation cost to changes in temperature\n[Celsius^-1]. Value is obtained from :cite:t:`brzostek_modeling_2014`.",
+      "tipo": "float",
+      "defecto": 0.27
+     },
+     {
+      "nombre": "nitrogen_fixation_cost_equality_temperature",
+      "descripcion": "Positive temperature at which nitrogen fixation cost is the same at zero Celsius.\n[Celsius]. Value is obtained from :cite:t:`brzostek_modeling_2014`.",
+      "tipo": "float",
+      "defecto": 50.28
+     },
+     {
+      "nombre": "free_living_N_fixation_reference_rate",
+      "descripcion": "Rate at which free living microbes fix nitrogen (at the reference temperature).\nUnits of [kg{N} m^-2 day^-1]. Value specific to tropical forests, and is taken from\n:cite:t:`lin_modelling_2000` (with the units adjusted). Should not be changed\nindependently from :attr:`SoilConstants.free_living_N_fixation_reference_temp`.",
+      "tipo": "float",
+      "defecto": 4.106776180698152e-06
+     },
+     {
+      "nombre": "free_living_N_fixation_reference_temp",
+      "descripcion": "Temperature reference rate of free-living nitrogen fixation was measured at\n[Kelvin]. Value taken from :cite:t:`lin_modelling_2000`. Should not be changed\nindependently from :attr:`SoilConstants.free_living_N_fixation_reference_rate`.",
+      "tipo": "float",
+      "defecto": 293.15
+     },
+     {
+      "nombre": "free_living_N_fixation_q10_coefficent",
+      "descripcion": "Q10 coefficient for free-living fixation of nitrogen [unitless]. Value taken from\n:cite:t:`lin_modelling_2000`.",
+      "tipo": "float",
+      "defecto": 3.0
+     },
+     {
+      "nombre": "primary_phosphorus_breakdown_rate",
+      "descripcion": "Rate constant for breakdown of primary phosphorus to labile phosphorus [day^-1].\nDefault value taken from :cite:t:`parton_dynamics_1988`.",
+      "tipo": "float",
+      "defecto": 2.2831050228310502e-07
+     },
+     {
+      "nombre": "secondary_phosphorus_breakdown_rate",
+      "descripcion": "Rate constant for breakdown of secondary mineral to labile phosphorus [day^-1].\nDefault value taken from :cite:t:`parton_dynamics_1988`.",
+      "tipo": "float",
+      "defecto": 7.407407407407407e-05
+     },
+     {
+      "nombre": "labile_phosphorus_sorption_rate",
+      "descripcion": "Rate constant for sorption of labile phosphorus to secondary mineral phosphorus\n[day^-1]. Default value taken from :cite:t:`parton_dynamics_1988`.",
+      "tipo": "float",
+      "defecto": 0.0016666666666666668
+     },
+     {
+      "nombre": "ammonium_deposition_rate",
+      "descripcion": "Rate at which ammonium is deposited into the system [kg{N} m^-2 day^-1]. We are\nassuming that deposition rates won't vary substantially over the area the simulation\nencompasses. Value taken from :cite:t:`vet_global_2014`. This variable is site\nspecific, you will need to recalculate it if you are setting up a new site.",
+      "tipo": "float",
+      "defecto": 4.1067761806981517e-07
+     },
+     {
+      "nombre": "phosphorus_deposition_rate",
+      "descripcion": "Rate at which phosphorus is deposited into the system [kg{P} m^-2 day^-1].\nWe are assuming that deposition rates won't vary substantially over the area the\nsimulation encompasses. Value taken from :cite:t:`Mahowald2008`.This variable is\nsite specific, you will need to recalculate it if you are setting up a new site.",
+      "tipo": "float",
+      "defecto": 1.3689253935660508e-08
+     },
+     {
+      "nombre": "nitrogen_fixer_supply_fraction",
+      "descripcion": "Fraction of carbon supplied by plants to symbiotes that goes to nitrogen fixers.\n[unitless]. The remainder goes to mycorrhizal fungi.",
+      "tipo": "float",
+      "defecto": 0.3
+     },
+     {
+      "nombre": "ectomycorrhiza_supply_fraction",
+      "descripcion": "Fraction of plant carbon supply to mycorrhizal fungi that goes to ectomycorrhiza.\n[unitless]. The remainder goes to arbuscular mycorrhizal fungi.",
+      "tipo": "float",
+      "defecto": 0.25
+     },
+     {
+      "nombre": "fungal_fruiting_bodies_decay_rate",
+      "descripcion": "Rate constant for the decay of fungal fruiting bodies, [day^-1].\n\nThe default value is calculated based on the assumption that fungal fruiting bodies\ndecay with a half-life of 50 days. This estimate should be improved based on\nempirical data.",
+      "tipo": "float",
+      "defecto": 0.013862943611198907
+     }
+    ]
+   },
+   {
+    "nombre": "enzyme_class_definition",
+    "descripcion": "Definition of enzyme classes for soil model.",
+    "tipo": "list",
+    "defecto": [
+     {
+      "source": "fungi",
+      "substrate": "pom",
+      "maximum_rate": 60.0,
+      "half_saturation_constant": 70.0,
+      "activation_energy_rate": 37000,
+      "activation_energy_saturation": 30000,
+      "reference_temperature": 12.0,
+      "turnover_rate": 0.024,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16
+     },
+     {
+      "source": "fungi",
+      "substrate": "maom",
+      "maximum_rate": 60.0,
+      "half_saturation_constant": 70.0,
+      "activation_energy_rate": 37000,
+      "activation_energy_saturation": 30000,
+      "reference_temperature": 12.0,
+      "turnover_rate": 0.024,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16
+     },
+     {
+      "source": "bacteria",
+      "substrate": "pom",
+      "maximum_rate": 60.0,
+      "half_saturation_constant": 70.0,
+      "activation_energy_rate": 37000,
+      "activation_energy_saturation": 30000,
+      "reference_temperature": 12.0,
+      "turnover_rate": 0.024,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16
+     },
+     {
+      "source": "bacteria",
+      "substrate": "maom",
+      "maximum_rate": 60.0,
+      "half_saturation_constant": 70.0,
+      "activation_energy_rate": 37000,
+      "activation_energy_saturation": 30000,
+      "reference_temperature": 12.0,
+      "turnover_rate": 0.024,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16
+     }
+    ]
+   },
+   {
+    "nombre": "microbial_group_definition",
+    "descripcion": "Definition of microbial groups for soil model.",
+    "tipo": "list",
+    "defecto": [
+     {
+      "name": "saprotrophic_fungi",
+      "taxonomic_group": "fungi",
+      "max_uptake_rate_labile_C": 0.04,
+      "activation_energy_uptake_rate": 47000,
+      "half_sat_labile_C_uptake": 0.364,
+      "activation_energy_uptake_saturation": 30000,
+      "max_uptake_rate_ammonium": 0.005,
+      "half_sat_ammonium_uptake": 0.02275,
+      "max_uptake_rate_nitrate": 0.0005,
+      "half_sat_nitrate_uptake": 0.02275,
+      "max_uptake_rate_labile_p": 0.0025,
+      "half_sat_labile_p_uptake": 0.02275,
+      "turnover_rate": 0.005,
+      "activation_energy_turnover": 20000,
+      "reference_temperature": 12.0,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16,
+      "enzyme_production": {
+       "pom": 0.005,
+       "maom": 0.005
+      },
+      "reproductive_allocation": 0.0,
+      "symbiote_nitrogen_uptake_fraction": 0.0,
+      "symbiote_phosphorus_uptake_fraction": 0.0
+     },
+     {
+      "name": "ectomycorrhiza",
+      "taxonomic_group": "fungi",
+      "max_uptake_rate_labile_C": 0.04,
+      "activation_energy_uptake_rate": 47000,
+      "half_sat_labile_C_uptake": 0.364,
+      "activation_energy_uptake_saturation": 30000,
+      "max_uptake_rate_ammonium": 0.005,
+      "half_sat_ammonium_uptake": 0.02275,
+      "max_uptake_rate_nitrate": 0.0005,
+      "half_sat_nitrate_uptake": 0.02275,
+      "max_uptake_rate_labile_p": 0.0025,
+      "half_sat_labile_p_uptake": 0.02275,
+      "turnover_rate": 0.005,
+      "activation_energy_turnover": 20000,
+      "reference_temperature": 12.0,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16,
+      "enzyme_production": {
+       "pom": 0.005,
+       "maom": 0.005
+      },
+      "reproductive_allocation": 0.0,
+      "symbiote_nitrogen_uptake_fraction": 0.0,
+      "symbiote_phosphorus_uptake_fraction": 0.0
+     },
+     {
+      "name": "arbuscular_mycorrhiza",
+      "taxonomic_group": "fungi",
+      "max_uptake_rate_labile_C": 0.04,
+      "activation_energy_uptake_rate": 47000,
+      "half_sat_labile_C_uptake": 0.364,
+      "activation_energy_uptake_saturation": 30000,
+      "max_uptake_rate_ammonium": 0.005,
+      "half_sat_ammonium_uptake": 0.02275,
+      "max_uptake_rate_nitrate": 0.0005,
+      "half_sat_nitrate_uptake": 0.02275,
+      "max_uptake_rate_labile_p": 0.0025,
+      "half_sat_labile_p_uptake": 0.02275,
+      "turnover_rate": 0.005,
+      "activation_energy_turnover": 20000,
+      "reference_temperature": 12.0,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16,
+      "enzyme_production": {
+       "pom": 0.005,
+       "maom": 0.005
+      },
+      "reproductive_allocation": 0.0,
+      "symbiote_nitrogen_uptake_fraction": 0.0,
+      "symbiote_phosphorus_uptake_fraction": 0.0
+     },
+     {
+      "name": "bacteria",
+      "taxonomic_group": "bacteria",
+      "max_uptake_rate_labile_C": 0.04,
+      "activation_energy_uptake_rate": 47000,
+      "half_sat_labile_C_uptake": 0.364,
+      "activation_energy_uptake_saturation": 30000,
+      "max_uptake_rate_ammonium": 0.005,
+      "half_sat_ammonium_uptake": 0.02275,
+      "max_uptake_rate_nitrate": 0.0005,
+      "half_sat_nitrate_uptake": 0.02275,
+      "max_uptake_rate_labile_p": 0.0025,
+      "half_sat_labile_p_uptake": 0.02275,
+      "turnover_rate": 0.005,
+      "activation_energy_turnover": 20000,
+      "reference_temperature": 12.0,
+      "c_n_ratio": 5.2,
+      "c_p_ratio": 16,
+      "enzyme_production": {
+       "pom": 0.005,
+       "maom": 0.005
+      },
+      "reproductive_allocation": 0.0,
+      "symbiote_nitrogen_uptake_fraction": 0.0,
+      "symbiote_phosphorus_uptake_fraction": 0.0
+     }
+    ]
+   }
+  ]
+ },
+ "pft": [
+  {
+   "nombre": "pft_name",
+   "descripcion": "The name of the plant functional type.",
+   "tipo": "tuple",
+   "defecto": [
+    "default"
+   ]
+  },
+  {
+   "nombre": "a_hd",
+   "descripcion": "Initial slope of height-diameter relationship (:math:`a`, -)",
+   "tipo": "tuple",
+   "defecto": [
+    116.0
+   ]
+  },
+  {
+   "nombre": "ca_ratio",
+   "descripcion": "Initial ratio of crown area to stem cross-sectional area (:math:`c`, -)",
+   "tipo": "tuple",
+   "defecto": [
+    390.43
+   ]
+  },
+  {
+   "nombre": "h_max",
+   "descripcion": "Maximum tree height (:math:`H_m`, m)",
+   "tipo": "tuple",
+   "defecto": [
+    25.33
+   ]
+  },
+  {
+   "nombre": "rho_s",
+   "descripcion": "Sapwood density (:math:`\\rho_s`, kg Cm-3)",
+   "tipo": "tuple",
+   "defecto": [
+    200.0
+   ]
+  },
+  {
+   "nombre": "lai",
+   "descripcion": "Leaf area index within the crown (:math:`L`,  -)",
+   "tipo": "tuple",
+   "defecto": [
+    1.8
+   ]
+  },
+  {
+   "nombre": "sla",
+   "descripcion": "Specific leaf area (:math:`\\sigma`,  m2 kg-1 C)",
+   "tipo": "tuple",
+   "defecto": [
+    14.0
+   ]
+  },
+  {
+   "nombre": "tau_f",
+   "descripcion": "Foliage turnover time (:math:`\\tau_f`,years)",
+   "tipo": "tuple",
+   "defecto": [
+    4.0
+   ]
+  },
+  {
+   "nombre": "tau_r",
+   "descripcion": "Fine-root turnover time (:math:`\\tau_r`,  years)",
+   "tipo": "tuple",
+   "defecto": [
+    1.04
+   ]
+  },
+  {
+   "nombre": "tau_b",
+   "descripcion": "Branch turnover time (:math:`\\tau_b`,  years)",
+   "tipo": "tuple",
+   "defecto": [
+    "Infinity"
+   ]
+  },
+  {
+   "nombre": "par_ext",
+   "descripcion": "Extinction coefficient of photosynthetically active radiation (PAR) (:math:`k`,\n-)",
+   "tipo": "tuple",
+   "defecto": [
+    0.5
+   ]
+  },
+  {
+   "nombre": "yld",
+   "descripcion": "Yield factor (:math:`y`,  -)",
+   "tipo": "tuple",
+   "defecto": [
+    0.6
+   ]
+  },
+  {
+   "nombre": "zeta",
+   "descripcion": "Ratio of fine-root mass to foliage area (:math:`\\zeta`, kg C m-2)",
+   "tipo": "tuple",
+   "defecto": [
+    0.17
+   ]
+  },
+  {
+   "nombre": "resp_r",
+   "descripcion": "Fine-root specific respiration rate (:math:`r_r`, year-1)",
+   "tipo": "tuple",
+   "defecto": [
+    0.913
+   ]
+  },
+  {
+   "nombre": "resp_s",
+   "descripcion": "Sapwood-specific respiration rate (:math:`r_s`,  year-1)",
+   "tipo": "tuple",
+   "defecto": [
+    0.044
+   ]
+  },
+  {
+   "nombre": "resp_f",
+   "descripcion": "Foliage maintenance respiration fraction (:math:`r_f`,  -)",
+   "tipo": "tuple",
+   "defecto": [
+    0.1
+   ]
+  },
+  {
+   "nombre": "m",
+   "descripcion": "Crown shape parameter (:math:`m`, -)",
+   "tipo": "tuple",
+   "defecto": [
+    2
+   ]
+  },
+  {
+   "nombre": "n",
+   "descripcion": "Crown shape parameter (:math:`n`, -)",
+   "tipo": "tuple",
+   "defecto": [
+    5
+   ]
+  },
+  {
+   "nombre": "f_g",
+   "descripcion": "Crown gap fraction (:math:`f_g`, -)",
+   "tipo": "tuple",
+   "defecto": [
+    0.05
+   ]
+  },
+  {
+   "nombre": "fruit_seed_foliage_mass_fraction",
+   "descripcion": "Carbon allocation to reproductive structures tissue (fruit and seeds) as a\nfraction of foliage carbon mass (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    0.05
+   ]
+  },
+  {
+   "nombre": "resp_rt",
+   "descripcion": "Annual respiration fraction of tissues in reproductive structures (fruit and\nseeds): tissue respiration costs from GPP are calculated as a fraction of tissue\ncarbon mass (:math:`r_{rt}`, kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    0.05
+   ]
+  },
+  {
+   "nombre": "tau_rt",
+   "descripcion": "Turnover time of tissues in reproductive structures (fruit and seeds), expressed\nas the time for the entire tissue carbon mass to be replaced through turnover\n(:math:`\\tau_{rt}`, years).",
+   "tipo": "tuple",
+   "defecto": [
+    1.0
+   ]
+  },
+  {
+   "nombre": "root_symbiote_npp_fraction",
+   "descripcion": "Carbon allocation to root symbiotes as a fraction of net primary productivity\n(kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    0.1
+   ]
+  },
+  {
+   "nombre": "stem_c_n_ratio",
+   "descripcion": "Carbon/Nitrogen ratio of stem tissue (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    60.7
+   ]
+  },
+  {
+   "nombre": "stem_c_p_ratio",
+   "descripcion": "Carbon/Phosphorous ratio of stem tissue (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    856.5
+   ]
+  },
+  {
+   "nombre": "foliage_turnover_c_n_ratio",
+   "descripcion": "Carbon/Nitrogen ratio of foliage tissue that is lost through turnover, after\nnutrient resorption during leaf senescence (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    25.5
+   ]
+  },
+  {
+   "nombre": "foliage_turnover_c_p_ratio",
+   "descripcion": "Carbon/Phosphorous ratio of foliage tissue that is lost through turnover, after\nnutrient resorption during leaf senescence (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    415.0
+   ]
+  },
+  {
+   "nombre": "fruit_seed_c_n_ratio",
+   "descripcion": "Carbon/Nitrogen ratio of tissues in reproductive structures (fruit and seeds)\n(kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    12.5
+   ]
+  },
+  {
+   "nombre": "fruit_seed_c_p_ratio",
+   "descripcion": "Carbon/Phosphorous ratio of tissues in reproductive structures (fruit and seeds)\n(kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    125.5
+   ]
+  },
+  {
+   "nombre": "root_c_n_ratio",
+   "descripcion": "Carbon/Nitrogen ratio of fine root tissue (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    656.7
+   ]
+  },
+  {
+   "nombre": "root_c_p_ratio",
+   "descripcion": "Carbon/Phosphorous ratio of fine root tissue (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    45.6
+   ]
+  },
+  {
+   "nombre": "foliage_c_n_ratio",
+   "descripcion": "Carbon/Nitrogen ratio of foliage tissue (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    15.0
+   ]
+  },
+  {
+   "nombre": "foliage_c_p_ratio",
+   "descripcion": "Carbon/Phosphorous ratio of foliage tissue (kg kg-1).",
+   "tipo": "tuple",
+   "defecto": [
+    300.0
+   ]
+  },
+  {
+   "nombre": "c_mass_fruit_flesh",
+   "descripcion": "Carbon mass of fruit flesh in a fruit (g).",
+   "tipo": "tuple",
+   "defecto": [
+    5.0
+   ]
+  },
+  {
+   "nombre": "c_mass_fruit_seed",
+   "descripcion": "Carbon mass of a single seed in a fruit (g).",
+   "tipo": "tuple",
+   "defecto": [
+    1.0
+   ]
+  },
+  {
+   "nombre": "seeds_per_fruit",
+   "descripcion": "Number of seeds in a fruit (unitless).",
+   "tipo": "tuple",
+   "defecto": [
+    2
+   ]
+  },
+  {
+   "nombre": "lai_base",
+   "descripcion": "Reference variable holding the base LAI for the PFT.",
+   "tipo": "tuple[float, ...] | None",
+   "defecto": null
+  },
+  {
+   "nombre": "tau_f_base",
+   "descripcion": "Reference variable holding the base foliage turnover rate for the PFT.",
+   "tipo": "tuple[float, ...] | None",
+   "defecto": null
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoLoco · bioma de ejemplo: selva de Maliau</title>
+<style>
+  html, body { margin:0; height:100%; background:#000; overflow:hidden; }
+  #lienzo { position:fixed; inset:0; width:100vw; height:100vh; display:block; image-rendering:pixelated; cursor:default; }
+  .ayuda { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); background:rgba(20,16,15,.85); color:#efe4d2; border:1px solid #3a2f29; border-radius:6px; padding:7px 13px; font:13px/1.5 system-ui, sans-serif; white-space:nowrap; display:none; }
+  .ayuda.on { display:block; }
+  .ayuda b { color:#e8a64a; }
+</style>
+</head>
+<body>
+<canvas id="lienzo"></canvas>
+<div class="ayuda" id="ayuda"><b>Botón derecho</b> mantenido: mirar + <b>WASD</b> volar · <b>Q/E</b> bajar/subir · <b>Mayús</b> rápido · <b>rueda</b> acercar (volando: velocidad) · <b>botón central</b> desplazar · <b>Alt+izq.</b> orbitar · <b>F</b> encuadrar · <b>P</b> perspectiva/orto · <b>N</b> día/atardecer/noche · <b>+/−</b> píxel · <b>Intro</b> pantalla completa · <b>H</b> ayuda</div>
+<script type="module" src="./bioma.js"></script>
+</body>
+</html>

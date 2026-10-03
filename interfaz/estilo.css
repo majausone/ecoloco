@@ -1,0 +1,76 @@
+:root {
+  color-scheme: dark;
+  --fondo: #121614; --tinta: #e3e8e2; --suave: #98a59a; --linea: #2c3530; --verde: #3f9e63; --papel: #1b201d;
+  --cabecera: #0b0e0c; --pestana: #232a26; --borde-boton: #3d4842; --tabla-cabecera: #232a26;
+  --guion: #2a322d; --defecto: #7d887f; --cambiado: #f0a35e; --rejilla: #2f3833; --ejes: #98a59a;
+  --error-fondo: #3a1d1b; --error-borde: #d9534f; --error-tinta: #ffb4ab; --mal: #5a2522;
+}
+html[data-tema=claro] {
+  color-scheme: light;
+  --fondo: #f4f6f2; --tinta: #1d2a1f; --suave: #5d6b60; --linea: #d4dbd2; --verde: #2f7d4b; --papel: #fff;
+  --cabecera: #1d2a1f; --pestana: #e7ece5; --borde-boton: #aab5a8; --tabla-cabecera: #eef2ec;
+  --guion: #e3e8e1; --defecto: #8a958b; --cambiado: #b4530b; --rejilla: #ccc; --ejes: #666;
+  --error-fondo: #fff1ef; --error-borde: #d9534f; --error-tinta: #8a1f1b; --mal: #fde2e0;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.4 system-ui, "Segoe UI", sans-serif; background: var(--fondo); color: var(--tinta); }
+header { display: flex; align-items: baseline; gap: 1.5em; padding: .6em 1em; background: var(--cabecera); color: #fff; }
+header h1 { font-size: 1.2em; margin: 0; }
+header small { font-weight: normal; opacity: .7; }
+#estado { font-variant-numeric: tabular-nums; opacity: .9; }
+nav { display: flex; gap: .2em; padding: .4em 1em 0; border-bottom: 1px solid var(--linea); }
+nav button { border: 1px solid var(--linea); border-bottom: none; background: var(--pestana); color: var(--tinta); padding: .4em 1em; border-radius: 6px 6px 0 0; cursor: pointer; }
+nav button.activa { background: var(--papel); font-weight: 600; }
+.panel { display: none; padding: .8em 1em; }
+.panel.activa { display: block; }
+#controles { display: flex; flex-wrap: wrap; gap: .5em .8em; align-items: center; }
+#controles input[type=number] { width: 5em; }
+button, .boton { padding: .35em .8em; border: 1px solid var(--borde-boton); background: var(--papel); color: var(--tinta); border-radius: 5px; cursor: pointer; font: inherit; }
+button.principal { background: var(--verde); color: #fff; border-color: var(--verde); }
+button:disabled { opacity: .45; cursor: default; }
+.sep { flex: 0 0 1px; height: 1.5em; background: var(--linea); }
+#progreso { height: 4px; background: var(--linea); margin: .6em 0; }
+#barra { height: 100%; width: 0; background: var(--verde); transition: width .2s; }
+#graficas { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: .8em; }
+figure { margin: 0; background: var(--papel); border: 1px solid var(--linea); border-radius: 8px; padding: .5em; }
+figure.ancha { grid-column: 1 / -1; }
+figcaption { font-weight: 600; margin-bottom: .3em; display: flex; gap: .6em; align-items: center; flex-wrap: wrap; }
+figcaption select, figcaption label { font-weight: normal; }
+canvas { width: 100%; height: 260px; display: block; }
+.explorador { display: grid; grid-template-columns: 1fr 360px; gap: 1em; }
+.mapa canvas { height: 300px; }
+#leyenda { height: 14px; margin-top: 4px; font-size: 12px; display: flex; justify-content: space-between; }
+#mapa-info { font-size: 12px; color: var(--suave); min-height: 1.4em; }
+#x-desc { font-weight: normal; color: var(--suave); font-size: 12px; }
+#troficas { overflow-x: auto; }
+#troficas table { border-collapse: collapse; font-size: 12px; }
+#troficas th, #troficas td { border: 1px solid var(--linea); padding: 2px 5px; text-align: right; white-space: nowrap; }
+#troficas th { background: var(--tabla-cabecera); }
+#troficas th.fila { text-align: left; }
+.cab-panel { display: flex; align-items: center; gap: .4em; margin-bottom: .6em; }
+body.con-cabecera header { margin-top: 0; }
+#buscar { width: 24em; padding: .35em; margin-bottom: .6em; }
+details { background: var(--papel); border: 1px solid var(--linea); border-radius: 6px; margin: .3em 0; padding: .2em .6em; }
+details details { margin-left: .5em; }
+summary { cursor: pointer; font-weight: 600; padding: .2em 0; }
+.param { display: grid; grid-template-columns: 22em 16em 1fr; gap: .6em; align-items: start; padding: .25em 0; border-top: 1px dashed var(--guion); }
+.param .nombre { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; word-break: break-all; }
+.param .desc { color: var(--suave); font-size: 12.5px; }
+.param .defecto { color: var(--defecto); font-size: 11.5px; }
+.param.cambiado .nombre { color: var(--cambiado); font-weight: 600; }
+.param input[type=text], .param input[type=number], .param select { width: 100%; }
+.param textarea { width: 100%; font-family: ui-monospace, Consolas, monospace; font-size: 11.5px; min-height: 3.5em; }
+table.editable { border-collapse: collapse; background: var(--papel); font-size: 12px; margin-bottom: 1em; }
+table.editable th, table.editable td { border: 1px solid var(--linea); padding: 0; }
+table.editable th { background: var(--tabla-cabecera); padding: 3px 5px; cursor: help; position: sticky; top: 0; }
+table.editable td input { border: none; padding: 3px 5px; width: 100%; min-width: 5em; font: inherit; background: transparent; }
+.tabla-env { overflow: auto; max-height: 420px; margin-bottom: .5em; }
+.entrada { display: grid; grid-template-columns: 20em 1fr 7em 7em 220px; gap: .6em; align-items: center; background: var(--papel); border: 1px solid var(--linea); border-radius: 6px; padding: .4em .6em; margin: .3em 0; }
+.entrada canvas { height: 120px; width: 220px; }
+.entrada .nombre { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+.entrada .desc { color: var(--suave); font-size: 12.5px; }
+#error { position: fixed; bottom: 1em; right: 1em; max-width: 50em; max-height: 40vh; overflow: auto; background: var(--error-fondo); border: 1px solid var(--error-borde); color: var(--error-tinta); padding: .8em; border-radius: 8px; white-space: pre-wrap; font: 12px ui-monospace, Consolas, monospace; cursor: pointer; }
+.entrada input { width: 5.5em; }
+input, select, textarea { background: var(--papel); color: var(--tinta); border: 1px solid var(--borde-boton); border-radius: 4px; }
+input[type=checkbox], input[type=range] { accent-color: var(--verde); }
+#b-tema { margin-left: auto; background: transparent; color: #fff; border-color: rgba(255,255,255,.35); }

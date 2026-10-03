@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<script>document.documentElement.dataset.tema = localStorage.getItem('ecoloco-tema') || 'oscuro';</script>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoLoco · Virtual Ecosystem en JS</title>
+<link rel="stylesheet" href="estilo.css">
+<link rel="stylesheet" href="../comun/comun.css">
+</head>
+<body>
+<header>
+  <h1>EcoLoco <small data-en="Virtual Ecosystem 0.2.2 in JavaScript">Virtual Ecosystem 0.2.2 en JavaScript</small></h1>
+  <span class="ayuda" data-es="El motor de Virtual Ecosystem pasado a JavaScript, a solas: sin animales que se vean. Elige un escenario, cambia lo que quieras en las pestañas y pulsa «Iniciar». Da los mismos números que el original." data-en="The Virtual Ecosystem engine ported to JavaScript, on its own: no visible animals. Choose a scenario, change whatever you like in the tabs and press «Start». It gives the same numbers as the original."></span>
+  <div id="estado" data-en="Loading…">Cargando…</div>
+  <button id="b-tema" title="Cambiar entre tema oscuro y claro" data-en-title="Switch between dark and light theme">☀ Claro</button>
+</header>
+
+<nav id="pestanas">
+  <button data-p="simulacion" class="activa" data-en="Simulation">Simulación</button>
+  <button data-p="parametros" data-en="Parameters">Parámetros</button>
+  <button data-p="tablas" data-en="Animals and plants">Animales y plantas</button>
+  <button data-p="entradas" data-en="Climate and starting data">Clima y datos de partida</button>
+  <span class="ayuda" data-es="Simulación: correr el motor y ver sus gráficas. Parámetros: todas las constantes de cada módulo. Animales y plantas: los tipos de animal y de planta y las cohortes de partida. Clima y datos de partida: las entradas, con un factor y una suma." data-en="Simulation: run the engine and see its charts. Parameters: every constant of each module. Animals and plants: the animal and plant types and the starting cohorts. Climate and starting data: the inputs, with a factor and an offset."></span>
+</nav>
+
+<section id="p-simulacion" class="panel activa">
+  <div id="controles">
+    <label><span data-en="Scenario">Escenario</span> <select id="escenario"></select><span class="ayuda" data-es="Los datos de partida: el ejemplo de Virtual Ecosystem, Maliau (Borneo) u otros de datos/escenarios/." data-en="The starting data: the Virtual Ecosystem example, Maliau (Borneo) or others in datos/escenarios/."></span></label>
+    <label><span data-en="Seed">Semilla</span> <input id="semilla" type="number" value="1" min="0" step="1"><span class="ayuda" data-es="El azar del motor: con la misma semilla, la misma simulación, bit a bit." data-en="The engine randomness: with the same seed, the same simulation, bit for bit."></span></label>
+    <label><input id="historia" type="checkbox" checked> <span data-en="keep full history">guardar historia completa</span><span class="ayuda" data-es="Guarda todas las variables de todos los pasos: hace falta para exportar el zarr. En pasadas diarias largas ocupa mucha memoria." data-en="Keeps every variable of every step: needed to export the zarr. On long daily runs it uses a lot of memory."></span></label>
+    <label><input id="corregir" type="checkbox"> <span data-en="fix the herbivore bug">corregir el fallo de los herbívoros</span><span class="ayuda" data-es="Activa las correcciones del fallo de los herbívoros (unidades, truncados, Boltzmann, reproducción…) y los ajustes de motor/correcciones.js. Apagado, el motor da los mismos bits que el original. El escenario de Maliau ya las trae puestas." data-en="Turns on the fixes for the herbivore bug (units, truncation, Boltzmann, reproduction…) and the tweaks in motor/correcciones.js. Off, the engine gives the same bits as the original. The Maliau scenario already has them on."></span></label>
+    <button id="b-iniciar" class="principal" data-en="Start / restart">Iniciar / reiniciar</button>
+    <button id="b-paso" disabled data-en="One step">Un paso</button>
+    <button id="b-correr" disabled data-en="▶ Run">▶ Correr</button>
+    <span class="ayuda" data-es="Iniciar crea la simulación con lo que haya en las pestañas. Un paso avanza un paso del motor (un día o un mes, según el escenario); Correr sigue hasta el final o hasta que lo pares." data-en="Start creates the simulation with whatever is in the tabs. One step advances one engine step (a day or a month, depending on the scenario); Run keeps going to the end or until you stop it."></span>
+    <label><span data-en="Speed">Velocidad</span> <input id="velocidad" type="range" min="0" max="100" value="100"><span class="ayuda" data-es="A la derecha, sin pausas entre pasos; a la izquierda, con una pausa para ver cómo cambian las gráficas." data-en="Right, no pauses between steps; left, with a pause to watch the charts change."></span></label>
+    <span class="sep"></span>
+    <button id="b-guardar" data-en="Save settings">Guardar configuración</button>
+    <label class="boton"><span data-en="Load settings">Cargar configuración</span> <input id="f-cargar" type="file" accept=".json" hidden></label>
+    <span class="ayuda" data-es="Guarda en un archivo el escenario con todos tus cambios (parámetros, tablas, clima y semilla) para volver a cargarlo." data-en="Saves the scenario with all your changes (parameters, tables, climate and seed) to a file so you can load it again."></span>
+    <button id="b-exp-series" data-en="Export series (CSV)">Exportar series (CSV)</button>
+    <button id="b-exp-animales" data-en="Export animals CSV">Exportar CSV de animales</button>
+    <button id="b-exp-zarr" data-en="Export zarr (zip)">Exportar zarr (zip)</button>
+    <span class="ayuda" data-es="Series: la media de cada variable en cada paso. Animales: las cohortes como los CSV del original. Zarr: la salida completa del motor, como la del original (necesita la historia completa)." data-en="Series: the mean of each variable at each step. Animals: the cohorts like the original CSVs. Zarr: the full engine output, like the original (needs the full history)."></span>
+  </div>
+  <div id="progreso"><div id="barra"></div></div>
+
+  <div id="graficas">
+    <figure><figcaption><span data-en="Populations by animal type">Poblaciones por tipo de animal</span> <select id="g-pob-modo"><option value="individuos" data-en="individuals">individuos</option><option value="biomasa" data-en="biomass (kg)">biomasa (kg)</option><option value="cohortes" data-en="cohorts">cohortes</option></select>
+      <label><input id="g-pob-log" type="checkbox" checked> log</label><span class="ayuda" data-es="Cada línea, un grupo funcional del motor, sumando toda la rejilla. «log»: escala logarítmica. Pulsa un nombre de la leyenda para ocultarlo." data-en="Each line, an engine functional group, summed over the whole grid. «log»: logarithmic scale. Click a legend name to hide it."></span></figcaption><canvas id="g-pob"></canvas></figure>
+    <figure><figcaption><span data-en="Plant biomass (kg C, whole grid)">Biomasa de plantas (kg C, toda la rejilla)</span><span class="ayuda" data-es="El carbono de las plantas de cada tipo (PFT), sumando todas las cohortes." data-en="The carbon in the plants of each type (PFT), summing all cohorts."></span></figcaption><canvas id="g-plantas"></canvas></figure>
+    <figure><figcaption><span data-en="Leaf litter (kg C m⁻², mean)">Hojarasca (kg C m⁻², media)</span><span class="ayuda" data-es="Las reservas de hojarasca del modelo de hojarasca (encima y debajo del suelo, metabólica y estructural, madera muerta), media de la rejilla." data-en="The litter pools of the litter model (above and below ground, metabolic and structural, dead wood), grid mean."></span></figcaption><canvas id="g-hojarasca"></canvas></figure>
+    <figure><figcaption><span data-en="Soil (kg C m⁻³, mean)">Suelo (kg C m⁻³, media)</span><span class="ayuda" data-es="Las reservas de carbono del modelo de suelo (materia orgánica, microbios), media de la rejilla." data-en="The carbon pools of the soil model (organic matter, microbes), grid mean."></span></figcaption><canvas id="g-suelo"></canvas></figure>
+    <figure><figcaption><span data-en="Water">Agua</span><span class="ayuda" data-es="Lluvia, agua del suelo y escorrentía del modelo de hidrología, media de la rejilla." data-en="Rain, soil water and runoff from the hydrology model, grid mean."></span></figcaption><canvas id="g-agua"></canvas></figure>
+    <figure><figcaption><span data-en="Temperature (°C, mean)">Temperatura (°C, media)</span><span class="ayuda" data-es="La temperatura del aire de partida y la que calcula el microclima del bosque, media de la rejilla." data-en="The input air temperature and the one computed by the forest microclimate, grid mean."></span></figcaption><canvas id="g-temp"></canvas></figure>
+    <figure class="ancha"><figcaption><span data-en="Who eats whom (kg C eaten in the step)">Quién se come a quién (kg C ingeridos en el paso)</span> <label><input id="t-acum" type="checkbox"> <span data-en="cumulative">acumulado</span></label><span class="ayuda" data-es="Filas: los grupos que comen; columnas: lo que comen. Cuanto más oscuro, más. «acumulado»: desde el principio en vez del último paso." data-en="Rows: the groups that eat; columns: what they eat. The darker, the more. «cumulative»: since the start instead of the last step."></span></figcaption><div id="troficas"></div></figure>
+    <figure class="ancha"><figcaption><span data-en="Explorer: any variable">Explorador: cualquier variable</span>
+        <select id="x-var"></select> <select id="x-corte"></select> <span id="x-desc"></span><span class="ayuda" data-es="Elige cualquier variable del motor y, si tiene capas, elementos o tipos, cuál. A la izquierda, su media en el tiempo; a la derecha, el mapa de la rejilla en el último paso (pasa el ratón por una celda para ver su valor)." data-en="Choose any engine variable and, if it has layers, elements or types, which one. Left, its mean over time; right, the grid map at the last step (hover a cell to see its value)."></span></figcaption>
+      <div class="explorador"><canvas id="g-explorador"></canvas><div class="mapa"><canvas id="mapa"></canvas><div id="leyenda"></div><div id="mapa-info"></div></div></div>
+    </figure>
+  </div>
+</section>
+
+<section id="p-parametros" class="panel">
+  <div class="cab-panel"><input id="buscar" type="search" placeholder="Buscar parámetro…" data-en-placeholder="Search parameter…"><span class="ayuda" data-es="Todos los parámetros de configuración (los de los TOML y las constantes de model_config.py de cada módulo), con su valor por defecto. Pasa el ratón por el «?» de cada uno para su explicación. Los cambios se aplican al pulsar «Iniciar / reiniciar»; los que no son el de por defecto salen marcados." data-en="Every configuration parameter (those in the TOML files and the model_config.py constants of each module), with its default value. Hover each «?» for its explanation. Changes apply when you press «Start / restart»; those that differ from the default are highlighted."></span></div>
+  <div id="arbol"></div>
+</section>
+
+<section id="p-tablas" class="panel">
+  <div class="cab-panel"><span class="ayuda" data-es="Tipos de animal (grupos funcionales), tipos de planta (PFT) y cohortes de plantas de partida, como en los CSV del original. Cada columna lleva su «?». Las filas se pueden cambiar, quitar (×) y añadir." data-en="Animal types (functional groups), plant types (PFT) and starting plant cohorts, as in the original CSVs. Each column has its «?». Rows can be edited, removed (×) and added."></span></div>
+  <div id="tablas"></div>
+</section>
+
+<section id="p-entradas" class="panel">
+  <div class="cab-panel"><span class="ayuda" data-es="Clima y demás datos de partida (los .nc del original). Para cada variable se puede multiplicar por un factor (×) y sumar una cantidad (+) en todas las celdas y pasos; se aplica al iniciar: primero ×, luego +. El mapa enseña el primer paso." data-en="Climate and other starting data (the original .nc files). Each variable can be multiplied by a factor (×) and have an amount added (+) in every cell and step; it applies on start: first ×, then +. The map shows the first step."></span></div>
+  <div id="entradas"></div>
+</section>
+
+<div id="error" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

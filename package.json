@@ -1,0 +1,14 @@
+{
+  "name": "ecoloco",
+  "private": true,
+  "type": "module",
+  "description": "Virtual Ecosystem 0.2.2 portado a JavaScript puro, con interfaz web y comparador bit a bit contra el original",
+  "scripts": {
+    "test": "node --test pruebas/*.test.js",
+    "interfaz": "node interfaz/servidor.mjs 8090",
+    "correr": "node herramientas/correr.mjs datos/escenarios/ejemplo.json --salida runs/js_ejemplo"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

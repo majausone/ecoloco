@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoLoco · el mundo vivo de Maliau</title>
+<style>
+  html, body { margin:0; height:100%; background:#000; overflow:hidden; font:13px/1.45 system-ui, sans-serif; color:#efe4d2; }
+  #lienzo { position:fixed; inset:0; width:100vw; height:100vh; display:block; image-rendering:pixelated; }
+  .caja { position:fixed; background:rgba(20,16,15,.78); border:1px solid #3a2f29; border-radius:6px; }
+  #indicador { left:10px; top:44px; padding:4px 10px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  #indicador .lento { color:#e8a64a; }
+  #resumen { right:56px; top:44px; width:330px; max-height:calc(100vh - 80px); overflow:auto; padding:8px 11px; display:none; }
+  #resumen.on { display:block; }
+  #resumen h3 { margin:0 0 4px; font-size:13px; color:#e8a64a; }
+  #resumen table { border-collapse:collapse; width:100%; margin-bottom:6px; }
+  #resumen td { padding:0 4px; } #resumen td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+  #resumen .suceso { opacity:.9; } #resumen .suceso b { color:#e8a64a; font-weight:normal; }
+  #medidas { left:10px; top:78px; padding:4px 10px; display:none; font-variant-numeric:tabular-nums; white-space:pre; font-size:12px; }
+  #medidas.on { display:block; }
+  #carga { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:#0d0b0a; font-size:15px; z-index:5; text-align:center; }
+  .oculto { display:none !important; }
+  #indicador .fps { color:#e8a64a; }
+  /* menú de animales y ficha */
+  #b-panel { position:fixed; right:10px; top:44px; width:34px; height:34px; border-radius:50%; border:1px solid #4a3c34; background:rgba(20,16,15,.78); color:#efe4d2; font-size:17px; cursor:pointer; z-index:3; transition:right .2s; }
+  #b-panel:hover, #b-panel.on { border-color:#e8a64a; color:#e8a64a; }
+  body.panel-abierto #b-panel { right:412px; }
+  #b-ayuda { position:fixed; right:19px; top:86px; z-index:3; transition:right .2s; }
+  body.panel-abierto #b-ayuda { right:421px; }
+  #panel { position:fixed; top:34px; right:0; bottom:0; width:400px; background:rgba(20,16,15,.9); border-left:1px solid #3a2f29; transform:translateX(100%); transition:transform .2s; display:flex; flex-direction:column; z-index:2; }
+  #panel.on { transform:none; }
+  body.panel-abierto #resumen { right:458px; }
+  #pestanas-panel button .cerrar { margin-left:6px; opacity:.75; } #pestanas-panel button .cerrar:hover { opacity:1; }
+  #pestanas-panel #pestana-ficha { flex:1.5; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .buscador { padding:8px 12px 2px; } .buscador input { width:100%; box-sizing:border-box; background:#1a1512; color:#efe4d2; border:1px solid #4a3c34; border-radius:5px; padding:5px 8px; font:inherit; }
+  .dato { font-variant-numeric:tabular-nums; color:#e8a64a; }
+  .hoja h4 .ayuda { text-transform:none; letter-spacing:0; }
+  #pestanas-panel { display:flex; gap:3px; padding:8px 10px 0; border-bottom:1px solid #3a2f29; }
+  #pestanas-panel button { flex:1; background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-bottom:none; border-radius:5px 5px 0 0; padding:5px 4px; font:inherit; cursor:pointer; }
+  #pestanas-panel button.on { background:#e8a64a; color:#1a1410; border-color:#e8a64a; }
+  .hoja { flex:1; overflow:auto; padding:8px 12px 12px; font-size:12.5px; display:flex; flex-direction:column; }
+  .hoja h4 { margin:12px 0 4px; font-size:12px; color:#e8a64a; font-weight:normal; text-transform:uppercase; letter-spacing:.04em; }
+  .hoja .linea { font-size:11.5px; margin:3px 0; }
+  .botonera { display:flex; flex-wrap:wrap; gap:3px; align-items:center; margin:3px 0; }
+  .botonera button, .opcion button { background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-radius:4px; padding:2px 8px; font:inherit; cursor:pointer; }
+  .botonera button.on, .opcion button.on, .botonera button.fuerte { background:#e8a64a; color:#1a1410; border-color:#e8a64a; }
+  .botonera button:disabled { opacity:.4; cursor:default; }
+  .opcion button.ahora { border-color:#e8a64a; }
+  .botonera.pequenos button { padding:1px 6px; font-size:11.5px; }
+  .botonera input[type=number] { width:62px; background:#1a1512; color:#efe4d2; border:1px solid #4a3c34; border-radius:4px; padding:2px 5px; font:inherit; }
+  .tabla { width:100%; border-collapse:collapse; } .tabla td { padding:1px 4px; } .tabla td:last-child { text-align:right; font-variant-numeric:tabular-nums; color:#e8a64a; }
+  .tabla tr[data-g], .tabla tr[data-l] { cursor:pointer; } .tabla tr[data-g]:hover, .tabla tr[data-l]:hover { background:#2a221e; } .tabla tr.sel { background:#4a3a24; }
+  .tabla tr.tot td { padding-top:6px; font-weight:600; } .tabla td.dib { text-align:right; opacity:.8; white-space:nowrap; } .tabla tr.cab td { font-size:11px; opacity:.6; color:inherit; text-align:right; } .tabla tr[data-g] td:first-child { padding-left:12px; }
+  .caja-grafica { margin:6px 0; min-height:40px; }
+  .grafica { display:block; } .etiqueta-grafica { position:absolute; display:none; background:rgba(20,16,15,.95); border:1px solid #4a3c34; border-radius:4px; padding:3px 7px; font-size:11.5px; pointer-events:none; white-space:nowrap; z-index:3; }
+  .leyenda { display:flex; gap:12px; font-size:11.5px; margin-top:2px; } .marca { display:inline-block; width:10px; height:3px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+  .titulo-grafica { margin-top:8px; color:#e8a64a; font-size:12px; }
+  #datos-lista { max-height:240px; overflow:auto; border:1px solid #2c241f; border-radius:4px; margin-top:4px; }
+  #datos-lista .var { display:flex; gap:8px; justify-content:space-between; padding:3px 7px; cursor:pointer; border-bottom:1px solid #241d19; }
+  #datos-lista .var:hover { background:#2a221e; } #datos-lista .var.sel { background:#4a3a24; }
+  #datos-lista .var .n { color:#e8a64a; font-variant-numeric:tabular-nums; white-space:nowrap; text-align:right; } #datos-lista .cod { font-size:10.5px; }
+  .cuadros { display:grid; gap:2px; width:180px; margin:4px 0; } .cuadros button { aspect-ratio:1; padding:0; background:#2a221e; border:1px solid #4a3c34; border-radius:2px; cursor:pointer; }
+  .cuadros button.cam { border-color:#3b86cf; } .cuadros button.on { background:#e8a64a; border-color:#e8a64a; }
+  .opcion { display:grid; grid-template-columns:110px 1fr; gap:2px 8px; padding:5px 0; border-top:1px solid #2c241f; } .opcion .nom { opacity:.8; padding-top:2px; }
+  .opcion .botones { display:flex; flex-wrap:wrap; gap:3px; } .opcion .linea { grid-column:2; font-size:11px; opacity:.6; }
+  .pred { margin-top:8px; } .pred .t { font-size:12px; }
+  #ajustes { padding:8px 12px 6px; border-bottom:1px solid #3a2f29; font-size:12.5px; }
+  #ajustes .fila { display:flex; align-items:center; gap:6px; margin:2px 0; } #ajustes .fila > span:not(.ayuda) { width:52px; opacity:.75; }
+  #ajustes .crece { flex:1; }
+  #ajustes button { background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-radius:4px; padding:1px 7px; font:inherit; cursor:pointer; }
+  #ajustes .enlace { color:#e8a64a; margin-left:6px; font-size:12.5px; }
+  #ajustes button.on { background:#e8a64a; color:#1a1410; border-color:#e8a64a; cursor:default; } #ajustes .nota { font-size:11.5px; margin:4px 0 2px; }
+  #aviso { left:50%; top:52px; transform:translateX(-50%); padding:6px 12px; display:none; } #aviso.on { display:block; }
+  #hoja-animales { padding:0; overflow:hidden; }
+  #hoja-ficha { padding:0; }
+  #ficha { padding:10px 12px 6px; overflow:auto; font-size:12.5px; }
+  #ficha .nada { opacity:.75; padding:6px 0; }
+  #ficha .cab { display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  #ficha .nom { font-size:15px; color:#e8a64a; } #ficha .cien { font-style:italic; opacity:.75; }
+  #ficha .acc button { background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-radius:4px; padding:2px 7px; font:inherit; cursor:pointer; margin-left:3px; }
+  #ficha .acc button.on { background:#e8a64a; color:#1a1410; border-color:#e8a64a; }
+  #ficha h4 { margin:9px 0 3px; font-size:12px; color:#e8a64a; font-weight:normal; text-transform:uppercase; letter-spacing:.04em; }
+  #ficha table { border-collapse:collapse; width:100%; } #ficha td { padding:1px 4px 1px 0; vertical-align:top; } #ficha td:first-child { opacity:.7; white-space:nowrap; width:1%; padding-right:10px; }
+  #ficha .ahora { margin-top:7px; padding:6px 8px; background:#2a221e; border-radius:5px; } #ficha .ahora b { font-weight:normal; color:#fff3dc; }
+  #ficha .porque { opacity:.75; font-size:12px; }
+  #ficha .aviso { margin-top:7px; padding:6px 8px; background:#2a2a2e; border-radius:5px; } #ficha .aviso.muerto { background:#3a1e1c; color:#f0b0a0; }
+  #ficha .hist div { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } #ficha .hist b { color:#e8a64a; font-weight:normal; font-variant-numeric:tabular-nums; }
+  #ficha .nota { margin-top:4px; font-size:12px; }
+  .barra { display:inline-block; width:110px; height:8px; background:#3a2f29; border-radius:4px; overflow:hidden; vertical-align:middle; margin-right:6px; }
+  .barra span { display:block; height:100%; }
+  .gris { opacity:.65; }
+  #lista { overflow:auto; flex:1; padding:6px 0 10px; font-size:12.5px; }
+  #lista .tot { padding:2px 12px 6px; }
+  #lista .esp { padding:4px 12px; cursor:pointer; position:relative; } #lista .esp:hover { background:#2a221e; }
+  #lista .esp .n { position:absolute; right:12px; top:4px; font-variant-numeric:tabular-nums; color:#e8a64a; }
+  #lista .esp .sub { font-size:11px; padding-left:14px; } #lista .flecha { display:inline-block; width:10px; opacity:.7; }
+  #lista .indiv { padding:0 0 4px 26px; } #lista .uno { padding:2px 8px; cursor:pointer; border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #lista .uno:hover { background:#2a221e; } #lista .uno.sel { background:#4a3a24; }
+</style>
+</head>
+<body>
+<canvas id="lienzo"></canvas>
+<div id="carga" data-en="Generating the world and computing the first day…">Generando el mundo y calculando el primer día…</div>
+<div class="caja" id="indicador"></div>
+<div class="caja" id="medidas"></div>
+<div class="caja" id="resumen"></div>
+<button id="b-panel" title="El panel: mundo, animales, datos y parámetros (B)" data-en-title="The panel: world, animals, data and parameters (B)">🐾</button>
+<span id="b-ayuda" class="ayuda izq" data-es="Cámara: botón derecho + W A S D para volar, Q y E para bajar y subir, rueda para acercarse, F encuadrar, P perspectiva u ortográfica. Clic en un animal, una planta o un hongo: su ficha. Teclas: espacio pausa, 1–5 velocidad (×1 ×10 ×60 ×600 máx), B el panel, G seguir a otro animal, Esc dejar de seguir, Z resumen del día, I indicador, M medidas, Intro pantalla completa." data-en="Camera: right button + W A S D to fly, Q and E to go down and up, wheel to zoom, F to frame, P perspective or orthographic. Click an animal, a plant or a fungus: its card. Keys: space pause, 1–5 speed (×1 ×10 ×60 ×600 max), B the panel, G follow another animal, Esc stop following, Z day summary, I indicator, M measurements, Enter full screen."></span>
+<div id="panel">
+  <div id="pestanas-panel"><button data-p="mundo" class="on" data-en="World">Mundo</button><button data-p="animales" data-en="Animals">Animales</button><button data-p="datos" data-en="Data">Datos</button><button data-p="parametros" data-en="Parameters">Parámetros</button><button data-p="ficha" id="pestana-ficha" class="oculto"><span id="pestana-ficha-nombre"></span><span id="cerrar-ficha" class="cerrar" title="Cerrar la ficha" data-en-title="Close the card">✕</span></button></div>
+  <div class="hoja" id="hoja-mundo">
+    <div id="ajustes">
+      <div class="fila"><span data-en="World">Mundo</span><div id="tam-mundo" class="crece"></div><span class="ayuda izq" data-es="Cuánta selva calcula el motor (de 1 a 10 km²) y, por tanto, cuántos animales hay. Todos salen en el mapa: cada animal dibujado vale por varios del motor. Cambiarlo vuelve a generar el mundo." data-en="How much forest the engine computes (1 to 10 km²), and therefore how many animals there are. All of them appear on the map: each drawn animal stands for several in the engine. Changing it regenerates the world."></span></div>
+      <div class="fila"><span data-en="Map">Mapa</span><div id="tam-mapa" class="crece"></div><span class="ayuda izq" data-es="El lado del cuadrado que se dibuja (de 50 a 1000 m; 100 por defecto). Todo el mundo cabe en él. Cambiarlo vuelve a generar el mundo." data-en="The side of the square that is drawn (50 to 1000 m; 100 by default). The whole world fits in it. Changing it regenerates the world."></span></div>
+      <div class="fila"><span></span><button id="guardar" data-en="Save this world">Guardar este mundo</button><span class="ayuda izq" data-es="Guarda la configuración y el día: se vuelve a abrir desde la portada, en «Mundos guardados»." data-en="Saves the settings and the day: open it again from the home page, under «Saved worlds»."></span></div>
+    </div>
+    <h4><span data-en="Speed">Velocidad</span><span class="ayuda" data-es="Un día de juego dura 24 minutos a ×1. A «máx», un día por cada día que esté calculado. Teclas 1–5; espacio, pausa." data-en="A game day lasts 24 minutes at ×1. At «max», one day per computed day. Keys 1–5; space, pause."></span></h4><div class="botonera" id="panel-velocidad"></div>
+    <h4><span data-en="Go to a day">Ir a un día</span><span class="ayuda" data-es="Hacia delante, el motor corre deprisa (unas 0,2 s por día) sin los animales y luego se reparten; hacia atrás, el mundo se vuelve a generar desde el principio." data-en="Forwards, the engine runs fast (about 0.2 s per day) without the animals, which are then placed; backwards, the world is generated again from the start."></span></h4>
+    <div class="botonera" id="ir-pasos"><button data-d="-30">−30</button><button data-d="-7">−7</button><button data-d="-1">−1</button><input type="number" id="ir-dia" min="1"><button data-d="1">+1</button><button data-d="7">+7</button><button data-d="30">+30</button><button id="ir-boton" class="fuerte" data-en="Go">Ir</button></div>
+    <h4><span data-en="Performance">Rendimiento</span><span class="ayuda" data-es="Fotogramas por segundo y triángulos que se dibujan en cada fotograma. Más detalle con la tecla M." data-en="Frames per second and triangles drawn in each frame. More detail with the M key."></span></h4>
+    <div id="rendimiento" class="dato"></div>
+    <h4><span data-en="Animals on the map">Animales en el mapa</span><span class="ayuda" data-es="De cada grupo: cuántos animales se dibujan en el mapa, por cuántos individuos del motor vale cada uno (para que quepan todos sin sobrecargar el cuadrado) y cuántos hay en el motor en todo el mundo. Pulsa un grupo para ver cómo cambia con los días." data-en="For each group: how many animals are drawn on the map, how many engine individuals each one stands for (so they all fit without overloading the square) and how many there are in the engine across the whole world. Click a group to see how it changes over the days."></span></h4>
+    <div id="mundo-animales"></div><div id="mundo-grafica" class="caja-grafica"></div>
+  </div>
+  <div class="hoja oculto" id="hoja-animales">
+    <div class="buscador"><input type="search" id="buscar-animal" placeholder="Buscar especie o nombre científico" data-en-placeholder="Search species or scientific name" autocomplete="off"></div>
+    <div id="lista"></div>
+  </div>
+  <div class="hoja oculto" id="hoja-ficha"><div id="ficha"></div></div>
+  <div class="hoja oculto" id="hoja-datos">
+    <div class="botonera pequenos" id="datos-categorias"></div>
+    <div id="datos-lista"></div>
+    <div id="datos-titulo" class="titulo-grafica"></div>
+    <div id="datos-grafica" class="caja-grafica"></div>
+    <div id="datos-capas"></div>
+  </div>
+  <div class="hoja oculto" id="hoja-parametros">
+    <h4><span data-en="Change from tomorrow">Cambiar desde mañana</span><span class="ayuda" data-es="Cambia el clima o lo que admite el motor desde el día siguiente al que se ve: los días que vienen se vuelven a calcular con el cambio. Antes, mira la predicción." data-en="Changes the climate or what the engine allows from the day after the one shown: the coming days are computed again with the change. Check the prediction first."></span></h4>
+    <div id="param-lista"></div>
+    <div class="gris linea" id="param-estado"></div>
+    <div class="botonera"><button id="param-aplicar" class="fuerte" data-en="Apply">Aplicar</button></div>
+    <h4><span data-en="Prediction">Predicción</span><span class="ayuda" data-es="El motor corre deprisa con y sin el cambio, sin tocar la partida. Línea naranja: con los cambios; línea azul discontinua: sin ellos." data-en="The engine runs fast with and without the change, without touching the game. Orange line: with the changes; dashed blue line: without them."></span></h4>
+    <div class="botonera" id="param-dias"><button data-d="30" data-en="30 days">30 días</button><button data-d="90" data-en="90 days">90 días</button><button data-d="365" data-en="1 year">1 año</button><button id="param-predecir" class="fuerte" data-en="Predict">Predecir</button></div>
+    <div id="param-prediccion"></div>
+  </div>
+</div>
+<div class="caja" id="aviso"></div>
+<link rel="stylesheet" href="../comun/comun.css">
+<script type="module" src="./vivo.js"></script>
+</body>
+</html>

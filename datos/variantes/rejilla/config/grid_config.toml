@@ -1,0 +1,3 @@
+[core.grid]
+cell_nx = 6
+cell_ny = 4

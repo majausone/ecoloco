@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulaciones de ecosistemas open source</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EA; --surface:#FAFCF8; --head:#E3E9DF; --ink:#17231D; --muted:#56665D;
+  --line:#D2DACF; --accent:#17687A; --new:#B07A14;
+  --yes:#2A7446; --no:#A23E36; --mid:#8A6814; --chip:#E4EBE1; --row:#F3F6F0;
+  --pop:#17231D; --pop-ink:#F3F6F0;
+  color-scheme:light;
+  box-sizing:border-box;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A17; --surface:#18221E; --head:#1F2B26; --ink:#E3EAE4; --muted:#9AA9A0;
+    --line:#2C3A34; --accent:#74C6D4; --new:#E2B250;
+    --yes:#7FCB99; --no:#E78E83; --mid:#DBBA5E; --chip:#24312C; --row:#1C2723;
+    --pop:#E3EAE4; --pop-ink:#121A17;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A17; --surface:#18221E; --head:#1F2B26; --ink:#E3EAE4; --muted:#9AA9A0;
+  --line:#2C3A34; --accent:#74C6D4; --new:#E2B250;
+  --yes:#7FCB99; --no:#E78E83; --mid:#DBBA5E; --chip:#24312C; --row:#1C2723;
+  --pop:#E3EAE4; --pop-ink:#121A17;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:400 15px/1.3 "Barlow Semi Condensed","Arial Narrow","Helvetica Neue",Arial,system-ui,sans-serif;
+  font-variant-numeric:tabular-nums;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{padding:10px max(10px,env(safe-area-inset-right,0px)) 10px max(10px,env(safe-area-inset-left,0px))}
+@media (min-width:760px){.wrap{padding:16px 20px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Controles */
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar .search{flex:1 1 220px;min-width:0}
+input,select,button{font:inherit;color:inherit}
+input[type=search],select{
+  width:100%;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:6px;
+  background:var(--surface);
+}
+.btn{
+  height:36px;padding:0 14px;border:1px solid var(--line);border-radius:6px;
+  background:var(--surface);cursor:pointer;font-weight:500;white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent)}
+.count{color:var(--muted);white-space:nowrap;margin-left:auto}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.panel{display:none;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px 12px;margin-top:8px}
+.panel.open{display:grid}
+@media (min-width:760px){.panel{display:grid}.toggle{display:none}}
+.f label,.f .lab{display:block;font-size:13px;color:var(--muted);margin-bottom:2px}
+.f output{color:var(--ink);font-weight:600}
+input[type=range]{width:100%;height:36px;margin:0;accent-color:var(--accent)}
+.f.wide{grid-column:1/-1}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chipbtn{
+  height:30px;padding:0 11px;border:1px solid var(--line);border-radius:15px;
+  background:var(--surface);cursor:pointer;
+}
+.chipbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface);font-weight:500}
+
+/* Tabla: cabe a lo ancho de la pantalla; solo en móvil se desplaza dentro de su caja */
+.tablewrap{margin-top:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow-x:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+td{padding:6px 10px}
+th{background:var(--head);padding:0;font-weight:600;position:sticky;top:0;z-index:1}
+th button{
+  display:flex;align-items:center;gap:5px;width:100%;padding:8px 10px;
+  border:0;background:none;cursor:pointer;font-weight:600;text-align:left;white-space:nowrap;
+}
+th .arr{font-size:10px;color:var(--muted);opacity:.45}
+th[aria-sort="ascending"] .arr,th[aria-sort="descending"] .arr{color:var(--accent);opacity:1}
+tbody tr:nth-child(even) td{background:var(--row)}
+tbody tr:last-child td{border-bottom:0}
+td.name{font-weight:600;min-width:14ch}
+td.num{text-align:right;white-space:nowrap}
+th.num button{justify-content:flex-end}
+td.nw{white-space:nowrap}
+td.tagcell{min-width:20ch}
+.tag{display:inline-block;margin:0 3px 3px 0;padding:0 7px;border-radius:9px;background:var(--chip);font-size:13px}
+.stack{display:block;white-space:nowrap}
+.stack + .stack{color:var(--muted);font-size:13px}
+.new{display:inline-block;margin-left:5px;padding:0 5px;border:1px solid var(--new);border-radius:7px;color:var(--new);font-size:11px;font-weight:500;vertical-align:1px}
+.os-si{color:var(--yes);font-weight:600}
+.os-no{color:var(--no);font-weight:600}
+.os-re{color:var(--mid);font-weight:600}
+.st-4{color:var(--yes)}.st-3{color:var(--yes)}.st-2{color:var(--mid)}.st-1{color:var(--no)}
+.nv{color:var(--muted)}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+td.empty{padding:28px 12px;text-align:center;color:var(--muted)}
+td.empty .btn{margin-left:10px}
+
+/* Notas: una interrogación que enseña la nota al pasar el ratón o al tocarla */
+td.q{text-align:center;padding:4px 6px}
+.qbtn{
+  width:24px;height:24px;border:1px solid var(--line);border-radius:12px;background:var(--surface);
+  color:var(--accent);font-weight:600;font-size:13px;cursor:help;padding:0;line-height:22px;
+}
+.qbtn:hover,.qbtn[aria-expanded="true"]{border-color:var(--accent);background:var(--accent);color:var(--surface)}
+#pop{
+  position:fixed;z-index:10;max-width:320px;padding:8px 11px;border-radius:7px;
+  background:var(--pop);color:var(--pop-ink);font-size:14px;line-height:1.35;
+  box-shadow:0 4px 18px rgba(0,0,0,.22);pointer-events:none;display:none;
+}
+#pop.on{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="sr">Simulaciones de ecosistemas open source</h1>
+
+  <div class="bar">
+    <div class="search">
+      <label class="sr" for="q">Buscar</label>
+      <input type="search" id="q" placeholder="Buscar por nombre, lenguaje, licencia…" autocomplete="off">
+    </div>
+    <button class="btn toggle" id="toggle" type="button" aria-expanded="false" aria-controls="panel">Filtros</button>
+    <button class="btn" id="reset" type="button">Quitar filtros</button>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+
+  <div class="panel" id="panel">
+    <div class="f"><label for="fT">Tipo</label><select id="fT"></select></div>
+    <div class="f"><label for="fO">Open</label><select id="fO"></select></div>
+    <div class="f"><label for="fL">Lenguaje</label><select id="fL"></select></div>
+    <div class="f"><label for="fLic">Licencia</label><select id="fLic"></select></div>
+    <div class="f"><label for="fS">Estado</label><select id="fS"></select></div>
+    <div class="f"><label for="fStars">Estrellas</label>
+      <select id="fStars">
+        <option value="0">Cualquiera</option>
+        <option value="100">100 o más</option>
+        <option value="500">500 o más</option>
+        <option value="1000">1.000 o más</option>
+        <option value="3000">3.000 o más</option>
+        <option value="5000">5.000 o más</option>
+      </select>
+    </div>
+    <div class="f"><label for="fDepth">Profundidad mínima: <output id="fDepthOut">0</output></label>
+      <input type="range" id="fDepth" min="0" max="10" step="1" value="0">
+    </div>
+    <div class="f wide">
+      <span class="lab" id="tagsLab">Qué simula (tienen que cumplirse todas las marcadas)</span>
+      <div class="chips" id="chips" role="group" aria-labelledby="tagsLab"></div>
+    </div>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <caption class="sr">Simulaciones y juegos de ecosistemas, con profundidad, estrellas, lenguaje, licencia, estado, repositorio y web</caption>
+      <thead><tr id="head"></tr></thead>
+      <tbody id="body"></tbody>
+    </table>
+  </div>
+</div>
+<div id="pop" role="tooltip"></div>
+
+<script>
+(function(){
+  var TAGS={P:'Plantas',A:'Animales',D:'Depredación',R:'Reproducción',E:'Evolución',S:'Suelo',W:'Agua y clima',N:'Redes neuronales',X:'3D'};
+  var TAG_ORDER=['P','A','D','R','E','S','W','N','X'];
+  var NA='n/a';
+  var CERR='Cerrada';
+
+  // Datos verificados en GitHub/GitLab el 2 de octubre de 2026. "nu" marca los añadidos en esa revisión.
+  function r(n,t,os,d,s,lang,langs,lic,lf,st,tags,repo,web,note,nu){
+    return {n:n,t:t,os:os,d:d,s:s,lang:lang,langs:langs,lic:lic,lf:lf,st:st,
+      tags:tags.split('').map(function(k){return TAGS[k];}),repo:repo,web:web,note:note,nu:!!nu};
+  }
+
+  var DATA=[
+    r('Virtual Ecosystem','Científico','Sí',10,20,'Python',['Python'],'BSD-3','BSD','Activo','PARSW','https://github.com/ImperialCollegeLondon/virtual_ecosystem','https://virtual-ecosystem.readthedocs.io','Imperial College. Microclima, hidrología, suelo y animales. Sin interfaz gráfica'),
+    r('Madingley (C#)','Científico','Sí',9,21,'C#',['C#'],'Sin licencia','Sin licencia','Abandonado','PADR','https://github.com/Madingley/C-sharp-version-of-Madingley','https://madingley.github.io/','Ecosistema global de tierra y mar por cohortes. Sin cambios desde 2018. El repo no tiene licencia'),
+    r('MadingleyR','Científico','Sí',9,6,'C++ y R',['C++','R'],'GPL-3.0','GPL','Poco activo','PADR','https://github.com/MadingleyR/MadingleyR','','Paquete de R del modelo Madingley, la versión que se usa hoy'),
+    r('MadHPC','Científico','Sí',9,1,'C++',['C++'],'Sin licencia','Sin licencia','Abandonado','PADR','https://github.com/mikbitz/MadHPC','','Madingley paralelizado para superordenadores. Experimental'),
+    r('iLand','Científico','Sí',8,30,'C++ / Qt',['C++'],'GPL-3.0','GPL','Activo','PRW','https://github.com/edfm-tum/iland-model','https://iland-model.org/','Bosque árbol a árbol: competencia, regeneración, carbono, viento, escarabajos y ramoneo'),
+    r('LPJ-GUESS','Científico','Restringido',7,null,'C++',['C++'],'Restringida','Cerrada','Activo','PSW','','https://web.nateko.lu.se/lpj-guess/','Vegetación global, carbono y nitrógeno. Código solo por solicitud a la Universidad de Lund'),
+    r('GDAY','Científico','Sí',5,19,'C',['C'],'Sin licencia','Sin licencia','Activo','PSW','https://github.com/mdekauwe/GDAY','','Carbono, nitrógeno y agua en planta y suelo. Sin animales'),
+
+    r('Thrive','Juego','Sí',8,3725,'C# / Godot',['C#'],'GPL-3.0','GPL','Muy activo','DRES','https://github.com/Revolutionary-Games/Thrive','https://revolutionarygamesstudio.com/','Evolución de microbios con química, biomas y especies de la IA que evolucionan. Solo la fase microbiana está madura'),
+    r('orb.farm','Sandbox','Sí',6,505,'Rust y JS',['Rust','JavaScript'],'MIT','MIT','Abandonado','PARES','https://github.com/MaxBittker/orb.farm','https://orb.farm/','Acuario cerrado en el navegador: luz, O₂, CO₂, nitrógeno, algas, dafnias, peces y gambas con genes'),
+    r('openc2e','Juego','Sí',6,167,'C++',['C++'],'LGPL-2.1','LGPL','Activo','AREN','https://github.com/openc2e/openc2e','https://openc2e.github.io/','Motor libre para Creatures: genética, bioquímica y cerebro neuronal. Necesita los datos del juego original'),
+    r('Ecosystem (sayansil)','Sandbox','Sí',4,29,'C++',['C++'],'GPL-3.0','GPL','Activo','AREW','https://github.com/sayansil/Ecosystem','https://ecosystem-simulation.web.app/','Organismos que se adaptan cada generación, con clima y lluvia que controlas tú'),
+    r('Veloren','Juego','Sí',3,7592,'Rust',['Rust'],'GPL-3.0','GPL','Muy activo','PAX','https://gitlab.com/veloren/veloren','https://veloren.net/','RPG voxel de mundo abierto con fauna, flora y biomas. Estrellas del espejo en GitHub (2.399 en GitLab)'),
+    r('Cataclysm: DDA','Juego','Sí',3,13285,'C++',['C++'],'CC BY-SA 3.0','CC','Muy activo','PAW','https://github.com/CleverRaven/Cataclysm-DDA','https://cataclysmdda.org/','Roguelike de supervivencia con fauna, cultivos, estaciones y temperatura. Sin evolución'),
+    r('The Powder Toy','Sandbox','Sí',2,5341,'C++',['C++'],'GPL-3.0','GPL','Activo','','https://github.com/The-Powder-Toy/The-Powder-Toy','https://powdertoy.co.uk/','Física y química de partículas, con algún elemento vivo'),
+    r('Sandspiel','Sandbox','Sí',2,3175,'Rust y JS',['Rust','JavaScript'],'MIT','MIT','Activo','P','https://github.com/MaxBittker/sandspiel','https://sandspiel.club/','Arena en el navegador con plantas y hongos como elementos'),
+    r('Evoli','Juego','Sí',5,218,'Rust',['Rust'],'MIT / Apache-2.0','MIT','Abandonado','PADR','https://github.com/amethyst/evoli','','Juego de ecosistema de Amethyst: plantas, herbívoros y carnívoros. Se paró en 2021 con el motor',1),
+
+    r('ALIEN','Vida artificial','Sí',7,5528,'C++ / CUDA',['C++'],'BSD-3','BSD','Muy activo','DREN','https://github.com/chrxh/alien','https://alien-project.org/','Cuerpos blandos de partículas con sensores y músculos, millones en tiempo real. Requiere GPU NVIDIA'),
+    r('Polyworld','Vida artificial','Sí',6,212,'C++ / Qt',['C++'],'APSL-2.0','Otra','Poco activo','ADRENX','https://github.com/polyworld/polyworld','','Agentes 3D con redes hebbianas que comen, se aparean y se depredan'),
+    r('Noble Ape (ApeSDK)','Vida artificial','Sí',6,58,'C',['C'],'Propia (permisiva)','Otra','Activo','AW','https://github.com/barbalet/apesdk','https://www.apesdk.com/','Simios con cognición y biología en un mundo con terreno, clima y mareas. Desde 1996'),
+    r('The Life Engine','Vida artificial','Sí',5,572,'JavaScript',['JavaScript'],'GPL-3.0','GPL','Activo','PDRE','https://github.com/MaxRobinsonTheGreat/LifeEngine','https://thelifeengine.net/','Organismos multicelulares en rejilla que comen, mutan y depredan. En el navegador'),
+    r('Ecosystem-2 (Lague)','Vida artificial','Sí',5,538,'C# / Unity',['C#'],'Sin licencia','Sin licencia','Abandonado','PADREWX','https://github.com/SebLague/Ecosystem-2','','Conejos y zorros con hambre, sed, pareja y genes heredables en terreno 3D'),
+    r('evolv.io (carykh)','Vida artificial','Sí',5,null,'Java / Processing',['Java'],NA,NA,'Abandonado','PARENW','','','Criaturas con redes neuronales en un terreno con estaciones. El repo original ya no existe; quedan forks sueltos'),
+    r('Biogenesis','Vida artificial','Sí',5,8,'Java',['Java'],'GPL-2.0','GPL','Poco activo','PDRE','https://github.com/sullerandras/biogenesis','https://biogenesis.sourceforge.net/','Unicelulares de segmentos que mutan; los verdes hacen fotosíntesis'),
+    r('Critterding','Vida artificial','Sí',5,13,'C++ / Bullet',['C++'],'GPL-2.0','GPL','Abandonado','ENX','https://github.com/bobke/Critterding','https://critterding.sourceforge.net/','Criaturas 3D con física y cerebros que evolucionan. Último cambio en 2010'),
+    r('Critterding 2','Vida artificial','Sí',5,6,'C++ / Bullet',['C++'],'GPL-3.0','GPL','Activo','ENX','https://github.com/bobke/Critterding2','https://b0bke.itch.io/critterding-2','Reescritura de Critterding, en desarrollo'),
+    r('biosim4','Vida artificial','Sí',4,3366,'C++',['C++'],'MIT','MIT','Activo','REN','https://github.com/davidrmiller/biosim4','','Genoma que codifica una red neuronal, con selección por generaciones'),
+    r('Avida','Vida artificial','Sí',4,669,'C++',['C++'],NA,NA,'Poco activo','RE','https://github.com/devosoft/avida','https://avida.devosoft.org/','Programas autorreplicantes que evolucionan con recursos localizados'),
+    r('Lenia','Vida artificial','Sí',2,3858,'Python y JS',['Python','JavaScript'],'MIT','MIT','Poco activo','','https://github.com/Chakazul/Lenia','https://chakazul.github.io/','Autómata celular continuo con criaturas emergentes. Sin ecología'),
+    r('Particle Life','Vida artificial','Sí',2,1028,'Java',['Java'],'GPL-3.0','GPL','Activo','','https://github.com/tom-mohr/particle-life-app','','Partículas con atracciones simples que forman “células”. Bonito, pero sin ecología',1),
+    r('ecosim (connor-brooks)','Vida artificial','Sí',5,403,'C / OpenGL',['C'],'GPL-2.0','GPL','Abandonado','PADRE','https://github.com/connor-brooks/ecosim','','Agentes que comen plantas o a otros agentes y evolucionan sus genes. Solo Linux',1),
+    r('SproutLife','Vida artificial','Sí',3,587,'Java',['Java'],'MIT','MIT','Poco activo','RE','https://github.com/ShprAlex/SproutLife','','Juego de la vida de Conway con organismos que se reproducen y evolucionan',1),
+    r('Evolving Protozoa','Vida artificial','Sí',5,275,'Java',['Java'],'MIT','MIT','Poco activo','PDREN','https://github.com/DylanCope/Evolving-Protozoa','','Protozoos con redes neuronales que comen plantas y a otros, y heredan sus cerebros',1),
+    r('Evolution (Keiwan)','Vida artificial','Sí',2,455,'C# / Unity',['C#'],'Sin licencia','Sin licencia','Poco activo','EN','https://github.com/keiwando/evolution','https://keiwando.com/evolution/','Diseñas criaturas y aprenden a andar o saltar por evolución. Sin ecosistema',1),
+    r('Neural MMO','Framework','Sí',4,1652,'Python',['Python'],'MIT','MIT','Poco activo','AW','https://github.com/openai/neural-mmo','https://neuralmmo.github.io/','Mundo para entrenar cientos de agentes de IA que buscan comida y agua y compiten',1),
+    r('Dosidicus','Vida artificial','Sí',2,320,'Python',['Python'],'GPL-2.0','GPL','Muy activo','AN','https://github.com/ViciousSquid/Dosidicus','','Mascota tipo Tamagotchi con cerebro hebbiano. No es un ecosistema'),
+    r('Bibites Multiverse','Vida artificial','Sí',null,0,'Go',['Go'],'Apache-2.0','Apache','Activo','','https://github.com/jpinedaa/bibites-multiverse','https://bibitesmultiverse.com/','Solo un conector entre copias del juego cerrado The Bibites'),
+
+    r('Mesa','Framework','Sí',null,3871,'Python',['Python'],'Apache-2.0','Apache','Muy activo','PADR','https://github.com/mesa/mesa','https://mesa.readthedocs.io/','Incluye lobo, oveja y hierba con demo web. Para montar tu propio ecosistema'),
+    r('NetLogo','Framework','Sí',null,1187,'Scala / Java',['Scala','Java'],'GPL-2.0','GPL','Muy activo','PADR','https://github.com/NetLogo/NetLogo','https://netlogo.org/','Wolf Sheep Predation y decenas de modelos ecológicos en su biblioteca'),
+    r('Agents.jl','Framework','Sí',null,917,'Julia',['Julia'],'MIT','MIT','Activo','PADR','https://github.com/JuliaDynamics/Agents.jl','https://juliadynamics.github.io/Agents.jl/stable/','Ejemplos de depredador y presa con hierba'),
+    r('GAMA Platform','Framework','Sí',null,118,'Java',['Java'],'GPL-3.0','GPL','Muy activo','AD','https://github.com/gama-platform/gama','https://gama-platform.org/','Modelos espaciales con GIS, incluido presa y depredador'),
+    r('Repast','Framework','Sí',null,102,'Java / C++',['Java','C++'],'BSD','BSD','Activo','','https://github.com/Repast/repast.simphony','https://repast.github.io/','Ejemplos de ecología, muy usado en academia. Estrellas de Repast Simphony'),
+    r('MASON','Framework','Sí',null,191,'Java',['Java'],'AFL-3.0','Otra','Activo','','https://github.com/eclab/mason','https://cs.gmu.edu/~eclab/projects/mason/','Ejemplos de ecología, muy usado en academia'),
+
+    r('The Bibites','Vida artificial','No',null,null,'C# / Unity',['C#'],CERR,CERR,'Activo','PADREN','','https://www.thebibites.com/','Gratis pero de código cerrado. Algunos directorios lo marcan como open source por error'),
+    r('Species: ALRE','Juego','No',null,null,NA,[],CERR,CERR,NA,'PADREX','','https://store.steampowered.com/app/774541/','Comercial en Steam, en Early Access desde 2018'),
+    r('Equilinox','Juego','No',null,null,'Java',['Java'],CERR,CERR,NA,'PARX','','https://store.steampowered.com/app/853550/','Comercial y cerrado'),
+    r('Ecosystem (Steam)','Juego','No',null,null,NA,[],CERR,CERR,NA,'ADREX','','','Comercial y cerrado. No confundir con Ecosystem de sayansil ni con Ecosystem-2'),
+    r('Dwarf Fortress','Juego','No',null,null,'C++',['C++'],CERR,CERR,'Activo','PAW','','https://www.bay12games.com/dwarves/','Código cerrado'),
+    r('Terra Nil','Juego','No',null,null,NA,[],CERR,CERR,NA,'PASW','','https://store.steampowered.com/app/1593030/','Comercial y cerrado'),
+    r('Framsticks','Vida artificial','No',null,null,NA,[],'Propia','Otra',NA,'RENX','','https://www.framsticks.com/','Freeware con SDK bajo licencia propia. No es open source según la OSI')
+  ];
+
+  var COLS=[
+    {k:'n',l:'Nombre',type:'text'},
+    {k:'t',l:'Tipo',type:'text'},
+    {k:'d',l:'Profundidad',type:'num'},
+    {k:'s',l:'Estrellas',type:'num'},
+    {k:'st',l:'Lenguaje · Licencia · Estado',type:'rank'},
+    {k:'tags',l:'Qué simula',type:'count'},
+    {k:'os',l:'Open',type:'text'},
+    {k:'note',l:'Notas',type:'none'}
+  ];
+  var ST_RANK={'Muy activo':4,'Activo':3,'Poco activo':2,'Abandonado':1};
+  var TIPOS=['Científico','Juego','Sandbox','Vida artificial','Framework'];
+  var ESTADOS=['Muy activo','Activo','Poco activo','Abandonado',NA];
+
+  var state={sort:'d',dir:-1,tags:{}};
+  var $=function(id){return document.getElementById(id);};
+  var els={q:$('q'),fT:$('fT'),fO:$('fO'),fL:$('fL'),fLic:$('fLic'),fS:$('fS'),fStars:$('fStars'),fDepth:$('fDepth'),
+    out:$('fDepthOut'),chips:$('chips'),head:$('head'),body:$('body'),count:$('count'),reset:$('reset'),toggle:$('toggle'),panel:$('panel'),pop:$('pop')};
+
+  function norm(s){return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+  function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+  function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+  function stars(n){return n>=1000?(Math.round(n/100)/10).toString().replace('.',',')+'k':String(n);}
+  function uniq(a){var seen={},o=[];a.forEach(function(v){if(!seen[v]){seen[v]=1;o.push(v);}});return o;}
+
+  function fill(sel,values){
+    sel.appendChild(new Option('Todos',''));
+    values.forEach(function(v){sel.appendChild(new Option(v,v));});
+  }
+  fill(els.fT,TIPOS);
+  fill(els.fO,['Sí','No','Restringido']);
+  var langs=[];DATA.forEach(function(x){langs=langs.concat(x.langs);});
+  fill(els.fL,uniq(langs).sort(function(a,b){return a.localeCompare(b,'es');}));
+  var lfs=uniq(DATA.map(function(x){return x.lf;})).filter(function(v){return v!==NA;}).sort(function(a,b){return a.localeCompare(b,'es');});
+  lfs.push(NA);
+  fill(els.fLic,lfs);
+  fill(els.fS,ESTADOS);
+
+  TAG_ORDER.forEach(function(k){
+    var b=el('button','chipbtn',TAGS[k]);
+    b.type='button';b.setAttribute('aria-pressed','false');
+    b.addEventListener('click',function(){
+      var on=b.getAttribute('aria-pressed')!=='true';
+      b.setAttribute('aria-pressed',on?'true':'false');
+      if(on)state.tags[TAGS[k]]=1;else delete state.tags[TAGS[k]];
+      render();
+    });
+    els.chips.appendChild(b);
+  });
+
+  COLS.forEach(function(c){
+    var th=el('th');th.scope='col';th.dataset.k=c.k;
+    if(c.type==='num')th.className='num';
+    if(c.type==='none'){th.appendChild(el('span','sr',c.l));th.appendChild(el('span',null,''));els.head.appendChild(th);return;}
+    var b=el('button');b.type='button';
+    b.appendChild(el('span',null,c.l));
+    var a=el('span','arr','▲▼');a.setAttribute('aria-hidden','true');b.appendChild(a);
+    if(c.k==='st')b.title='Ordena por estado';
+    b.addEventListener('click',function(){
+      if(state.sort===c.k)state.dir=-state.dir;
+      else{state.sort=c.k;state.dir=(c.type==='text')?1:-1;}
+      render();
+    });
+    th.appendChild(b);els.head.appendChild(th);
+  });
+
+  function sortVal(x,c){
+    var v=x[c.k];
+    if(c.type==='num')return v;
+    if(c.type==='rank')return ST_RANK[v]||null;
+    if(c.type==='count')return v.length;
+    return v===''||v===NA?null:norm(v);
+  }
+
+  function activeCount(){
+    var n=0;
+    ['fT','fO','fL','fLic','fS'].forEach(function(id){if(els[id].value)n++;});
+    if(+els.fStars.value>0)n++;
+    if(+els.fDepth.value>0)n++;
+    n+=Object.keys(state.tags).length;
+    return n;
+  }
+
+  function filtered(){
+    var q=norm(els.q.value.trim()),t=els.fT.value,o=els.fO.value,l=els.fL.value,lic=els.fLic.value,s=els.fS.value;
+    var ms=+els.fStars.value,md=+els.fDepth.value,tg=Object.keys(state.tags);
+    return DATA.filter(function(x){
+      if(t&&x.t!==t)return false;
+      if(o&&x.os!==o)return false;
+      if(l&&x.langs.indexOf(l)<0)return false;
+      if(lic&&x.lf!==lic)return false;
+      if(s&&x.st!==s)return false;
+      if(ms>0&&!(x.s!=null&&x.s>=ms))return false;
+      if(md>0&&!(x.d!=null&&x.d>=md))return false;
+      for(var i=0;i<tg.length;i++){if(x.tags.indexOf(tg[i])<0)return false;}
+      if(q){
+        var hay=norm([x.n,x.t,x.lang,x.lic,x.st,x.tags.join(' '),x.repo,x.web,x.note].join(' '));
+        if(hay.indexOf(q)<0)return false;
+      }
+      return true;
+    });
+  }
+
+  function link(u,text,cls){
+    var a=el('a',cls,text);a.href=u;a.target='_blank';a.rel='noopener noreferrer';a.title=u;return a;
+  }
+
+  function row(x){
+    var tr=el('tr');
+    var nm=el('td','name',x.n);
+    if(x.nu){var nb=el('span','new','nuevo');nb.title='Añadido en la revisión del 2 de octubre de 2026';nm.appendChild(nb);}
+    tr.appendChild(nm);
+    tr.appendChild(el('td','nw',x.t));
+    tr.appendChild(el('td','num'+(x.d==null?' nv':''),x.d==null?NA:x.d));
+
+    var s=el('td','num');
+    if(x.s==null)s.appendChild(el('span','nv',NA));else{s.textContent=stars(x.s);s.title=fmt(x.s)+' estrellas';}
+    tr.appendChild(s);
+
+    var tech=el('td');
+    tech.appendChild(el('span','stack'+(x.lang===NA?' nv':''),x.lang));
+    tech.appendChild(el('span','stack',x.lic));
+    var stc=el('span','stack');stc.appendChild(el('span',ST_RANK[x.st]?'st-'+ST_RANK[x.st]:'nv',x.st));
+    tech.appendChild(stc);
+    tr.appendChild(tech);
+
+    var tg=el('td','tagcell');
+    if(!x.tags.length)tg.appendChild(el('span','nv','—'));
+    x.tags.forEach(function(t){tg.appendChild(el('span','tag',t));});
+    tr.appendChild(tg);
+
+    // Open: el repo como enlace (si lo hay) y debajo la web
+    var op=el('td','nw');
+    var l1=el('span','stack');
+    if(x.repo)l1.appendChild(link(x.repo,'repo','os-si'));
+    else l1.appendChild(el('span',x.os==='Sí'?'os-si':x.os==='No'?'os-no':'os-re',x.os));
+    op.appendChild(l1);
+    var l2=el('span','stack');
+    if(x.web)l2.appendChild(link(x.web,'web'));else l2.appendChild(el('span','nv','—'));
+    op.appendChild(l2);
+    tr.appendChild(op);
+
+    var qd=el('td','q');
+    var qb=el('button','qbtn','?');qb.type='button';qb.setAttribute('aria-label','Nota: '+x.note);qb.dataset.note=x.note;
+    qb.setAttribute('aria-expanded','false');
+    qd.appendChild(qb);tr.appendChild(qd);
+    return tr;
+  }
+
+  function render(){
+    hidePop();
+    var col=COLS.filter(function(c){return c.k===state.sort;})[0];
+    var rows=filtered().sort(function(a,b){
+      var va=sortVal(a,col),vb=sortVal(b,col);
+      if(va==null&&vb==null)return a.n.localeCompare(b.n,'es');
+      if(va==null)return 1;
+      if(vb==null)return -1;
+      var c=(typeof va==='number')?va-vb:va.localeCompare(vb,'es');
+      if(c===0)return a.n.localeCompare(b.n,'es');
+      return c*state.dir;
+    });
+
+    Array.prototype.forEach.call(els.head.children,function(th){
+      var arr=th.querySelector('.arr');if(!arr)return;
+      var on=th.dataset.k===state.sort;
+      if(on)th.setAttribute('aria-sort',state.dir===1?'ascending':'descending');else th.removeAttribute('aria-sort');
+      arr.textContent=on?(state.dir===1?'▲':'▼'):'▲▼';
+    });
+
+    els.body.textContent='';
+    if(!rows.length){
+      var tr=el('tr'),td=el('td','empty','Ningún proyecto cumple estos filtros.');
+      td.colSpan=COLS.length;
+      var b=el('button','btn','Quitar filtros');b.type='button';b.addEventListener('click',reset);
+      td.appendChild(b);tr.appendChild(td);els.body.appendChild(tr);
+    }else{
+      var frag=document.createDocumentFragment();
+      rows.forEach(function(x){frag.appendChild(row(x));});
+      els.body.appendChild(frag);
+    }
+
+    els.count.textContent=rows.length===DATA.length?DATA.length+' proyectos':rows.length+' de '+DATA.length+' proyectos';
+    var n=activeCount();
+    els.toggle.textContent=n?'Filtros ('+n+')':'Filtros';
+  }
+
+  // Popover de las notas
+  var popBtn=null;
+  function showPop(b){
+    if(popBtn&&popBtn!==b)popBtn.setAttribute('aria-expanded','false');
+    popBtn=b;b.setAttribute('aria-expanded','true');
+    var p=els.pop;p.textContent=b.dataset.note;p.classList.add('on');
+    var r=b.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight,vw=document.documentElement.clientWidth,vh=window.innerHeight;
+    var left=Math.max(8,Math.min(r.right-w,vw-w-8));
+    var top=r.bottom+6;if(top+h>vh-8)top=Math.max(8,r.top-h-6);
+    p.style.left=left+'px';p.style.top=top+'px';
+  }
+  function hidePop(){
+    if(popBtn)popBtn.setAttribute('aria-expanded','false');
+    popBtn=null;els.pop.classList.remove('on');
+  }
+  els.body.addEventListener('mouseover',function(e){var b=e.target.closest('.qbtn');if(b)showPop(b);});
+  els.body.addEventListener('mouseout',function(e){var b=e.target.closest('.qbtn');if(b&&b===popBtn&&!b.contains(e.relatedTarget)&&document.activeElement!==b)hidePop();});
+  els.body.addEventListener('focusin',function(e){var b=e.target.closest('.qbtn');if(b)showPop(b);});
+  els.body.addEventListener('focusout',function(e){if(e.target===popBtn)hidePop();});
+  els.body.addEventListener('click',function(e){var b=e.target.closest('.qbtn');if(!b)return;if(b===popBtn&&els.pop.classList.contains('on')){b.blur();hidePop();}else showPop(b);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')hidePop();});
+  window.addEventListener('scroll',hidePop,true);
+  window.addEventListener('resize',hidePop);
+
+  function reset(){
+    els.q.value='';
+    ['fT','fO','fL','fLic','fS'].forEach(function(id){els[id].value='';});
+    els.fStars.value='0';els.fDepth.value='0';els.out.textContent='0';
+    state.tags={};
+    Array.prototype.forEach.call(els.chips.children,function(b){b.setAttribute('aria-pressed','false');});
+    render();
+  }
+
+  els.q.addEventListener('input',render);
+  ['fT','fO','fL','fLic','fS','fStars'].forEach(function(id){els[id].addEventListener('change',render);});
+  els.fDepth.addEventListener('input',function(){els.out.textContent=els.fDepth.value;render();});
+  els.reset.addEventListener('click',reset);
+  els.toggle.addEventListener('click',function(){
+    var open=els.panel.classList.toggle('open');
+    els.toggle.setAttribute('aria-expanded',open?'true':'false');
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

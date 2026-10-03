@@ -1,0 +1,28 @@
+[plants]
+cohort_data_path = "../data/example_plant_cohorts.csv"
+pft_definitions_path = "../data/plant_pfts.csv"
+
+# Plant data
+[[core.data.variable]]
+file_path = "../data/example_plant_data.nc"
+var_name = "plant_pft_propagules"
+[[core.data.variable]]
+file_path = "../data/example_plant_data.nc"
+var_name = "downward_shortwave_radiation"
+[[core.data.variable]]
+file_path = "../data/example_plant_data.nc"
+var_name = "subcanopy_vegetation_cnp"
+[[core.data.variable]]
+file_path = "../data/example_plant_data.nc"
+var_name = "subcanopy_seedbank_cnp"
+
+
+[plants.constants]
+per_stem_annual_mortality_probability = 0.2
+per_propagule_annual_recruitment_probability = 0.3
+subcanopy_sprout_rate = 0.05
+
+[plants.community_data_export]
+cohort_attributes = ['dbh_value', 'stem_height', 'npp', 'foliage_C_biomass', 'lai', 'seeds_per_fruit']
+community_canopy_attributes = 'ALL'
+stem_canopy_attributes = ['fapar']

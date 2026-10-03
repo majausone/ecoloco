@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EcoLoco · galería: foto real frente a modelo</title>
+<style>
+  body { margin:0; background:#14100f; color:#efe4d2; font:13px/1.35 system-ui, sans-serif; }
+  header { padding:12px 18px 2px; } header h1 .ayuda { font-size:11px; } h1 { margin:0; font-size:18px; } header p { margin:3px 0 0; color:#a8998a; }
+  .filtros { padding:8px 18px; display:flex; gap:6px; }
+  .filtros button { background:#1d1815; color:#efe4d2; border:1px solid #3a2f29; border-radius:6px; padding:5px 10px; cursor:pointer; font:inherit; }
+  .filtros button[aria-pressed="true"] { border-color:#e8a64a; color:#e8a64a; }
+  .rejilla { display:grid; grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); gap:10px; padding:8px 18px 20px; }
+  .tarjeta { background:#1d1815; border:1px solid #3a2f29; border-radius:8px; overflow:hidden; }
+  .par { display:grid; grid-template-columns:1fr 1fr; height:200px; }
+  .par img, .par canvas { width:100%; height:200px; object-fit:cover; display:block; background:#0d0a09; }
+  .par canvas { image-rendering:pixelated; }
+  .pie .tri { float:right; font-style:normal; color:#1a1410; background:#e8a64a; border-radius:4px; padding:1px 7px; font-weight:600; }
+  .pie { padding:6px 9px; } .pie b { color:#e8a64a; } .pie span { color:#a8998a; display:block; font-size:11px; }
+</style>
+</head>
+<body>
+<header><h1><span data-en="Real photo (iNaturalist) next to our model">Foto real (iNaturalist) frente a nuestro modelo</span><span class="ayuda" data-es="Izquierda, la foto de referencia; derecha, el modelo tal como está ahora, con sus triángulos." data-en="Left, the reference photo; right, the model as it is now, with its triangles."></span></h1></header>
+<div class="filtros"><button data-t="animal" aria-pressed="true" data-en="Animals">Animales</button><button data-t="planta" aria-pressed="false" data-en="Plants">Plantas</button><button data-t="seta" aria-pressed="false" data-en="Mushrooms">Setas</button></div>
+<main class="rejilla" id="rejilla"></main>
+<script type="module">
+import * as THREE from '../vendor/three.module.js';
+import { ANIMALES, PLANTAS, SETAS } from './especies.js';
+import { crearAnimal } from './animales.js';
+import { crearPlanta } from './plantas.js';
+import { creditoFoto } from './credito.js';
+import { T, traducirDom, num } from '../../../comun/idioma.js';
+import { ponerAyudas } from '../../../comun/ayuda.js';
+import { cabecera } from '../../../comun/cabecera.js';
+import { nombreEsp } from '../../../comun/nombres.js';
+traducirDom(); ponerAyudas(); cabecera('galeria');
+
+const fotos = await (await fetch('./ref-fotos.json')).json();
+const porId = Object.fromEntries(fotos.map((f) => [f.id, f]));
+const W = 400, H = 400;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H); renderer.setPixelRatio(1);
+renderer.shadowMap.enabled = true;
+
+function retrato(modelo, animal) {
+  const escena = new THREE.Scene();
+  escena.background = new THREE.Color('#6f9a92');
+  const sol = new THREE.DirectionalLight('#fff2d8', 3);
+  const tam = Math.max(modelo.tam.x, modelo.tam.y, modelo.tam.z);
+  sol.position.set(-tam, tam * 1.6, tam * 0.9); sol.castShadow = true;
+  Object.assign(sol.shadow.camera, { left: -tam, right: tam, top: tam, bottom: -tam, near: 0.01, far: tam * 6 });
+  sol.shadow.mapSize.set(1024, 1024);
+  escena.add(sol, new THREE.HemisphereLight('#d8e8d0', '#2a3a20', 1.3));
+  const suelo = new THREE.Mesh(new THREE.BoxGeometry(tam * 3, tam * 0.01, tam * 3), new THREE.MeshLambertMaterial({ color: '#34502a' }));
+  suelo.position.y = -tam * 0.005; suelo.receiveShadow = true; escena.add(suelo);
+  escena.add(modelo.raiz);
+  modelo.paso(0.3);
+  const cam = new THREE.PerspectiveCamera(32, W / H, tam * 0.01, tam * 20);
+  const c = modelo.centro, d = tam * 2.3;
+  cam.position.set(c.x + d * 0.62, c.y + d * (animal ? 0.32 : 0.15), c.z + d * 0.72);
+  cam.lookAt(c);
+  renderer.render(escena, cam);
+  const lienzo = document.createElement('canvas'); lienzo.width = W; lienzo.height = H;
+  lienzo.getContext('2d').drawImage(renderer.domElement, 0, 0);
+  escena.remove(modelo.raiz);
+  return lienzo;
+}
+
+// los triángulos de un modelo (con sus instancias, si las tiene)
+function triangulos(raiz) {
+  let n = 0;
+  raiz.traverse((o) => { if (!o.isMesh || !o.geometry) return; const g = o.geometry, t = (g.index ? g.index.count : g.attributes.position.count) / 3; n += o.isInstancedMesh ? t * o.count : t; });
+  return Math.round(n);
+}
+
+function pintar(tipo) {
+  const lista = tipo === 'animal' ? ANIMALES : tipo === 'planta' ? PLANTAS : SETAS;
+  const cont = document.getElementById('rejilla'); cont.innerHTML = '';
+  for (const e of lista) {
+    const f = porId[e.id];
+    const t = document.createElement('div'); t.className = 'tarjeta';
+    const par = document.createElement('div'); par.className = 'par';
+    const img = document.createElement('img'); img.src = f?.foto || ''; img.alt = nombreEsp(e); par.append(img);
+    let tri = null;
+    try { const m = tipo === 'animal' ? crearAnimal(e) : crearPlanta(e); tri = triangulos(m.raiz); par.append(retrato(m, tipo === 'animal')); }
+    catch (err) { const p = document.createElement('div'); p.textContent = 'error: ' + err.message; par.append(p); }
+    const pie = document.createElement('div'); pie.className = 'pie';
+    pie.innerHTML = `<b>${nombreEsp(e)}</b> · <i>${e.cientifico}</i>${tri != null ? `<em class="tri">${num(tri)} ${T('triángulos', 'triangles')}</em>` : ''}<span>${T('foto', 'photo')}: ${f ? creditoFoto(f.autor) : '—'}</span>`;
+    t.append(par, pie); cont.append(t);
+  }
+}
+for (const b of document.querySelectorAll('.filtros button')) b.addEventListener('click', () => {
+  document.querySelectorAll('.filtros button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  pintar(b.dataset.t);
+});
+pintar(new URLSearchParams(location.search).get('t') || 'animal');
+window.__listo = true;
+</script>
+<link rel="stylesheet" href="../../../comun/comun.css">
+</body>
+</html>
