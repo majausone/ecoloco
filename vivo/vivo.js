@@ -24,6 +24,7 @@ import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js';
 import { Mapa, BALDOSA } from '../mundo/mapa.js';
 import { TICS, CLAVE, DETALLE } from '../mundo/dia.js';
 import { crearFicha } from './ficha.js';
+import { crearTactil } from './tactil.js';
 import { crearTerreno } from './terreno.js';
 import { crearBosque, LEJOS, uSeguido, uSigue } from './bosque.js';
 import { crearManada } from './manada.js';
@@ -41,8 +42,13 @@ import { VERTEBRADOS } from '../mundo/especies.js';
 const $ = (id) => document.getElementById(id);
 const lienzo = $('lienzo');
 // el idioma de los textos del HTML y los «?» con globo
-traducirDom(); ponerAyudas(); cabecera('vivo');
+traducirDom(); ponerAyudas(); cabecera('simulacion');
 const visor = new Visor(lienzo, { sombras: 4096 });
+// en las pantallas de alta densidad (móviles), a su resolución de verdad (hasta ×2 y unos 3 Mpx);
+// si no, se dibujaba a la resolución de CSS y se veía con píxeles gordos
+const densidad = () => Math.max(1, Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(3e6 / Math.max(1, innerWidth * innerHeight))));
+visor.pixel = 1 / densidad();
+window.addEventListener('resize', () => { visor.pixel = 1 / densidad(); });
 const escena = new THREE.Scene();
 const tiempo = { value: 0 }, viento = { value: 0.8 };
 const parametros = new URLSearchParams(location.search);
@@ -226,7 +232,7 @@ window.addEventListener('keydown', (e) => {
 // un clic (sin arrastrar) sobre un animal lo selecciona: primero lo que toca el rayo (los
 // modelos de cerca) y, si no, el más cercano en pantalla a menos de 28 píxeles (los insectos
 // son muy pequeños para atinar)
-let pulsado = null, camActual = null;
+let pulsado = null, camActual = null, tactil = null;
 const rayo = new THREE.Raycaster();
 lienzo.addEventListener('pointerdown', (e) => {
   if (e.button === 0 && !e.altKey) pulsado = { x: e.clientX, y: e.clientY };
@@ -236,7 +242,7 @@ lienzo.addEventListener('pointerup', (e) => {
   if (!pulsado || e.button !== 0) return;
   const movido = Math.hypot(e.clientX - pulsado.x, e.clientY - pulsado.y) > 5;
   pulsado = null;
-  if (movido || !camActual || !dia) return;
+  if (movido || !camActual || !dia || tactil?.multi) return;
   const r = lienzo.getBoundingClientRect();
   const ndc = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
   rayo.setFromCamera(ndc, camActual);
@@ -516,6 +522,9 @@ function montar(m) {
   camara.camP.far = 1200; camara.camP.updateProjectionMatrix();
   camara.camO.far = 1200; camara.camO.updateProjectionMatrix();
   camara.camP.layers.enable(CAPA_CIELO); camara.camO.layers.enable(CAPA_CIELO);
+  // con los dedos (móvil y tableta)
+  tactil = crearTactil({ lienzo, camara: () => camara, alMover: dejarDeSeguir,
+    foco: () => { const f = focoCamara(); return new THREE.Vector3(f.x - cx, cima(f.x, f.z), f.z - cz); } });
   ponerVelocidad(1);
   requestAnimationFrame(bucle);
 }

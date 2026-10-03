@@ -96,6 +96,19 @@
   #lista .esp .sub { font-size:11px; padding-left:14px; } #lista .flecha { display:inline-block; width:10px; opacity:.7; }
   #lista .indiv { padding:0 0 4px 26px; } #lista .uno { padding:2px 8px; cursor:pointer; border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #lista .uno:hover { background:#2a221e; } #lista .uno.sel { background:#4a3a24; }
+
+  /* en el móvil: el panel ocupa la pantalla (las huellas, encima, lo cierran), el indicador se parte en dos líneas */
+  #lienzo { touch-action:none; }
+  @media (max-width:700px) {
+    #panel { width:100%; border-left:none; padding-top:44px; box-sizing:border-box; }
+    body.panel-abierto #b-panel { right:10px; z-index:4; }
+    body.panel-abierto #b-ayuda { right:56px; top:52px; z-index:4; }
+    #indicador { white-space:normal; max-width:calc(100vw - 70px); font-size:12px; }
+    #resumen { left:10px; right:10px !important; width:auto; top:96px; max-height:45vh; font-size:12px; }
+    body.panel-abierto #resumen, body.panel-abierto #indicador { display:none; }
+    #pestanas-panel button { padding:5px 2px; font-size:12px; }
+    #ajustes .fila { flex-wrap:wrap; }
+  }
 </style>
 </head>
 <body>

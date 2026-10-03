@@ -1,98 +1,97 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EcoLoco</title>
+<title>EcoLoco · Virtual Ecosystem in JavaScript, and a living Bornean rainforest</title>
+<meta name="description" content="A bit-for-bit JavaScript port of Virtual Ecosystem 0.2.2, with a 3D living rainforest of Maliau (Borneo) on top.">
 <style>
-  :root { --fondo:#0d0b0a; --caja:rgba(20,16,15,.86); --borde:#3a2f29; --texto:#efe4d2; --acento:#e8a64a; --boton:#2a221e; --boton-borde:#4a3c34; }
-  html, body { margin:0; background:var(--fondo); color:var(--texto); font:14px/1.5 system-ui, sans-serif; }
-  body { background:linear-gradient(rgba(13,11,10,.35), rgba(13,11,10,.5) 200px, rgba(13,11,10,.9) 330px, var(--fondo) 410px) no-repeat, url('portada/fondo.png') center -140px / max(100%, 1400px) auto no-repeat var(--fondo); min-height:100vh; }
-  header { padding-top:20px; }
-  .pagina { max-width:1120px; margin:0 auto; padding:34px 22px 60px; }
-  header h1 { font-size:54px; margin:0; letter-spacing:.02em; color:var(--acento); font-weight:700; text-shadow:0 2px 18px #000; }
-  header p { font-size:17px; margin:4px 0 0; max-width:720px; opacity:.92; text-shadow:0 1px 8px #000; }
-  .accesos { display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:10px; margin:26px 0 30px; }
-  .acceso { display:block; text-decoration:none; color:var(--texto); background:var(--caja); border:1px solid var(--borde); border-radius:8px; padding:12px 14px; transition:border-color .15s; }
-  .acceso:hover { border-color:var(--acento); }
-  .acceso b { display:block; color:var(--acento); font-size:15px; } .acceso span { font-size:12.5px; opacity:.8; }
-  h2 { font-size:19px; margin:0 0 10px; color:var(--acento); font-weight:600; }
-  .explica { opacity:.75; font-size:13px; margin:0 0 12px; }
-  .caja { background:var(--caja); border:1px solid var(--borde); border-radius:8px; padding:16px 18px; margin-bottom:14px; }
-  .dos { display:grid; grid-template-columns:minmax(0, 1.55fr) minmax(0, 1fr); gap:14px; align-items:start; }
-  @media (max-width:860px) { .dos { grid-template-columns:1fr; } }
-  button { background:var(--boton); color:var(--texto); border:1px solid var(--boton-borde); border-radius:5px; padding:4px 11px; font:inherit; cursor:pointer; }
-  button:hover { border-color:var(--acento); }
-  button.on { background:var(--acento); color:#1a1410; border-color:var(--acento); }
-  button:disabled { opacity:.45; cursor:default; }
-  .preajustes { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:6px; }
-  .preajuste-texto { font-size:13px; opacity:.85; min-height:2.8em; margin:4px 0 10px; }
-  .opcion { display:grid; grid-template-columns:120px 1fr; align-items:center; gap:4px 12px; padding:7px 0; border-top:1px solid #2c241f; }
-  .opcion > .nom { opacity:.8; padding-top:4px; }
-  .opcion .botones { display:flex; flex-wrap:wrap; gap:4px; }
-  .opcion .linea { grid-column:2; font-size:12px; opacity:.6; }
-  .opcion input[type=number] { width:90px; background:#1a1512; color:var(--texto); border:1px solid var(--boton-borde); border-radius:5px; padding:4px 7px; font:inherit; }
-  .pestanas { display:flex; gap:4px; margin:6px 0 10px; }
-  .especies { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:6px; max-height:370px; overflow:auto; padding-right:4px; }
-  .esp { display:flex; gap:8px; align-items:center; background:#1a1512; border:1px solid var(--boton-borde); border-radius:6px; padding:4px; cursor:pointer; user-select:none; }
-  .esp img { width:38px; height:38px; object-fit:cover; border-radius:4px; flex:none; background:#2a221e; }
-  .esp .n { font-size:12.5px; line-height:1.25; } .esp .g { font-size:11px; opacity:.6; }
-  .esp.on { border-color:var(--acento); } .esp:not(.on) { opacity:.45; } .esp:not(.on) img { filter:grayscale(1); }
-  .aviso { font-size:12.5px; color:#f0b0a0; margin-top:8px; min-height:1.2em; }
-  .resumen table { width:100%; border-collapse:collapse; font-size:13px; } .resumen td { padding:2px 0; vertical-align:top; }
-  .resumen td:last-child { text-align:right; font-variant-numeric:tabular-nums; color:var(--acento); padding-left:10px; white-space:nowrap; }
-  .resumen h3 { font-size:13px; font-weight:normal; text-transform:uppercase; letter-spacing:.04em; color:var(--acento); margin:12px 0 4px; }
-  .generar { width:100%; margin-top:14px; padding:10px; font-size:16px; background:var(--acento); color:#1a1410; border-color:var(--acento); font-weight:600; }
-  .guardados .fila { display:flex; align-items:center; gap:8px; padding:6px 0; border-top:1px solid #2c241f; }
-  .guardados .fila .t { flex:1; } .guardados .fila .t small { opacity:.6; display:block; }
-  .gris { opacity:.6; }
-  input[type=file] { display:none; }
+  :root { --fondo:#0d0b0a; --caja:rgba(20,16,15,.86); --borde:#3a2f29; --texto:#efe4d2; --acento:#e8a64a; --suave:#b9ab99; }
+  html, body { margin:0; background:var(--fondo); color:var(--texto); font:15px/1.6 system-ui, sans-serif; }
+  body { background:linear-gradient(rgba(13,11,10,.3), rgba(13,11,10,.55) 240px, rgba(13,11,10,.92) 420px, var(--fondo) 520px) no-repeat, url('portada/fondo.png') center -120px / max(100%, 1400px) auto no-repeat var(--fondo); min-height:100vh; }
+  .pagina { max-width:1040px; margin:0 auto; padding:30px 22px 70px; box-sizing:border-box; }
+  h1 { font-size:clamp(38px, 8vw, 60px); margin:20px 0 0; color:var(--acento); line-height:1.1; text-shadow:0 2px 18px #000; }
+  .lema { font-size:clamp(16px, 2.6vw, 20px); margin:8px 0 0; max-width:760px; text-shadow:0 1px 8px #000; }
+  .botones { display:flex; flex-wrap:wrap; gap:10px; margin:26px 0 8px; }
+  .boton { display:inline-block; text-decoration:none; padding:11px 20px; border-radius:8px; font-weight:600; border:1px solid var(--acento); color:var(--acento); background:rgba(20,16,15,.7); }
+  .boton.fuerte { background:var(--acento); color:#1a1410; }
+  .boton:hover { filter:brightness(1.12); }
+  h2 { font-size:22px; color:var(--acento); margin:44px 0 8px; font-weight:600; }
+  p { margin:8px 0; } a { color:var(--acento); }
+  .caja { background:var(--caja); border:1px solid var(--borde); border-radius:10px; padding:16px 20px; }
+  .secciones { display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:12px; }
+  .seccion { display:block; text-decoration:none; color:var(--texto); background:var(--caja); border:1px solid var(--borde); border-radius:10px; padding:14px 16px; transition:border-color .15s; }
+  .seccion:hover { border-color:var(--acento); }
+  .seccion b { display:block; color:var(--acento); font-size:17px; margin-bottom:4px; }
+  .seccion span { font-size:14px; color:var(--suave); }
+  ul { margin:6px 0; padding-left:22px; } li { margin:4px 0; }
+  .cifras { display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px; margin:14px 0; }
+  .cifra { background:var(--caja); border:1px solid var(--borde); border-radius:10px; padding:10px 14px; }
+  .cifra b { display:block; font-size:24px; color:var(--acento); } .cifra span { font-size:13px; color:var(--suave); }
+  code { background:#221b17; border:1px solid #3a2f29; border-radius:4px; padding:1px 5px; font-size:13.5px; }
+  pre { background:#1a1512; border:1px solid #3a2f29; border-radius:8px; padding:10px 14px; overflow:auto; font-size:13.5px; }
+  .pie { margin-top:50px; font-size:13px; color:var(--suave); }
 </style>
 </head>
 <body>
 <div class="pagina">
-  <header>
-    <h1>EcoLoco</h1>
-    <p data-en="The Maliau rainforest (Borneo), alive: the <i>Virtual Ecosystem</i> engine computes the forest day by day, and every animal lives its life on top of it.">La selva de Maliau (Borneo), viva: el motor de <i>Virtual Ecosystem</i> calcula el bosque día a día, y cada animal hace su vida encima.</p>
-  </header>
-
-  <div class="accesos">
-    <a class="acceso" id="acceso-vivo" href="vivo/" target="_blank" rel="noopener"><b data-en="Simulation">Simulación</b><span data-en="The world set up below, in a new tab.">El mundo que configures abajo, en otra pestaña.</span></a>
-    <a class="acceso" href="graficos/pruebas-morta/borneo/editor.html" target="_blank" rel="noopener"><b data-en="Model editor">Editor de modelos</b><span data-en="Every animal, plant and fungus, with its animations.">Cada animal, planta y hongo, con sus animaciones.</span></a>
-    <a class="acceso" href="graficos/pruebas-morta/borneo/galeria.html" target="_blank" rel="noopener"><b data-en="Gallery">Galería</b><span data-en="The real photo of each species next to its model.">La foto real de cada especie frente a su modelo.</span></a>
-    <a class="acceso" href="interfaz/" target="_blank" rel="noopener"><b data-en="The engine on its own">El motor a solas</b><span data-en="The Virtual Ecosystem port, without animals.">El port de Virtual Ecosystem, sin animales.</span></a>
+  <h1>EcoLoco</h1>
+  <p class="lema" data-en="Virtual Ecosystem, the ecosystem simulator of Imperial College London, ported to JavaScript bit for bit, with a living 3D rainforest of Maliau (Borneo) on top.">Virtual Ecosystem, el simulador de ecosistemas del Imperial College de Londres, pasado a JavaScript bit a bit, con una selva viva en 3D de Maliau (Borneo) encima.</p>
+  <div class="botones">
+    <a class="boton fuerte" href="portada/simulacion.html" target="_blank" rel="noopener" data-en="▶ Go to the simulation">▶ Ir a la simulación</a>
+    <a class="boton" href="https://github.com/majausone/ecoloco" target="_blank" rel="noopener" data-en="Source code on GitHub">Código en GitHub</a>
+    <a class="boton" href="https://github.com/ImperialCollegeLondon/virtual_ecosystem" target="_blank" rel="noopener" data-en="The original: Virtual Ecosystem">El original: Virtual Ecosystem</a>
   </div>
 
-  <div class="dos" id="nuevo">
-    <div>
-      <div class="caja">
-        <h2><span data-en="A new world">Un mundo nuevo</span><span class="ayuda" data-es="Elige un punto de partida y cambia lo que quieras. El mundo se genera entero al entrar." data-en="Choose a starting point and change whatever you like. The whole world is generated when you enter."></span></h2>
-        <div class="preajustes" id="preajustes"></div>
-        <div class="preajuste-texto" id="preajuste-texto"></div>
-        <div id="opciones"></div>
-      </div>
-      <div class="caja">
-        <h2><span data-en="Species">Especies</span><span class="ayuda" data-es="Pulsa una especie para quitarla o volver a ponerla. Si un grupo del motor se queda sin ninguna, sale también del motor." data-en="Click a species to remove it or put it back. If an engine group is left with none, it leaves the engine too."></span></h2>
-        <div class="pestanas" id="pestanas"></div>
-        <div class="especies" id="especies"></div>
-        <div class="aviso" id="aviso-especies"></div>
-      </div>
-    </div>
-    <div>
-      <div class="caja resumen">
-        <h2 data-en="What it will have">Lo que va a tener</h2>
-        <div id="resumen" class="gris" data-en="Reading the Maliau scenario…">Leyendo el escenario de Maliau…</div>
-        <button class="generar" id="generar" data-en="Generate the world and enter (new tab)">Generar el mundo y entrar (en otra pestaña)</button>
-      </div>
-      <div class="caja guardados">
-        <h2><span data-en="Saved worlds">Mundos guardados</span><span class="ayuda" data-es="Los que guardes desde la simulación (botón «Guardar» del panel). Al abrir uno, el motor se recalcula deprisa hasta su día." data-en="The ones you save from the simulation (the panel’s «Save» button). When you open one, the engine is quickly recomputed up to its day."></span></h2>
-        <div id="guardados"></div>
-        <button id="cargar" style="margin-top:8px" data-en="Load from a file…">Cargar desde un archivo…</button><input type="file" id="archivo" accept=".json,application/json">
-      </div>
-    </div>
+  <h2 data-en="What it is">Qué es</h2>
+  <p data-en="<a href='https://github.com/ImperialCollegeLondon/virtual_ecosystem' target='_blank' rel='noopener'>Virtual Ecosystem</a> is a Python model that simulates a whole forest as a set of coupled modules: plants, animals, soil, leaf litter, water and the climate under the canopy, cell by cell over a grid. EcoLoco is two things built on it:">
+    <a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem" target="_blank" rel="noopener">Virtual Ecosystem</a> es un modelo en Python que simula un bosque entero como un conjunto de módulos acoplados: plantas, animales, suelo, hojarasca, agua y el clima bajo el dosel, celda a celda sobre una rejilla. EcoLoco son dos cosas hechas sobre él:</p>
+  <ul>
+    <li data-en="<b>The engine in JavaScript.</b> Virtual Ecosystem 0.2.2 (commit <code>0176dc2</code>) ported to plain JavaScript, with no dependencies. It gives <b>exactly the same bits</b> as the original in every output compared, and it runs in the browser, 5 to 15 times faster.">
+      <b>El motor en JavaScript.</b> Virtual Ecosystem 0.2.2 (commit <code>0176dc2</code>) pasado a JavaScript puro, sin dependencias. Da <b>exactamente los mismos bits</b> que el original en todas las salidas comparadas, y corre en el navegador, entre 5 y 15 veces más rápido.</li>
+    <li data-en="<b>The living world of Maliau.</b> On top of the engine, every animal is simulated as an individual, minute by minute: it eats where there is food, drinks, sleeps at its hour, flees, stalks and hunts, courts, digs and nests. Each day it matches what the engine says (who is born, who dies, who is eaten and how much is eaten), and it is shown in 3D with day and night, weather and 62 species of Borneo.">
+      <b>El mundo vivo de Maliau.</b> Encima del motor, cada animal se simula como un individuo, minuto a minuto: come donde hay comida, bebe, duerme a su hora, huye, acecha y caza, corteja, excava y anida. Cada día cuadra con lo que dice el motor (quién nace, quién muere, a quién se comen y cuánto se come), y se ve en 3D con día y noche, el tiempo que hace y 62 especies de Borneo.</li>
+  </ul>
+  <div class="cifras">
+    <div class="cifra"><b data-en="bit for bit">bit a bit</b><span data-en="same outputs as the original Python (zarr and CSV)">las mismas salidas que el Python original (zarr y CSV)</span></div>
+    <div class="cifra"><b>7</b><span data-en="engine modules: plants, animals, hydrology, litter, abiotic, simple abiotic, soil">módulos del motor: plantas, animales, hidrología, hojarasca, abiótico, abiótico sencillo, suelo</span></div>
+    <div class="cifra"><b>2010–2020</b><span data-en="real daily climate of Maliau (ERA5 through Open-Meteo)">clima diario real de Maliau (ERA5 a través de Open-Meteo)</span></div>
+    <div class="cifra"><b>62</b><span data-en="species modelled: 33 animals, 18 plants and 11 fungi">especies modeladas: 33 animales, 18 plantas y 11 hongos</span></div>
   </div>
+
+  <h2 data-en="The sections">Las secciones</h2>
+  <div class="secciones">
+    <a class="seccion" href="portada/simulacion.html" target="_blank" rel="noopener"><b data-en="Simulation">Simulación</b><span data-en="Set up a world (size of the forest and of the map, river, ponds, forest, climate, seed and which species there are) and walk into it. Follow any animal, read its card, look at the 149 engine variables day by day and change the climate from tomorrow with a prediction.">Configura un mundo (tamaño del bosque y del mapa, río, charcas, bosque, clima, semilla y qué especies hay) y entra en él. Sigue a cualquier animal, lee su ficha, mira las 149 variables del motor día a día y cambia el clima desde mañana con una predicción.</span></a>
+    <a class="seccion" href="graficos/pruebas-morta/borneo/editor.html" target="_blank" rel="noopener"><b data-en="Model editor">Editor de modelos</b><span data-en="Every animal, plant and fungus of the simulation, one by one, with its animations, its diet, where it lives and how well it matches the engine group it stands for.">Cada animal, planta y hongo de la simulación, uno a uno, con sus animaciones, su dieta, dónde vive y cuánto encaja con el grupo del motor al que representa.</span></a>
+    <a class="seccion" href="graficos/pruebas-morta/borneo/galeria.html" target="_blank" rel="noopener"><b data-en="Gallery">Galería</b><span data-en="The real photo of each species (from iNaturalist, with its author) next to its model.">La foto real de cada especie (de iNaturalist, con su autor) frente a su modelo.</span></a>
+    <a class="seccion" href="interfaz/" target="_blank" rel="noopener"><b data-en="The engine">El motor</b><span data-en="The JavaScript port on its own, without the 3D world: choose a scenario, edit every parameter, animal and plant type and the climate, run it step by step, look at the charts and export zarr and CSV files like the original.">El port en JavaScript a solas, sin el mundo en 3D: elige un escenario, cambia cada parámetro, tipo de animal y de planta y el clima, córrelo paso a paso, mira las gráficas y exporta zarr y CSV como el original.</span></a>
+  </div>
+
+  <h2 data-en="What really happens">Qué pasa de verdad</h2>
+  <div class="caja">
+    <p data-en="The engine computes the forest day by day: photosynthesis and growth of the plant cohorts, the microclimate under the canopy, water in the soil, leaf litter and soil carbon, and the animal cohorts (how many individuals of each functional group, how much they eat and of what). The living world reads that state every day and turns it into individuals:">El motor calcula el bosque día a día: la fotosíntesis y el crecimiento de las cohortes de plantas, el microclima bajo el dosel, el agua del suelo, la hojarasca y el carbono del suelo, y las cohortes de animales (cuántos individuos de cada grupo funcional, cuánto comen y de qué). El mundo vivo lee ese estado cada día y lo convierte en individuos:</p>
+    <ul>
+      <li data-en="The trees and shrubs are the engine plant cohorts at their real density, with their real height and crown; their fruit and leaves are the food the engine has.">Los árboles y arbustos son las cohortes de plantas del motor a su densidad real, con su altura y su copa de verdad; su fruta y sus hojas son la comida que tiene el motor.</li>
+      <li data-en="Each engine functional group is drawn with real species of Maliau. Where there is no real one (Borneo has no herbivorous lizards), a stand-in is used and the editor says so.">Cada grupo funcional del motor se dibuja con especies reales de Maliau. Donde no hay ninguna real (en Borneo no hay lagartos herbívoros) se usa un sustituto, y el editor lo dice.</li>
+      <li data-en="All the animals of the world are on the map. When there are too many to draw (insects number in the millions), each drawn animal stands for several engine individuals; the World tab says how many for each group.">Todos los animales del mundo están en el mapa. Cuando son demasiados para dibujarlos (los insectos se cuentan por millones), cada animal dibujado vale por varios individuos del motor; la pestaña Mundo dice por cuántos en cada grupo.</li>
+      <li data-en="The kills, deaths and births of the day are those of the engine; a «director» makes sure they happen on the map, and the World summary (Z key) compares engine and world.">Las cazas, muertes y nacimientos del día son los del motor; un «director» se encarga de que pasen en el mapa, y el resumen del día (tecla Z) compara motor y mundo.</li>
+    </ul>
+    <p data-en="The original has a known problem with herbivores (with a daily step no animal ever eats). The port reproduces it as it is; the fixes are optional and can be switched on in the engine page. The Maliau scenario uses them.">El original tiene un fallo conocido con los herbívoros (con paso diario ningún animal come nunca). El port lo reproduce tal cual; los arreglos son opcionales y se activan en la página del motor. El escenario de Maliau los lleva puestos.</p>
+  </div>
+
+  <h2 data-en="Run it on your computer">Ejecutarlo en tu ordenador</h2>
+  <p data-en="It needs only Node 22. From the root of the <a href='https://github.com/majausone/ecoloco' target='_blank' rel='noopener'>repository</a>:">Solo hace falta Node 22. Desde la raíz del <a href="https://github.com/majausone/ecoloco" target="_blank" rel="noopener">repositorio</a>:</p>
+  <pre>node interfaz/servidor.mjs        # http://localhost:8090/
+node --test pruebas/*.test.js     # the tests / las pruebas</pre>
+  <p data-en="The README explains how to run the engine without the browser, how to convert a new scenario from the original TOML files and how the bit-for-bit comparison against the original is done; <code>informe/INFORME.md</code> is the full report (in Spanish).">El README explica cómo correr el motor sin navegador, cómo convertir un escenario nuevo desde los TOML del original y cómo se hace la comparación bit a bit con el original; <code>informe/INFORME.md</code> es el informe completo.</p>
+
+  <p class="pie" data-en="EcoLoco is an independent project, not made by the Virtual Ecosystem team. Climate: ERA5 and ERA5-Land through Open-Meteo. Species photos: iNaturalist, credited on each one. 3D: three.js. It is left here for anyone who wants to look at it, use it or build on it.">EcoLoco es un proyecto independiente, no hecho por el equipo de Virtual Ecosystem. Clima: ERA5 y ERA5-Land a través de Open-Meteo. Fotos de las especies: iNaturalist, con su autor en cada una. 3D: three.js. Queda aquí para quien quiera verlo, usarlo o seguirlo.</p>
 </div>
 <link rel="stylesheet" href="comun/comun.css">
-<script type="module" src="portada/portada.js"></script>
+<script type="module">
+import { traducirDom } from './comun/idioma.js';
+import { cabecera } from './comun/cabecera.js';
+traducirDom(); cabecera('portada');
+</script>
 </body>
 </html>

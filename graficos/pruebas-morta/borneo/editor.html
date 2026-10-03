@@ -58,6 +58,15 @@
   .foto.sin { display:none; }
   .leyenda { margin-top:16px; color:var(--muted); font-size:12px; }
   .leyenda span { display:inline-flex; align-items:center; gap:5px; margin-right:10px; }
+  @media (max-width:800px) {
+    html, body { overflow:auto; height:auto; }
+    .app { grid-template-columns:1fr; grid-template-rows:auto; height:auto; }
+    .app > aside:first-child { max-height:34vh; border-right:0; border-bottom:1px solid var(--line); }
+    main { height:62vh; }
+    .barra button { padding:4px 7px; font-size:12px; }
+    .foto { width:110px; }
+    #lienzo { touch-action:none; }
+  }
 </style>
 </head>
 <body>
@@ -284,6 +293,19 @@ lienzo.addEventListener('pointermove', (e) => {
   }
 });
 lienzo.addEventListener('wheel', (e) => { e.preventDefault(); orbita.dist *= Math.exp(e.deltaY * 0.001); }, { passive: false });
+// con los dedos: uno gira (como el botón izquierdo) y dos pellizcan para acercar o alejar
+const dedos = new Map(); let pellizco = null;
+lienzo.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'touch') return; dedos.set(e.pointerId, [e.clientX, e.clientY]); if (dedos.size === 2) { const [p, q] = [...dedos.values()]; pellizco = Math.hypot(p[0] - q[0], p[1] - q[1]); arr = null; } });
+const soltarDedo = (e) => { dedos.delete(e.pointerId); if (dedos.size < 2) pellizco = null; };
+lienzo.addEventListener('pointerup', soltarDedo); lienzo.addEventListener('pointercancel', soltarDedo);
+lienzo.addEventListener('pointermove', (e) => {
+  if (!dedos.has(e.pointerId)) return;
+  dedos.set(e.pointerId, [e.clientX, e.clientY]);
+  if (dedos.size !== 2 || !pellizco) return;
+  arr = null;
+  const [p, q] = [...dedos.values()], d = Math.hypot(p[0] - q[0], p[1] - q[1]);
+  orbita.dist *= pellizco / Math.max(1, d); pellizco = d;
+});
 
 // bucle
 let ultimo = performance.now(), cuenta = 0, desde = ultimo;

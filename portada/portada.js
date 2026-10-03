@@ -1,5 +1,5 @@
-/* La portada de EcoLoco (index.html): configurar un mundo antes de generarlo (con
-   preajustes), ver lo que va a tener, entrar en la simulación y abrir los mundos guardados.
+/* La página «Simulación» de EcoLoco (portada/simulacion.html): el botón de empezar, configurar
+   un mundo antes de generarlo (con preajustes), ver lo que va a tener y abrir los mundos guardados.
    La configuración va a la simulación por la dirección: vivo/?mundo=... (mundo/config.js). */
 
 import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js';
@@ -12,7 +12,9 @@ import { ayuda, ponerAyudas } from '../comun/ayuda.js';
 import { cabecera } from '../comun/cabecera.js';
 import { GRUPO_EN, nombreEsp, categoria } from '../comun/nombres.js';
 
-traducirDom(); ponerAyudas(); cabecera('portada');
+traducirDom(); ponerAyudas(); cabecera('simulacion');
+// (la página está en portada/: lo demás, desde la raíz del proyecto)
+const RAIZ = new URL('../', import.meta.url).href;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -98,7 +100,7 @@ function pintarEspecies() {
   $('especies').innerHTML = LISTAS[pestana].map((e) => {
     const f = FICHA[e.id] || {};
     const sub = e.grupo ? grupoTxt(e.grupo) : categoria(f.cat || '');
-    return `<div class="esp ${fuera.has(e.id) ? '' : 'on'}" data-id="${e.id}" title="${esc(f.cientifico || '')}"><img src="graficos/pruebas-morta/borneo/ref/${e.id}.jpg" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+    return `<div class="esp ${fuera.has(e.id) ? '' : 'on'}" data-id="${e.id}" title="${esc(f.cientifico || '')}"><img src="${RAIZ}graficos/pruebas-morta/borneo/ref/${e.id}.jpg" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
       <div><div class="n">${esc(nombreEsp(f) || e.id)}</div><div class="g">${esc(sub)}</div></div></div>`;
   }).join('');
   for (const el of $('especies').querySelectorAll('.esp')) el.onclick = () => {
@@ -139,15 +141,15 @@ function pintarResumen() {
     ${vert.map((g) => `<tr><td>${grupoTxt(g.grupo)}</td><td>${num(g.n)}</td></tr>`).join('')}
     <tr><td><b>Total</b></td><td>${num(totV)}</td></tr></table>
   <h3>${T('Invertebrados', 'Invertebrates')}</h3><table><tr><td>${T('Insectos, lombrices y termitas', 'Insects, earthworms and termites')}</td><td>${num(totI)}</td></tr></table>`;
-  $('acceso-vivo').href = `vivo/?mundo=${aTexto(config)}`;
 }
 
 function pintar() { pintarPreajustes(); pintarOpciones(); pintarEspecies(); pintarResumen(); }
 
 // ---------------------------------------------------------------- entrar y mundos guardados
 // la simulación se abre en otra pestaña: la portada se queda
-const abrir = (c, dia = 0) => { window.open(`vivo/?mundo=${aTexto(c)}${dia ? `&dia=${dia}` : ''}`, '_blank', 'noopener'); };
+const abrir = (c, dia = 0) => { window.open(`${RAIZ}vivo/?mundo=${aTexto(c)}${dia ? `&dia=${dia}` : ''}`, '_blank', 'noopener'); };
 $('generar').onclick = () => abrir(config);
+$('empezar').onclick = () => abrir(config);
 const guardados = () => { try { return JSON.parse(localStorage.getItem('ecoloco.mundos') || '[]'); } catch { return []; } };
 function pintarGuardados() {
   const l = guardados();
@@ -169,5 +171,5 @@ $('archivo').onchange = async () => {
 
 pintar();
 pintarGuardados();
-fetch('datos/escenarios/maliau.json').then((r) => r.json()).then((e) => { escenario = e; pintarResumen(); })
+fetch(`${RAIZ}datos/escenarios/maliau.json`).then((r) => r.json()).then((e) => { escenario = e; pintarResumen(); })
   .catch(() => { $('resumen').textContent = T('No se encuentra datos/escenarios/maliau.json (se genera con herramientas/clima_maliau.py).', 'datos/escenarios/maliau.json not found (it is generated with herramientas/clima_maliau.py).'); });

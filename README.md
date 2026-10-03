@@ -23,7 +23,9 @@ El informe con lo que cuadra, lo que no y los tiempos está en [`informe/INFORME
 | `motor/salida/` | Escritura de las salidas como el original: zarr (grupos `inputs`, `init`, `outputs`) y CSV estilo pandas. |
 | `interfaz/` | La interfaz web del motor (página + Web Worker + servidor estático mínimo). |
 | `motor/correcciones.js` | Las correcciones del fallo de los herbívoros (y otros del original), todas opcionales. |
-| `index.html`, `portada/` | La portada de EcoLoco: configurar el mundo, preajustes, mundos guardados. |
+| `index.html` | La página de inicio: qué es EcoLoco, en qué se basa y para qué es cada sección. |
+| `portada/` | La página «Simulación» (`portada/simulacion.html`): el botón de empezar, configurar el mundo, preajustes, mundos guardados. |
+| `comun/` | Lo común a todas las páginas: cabecera, idioma (inglés y español), los «?» con globo, los controles de tamaño y los nombres de las especies en inglés. |
 | `mundo/` | El mundo vivo, sin gráficos: puente con el motor, mapa, especies y comportamientos, el día minuto a minuto, semillas y director. Corre en Node y en un Worker. |
 | `vivo/` | La página del mundo vivo: el mundo entero en 3D con los modelos de `graficos/pruebas-morta/borneo/` (terreno, bosque y animales por instancias). |
 | `herramientas/` | Conversión de entradas, oráculo Python, comparadores y la suite de pruebas. |
@@ -36,7 +38,10 @@ El informe con lo que cuadra, lo que no y los tiempos está en [`informe/INFORME
 ```
 node interfaz/servidor.mjs          # o: npm run interfaz
 ```
-y abrir <http://localhost:8090/>: la **portada de EcoLoco**. Desde ella se configura un mundo
+y abrir <http://localhost:8090/>: la **página de inicio**, que explica el proyecto. Todas las páginas
+llevan arriba la misma cabecera (Inicio, Simulación, Editor de modelos, Galería, El motor) y el
+selector de idioma (inglés por defecto, o español). En **Simulación**
+(`portada/simulacion.html`) está el botón de empezar y, debajo, se configura un mundo
 antes de generarlo (tamaño, río, charcas, bosque, clima, semilla y qué especies hay), con
 preajustes («Maliau, bosque maduro», «Claro tras un incendio», «Ribera», «Año seco (El Niño)»,
 «Maliau a lo grande»), se ve lo que va a tener y se entra en la simulación; también lleva al
@@ -60,28 +65,37 @@ La casilla **corregir el fallo de los herbívoros** activa todas las correccione
 
 ### El mundo vivo de Maliau
 
+En el móvil y la tableta se navega con los dedos: uno arrastra el suelo; con dos se pellizca
+para acercar o alejar, se giran para rotar la vista y se mueven juntos arriba o abajo para
+inclinarla. Un toque selecciona un animal o una planta. Se dibuja a la resolución real de la
+pantalla (hasta ×2). Todas las páginas se adaptan al ancho del móvil.
+
 ```
 node interfaz/servidor.mjs          # el mismo servidor
 ```
-y abrir <http://localhost:8090/vivo/> (o entrar desde la portada, con la configuración elegida:
+y abrir <http://localhost:8090/vivo/> (o entrar desde la página Simulación, con la configuración elegida:
 `vivo/?mundo=...`; con `&dia=N`, en ese día, recalculando antes el motor deprisa). Tarda de 3 a 10 s en cargar el escenario (43 MB),
-generar el mundo y calcular el primer día. Lo que se ve es un diorama de 90 × 90 m: el cuadro
-central del motor (que mide de verdad 90 m con 0,66 km² y 3,5 km con 1000 km²); con más km²,
-más animales en ese cuadro y cada uno vale por más individuos. Arriba,
-siempre: FPS, día, hora, velocidad, tiempo y **Animales en el mapa** (los individuos del motor).
+generar el mundo y calcular el primer día. Lo que se ve es un cuadrado cerrado (100 m de lado por
+defecto, de 50 a 1000 m) que representa el mundo **entero** que calcula el motor (de 1 a 10 km²):
+todas sus cohortes de animales, y cada animal dibujado vale por varios individuos cuando son
+demasiados (la pestaña Mundo dice cuántos se dibujan y por cuántos vale cada uno); las plantas,
+a su densidad real. Con un mapa de hasta 500 m va a 60 FPS (1600 × 900); con 1000 m, a unos 40.
+Arriba a la izquierda: día, fecha, hora, temperatura, humedad y velocidad. Arriba a la derecha,
+las huellas 🐾 (o la tecla **B**) abren el panel, y el «?» de debajo explica ratón y teclas.
+El panel, en pestañas: **Mundo** (tamaño del mundo y del mapa, «Guardar este mundo», velocidad,
+ir a un día, FPS y triángulos, y los animales por grupo con su gráfica), **Animales** (buscador
+y listado por especie), **Datos** (las variables del motor del mundo entero y por capas, con su
+gráfica día a día) y **Parámetros** (clima, CO₂ y árboles desde el día siguiente, y una
+predicción con y sin el cambio). Al pulsar un animal, una planta o un hongo (en la escena o en
+la lista) se abre su ficha en una pestaña nueva, que se cierra con ✕.
 Teclas: **espacio** pausa, **1–5** velocidad (×1, ×10, ×60, ×600, máx), **Z** resumen del día,
-**G** seguir a un animal (Esc para dejarlo), **I** indicador, **B** (o el botón 🐾 de la
-derecha) el panel, en pestañas: **Mundo** (tamaño, «Guardar este mundo», velocidad, ir a un
-día, los animales del mapa por grupo con su gráfica), **Animales** (la ficha del seleccionado y
-el listado por especie), **Datos** (las 149 variables del motor, del mundo o de un cuadro y por
-capas, con su gráfica día a día) y **Parámetros** (clima, CO₂ y árboles desde el día siguiente,
-y una predicción con y sin el cambio), **clic** en un animal para seleccionarlo, **C**
-controles, **M** medidas (ms por fotograma, triángulos, llamadas de dibujo, animales
-dibujados y simulados, tiempo de cálculo, N de los representantes), **Intro** pantalla
-completa, **H** ayuda; la cámara es la de Unity (botón derecho + WASD, Q/E, rueda, F
-encuadrar, P perspectiva/ortográfica). Con `?semilla=2` sale otro mundo; con `?km2=100`, un
-mundo de 100 km². Donde mira la cámara (y el animal que se sigue) se simula minuto a minuto;
-el resto del mundo, a pasos de 10 a 30 minutos. En la consola, `__vivo.banco(1500, 60)` mide
+**G** seguir a un animal (Esc para dejarlo; lo que lo tape se vuelve transparente), **I**
+indicador, **M** medidas (ms por fotograma, triángulos, llamadas de dibujo, animales dibujados y
+simulados, tiempo de cálculo), **Intro** pantalla completa; la cámara es la de Unity (botón
+derecho + WASD, Q/E, rueda, F encuadrar, P perspectiva/ortográfica). Con `?semilla=2` sale otro
+mundo; con `?km2=5&lado=300`, otros tamaños. Donde mira la cámara (y el animal que se sigue) se
+simula minuto a minuto; el resto del mundo, a pasos de 10 a 30 minutos. En la consola,
+`__vivo.banco(1500, 60)` mide
 1500 fotogramas a ×60 (mediana, p95, máximo, tirones, triángulos).
 
 Sin gráficos (Node):

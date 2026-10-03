@@ -17,3 +17,13 @@
 .cabecera .hueco { flex:1; }
 .cabecera select { background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-radius:5px; padding:2px 6px; font:inherit; }
 body.con-cabecera { padding-top:34px; box-sizing:border-box; }
+/* en el móvil: la cabecera se desliza de lado si no cabe, y los globos no se salen de la pantalla */
+.cabecera { overflow-x:auto; scrollbar-width:none; } .cabecera::-webkit-scrollbar { display:none; }
+.cabecera a, .cabecera label { flex:none; white-space:nowrap; }
+@media (max-width:700px) {
+  .cabecera { gap:0; padding:0 6px; font-size:12.5px; }
+  .cabecera .cab-marca { font-size:14px; margin-right:6px; }
+  .cabecera a.ir { padding:4px 7px; }
+  .ayuda:hover::after, .ayuda:focus::after { position:fixed; left:8px; right:8px; top:auto; bottom:12px; transform:none; width:auto; max-width:none; }
+  .ayuda.izq:hover::after, .ayuda.izq:focus::after { left:8px; right:8px; }
+}

@@ -74,3 +74,15 @@ table.editable td input { border: none; padding: 3px 5px; width: 100%; min-width
 input, select, textarea { background: var(--papel); color: var(--tinta); border: 1px solid var(--borde-boton); border-radius: 4px; }
 input[type=checkbox], input[type=range] { accent-color: var(--verde); }
 #b-tema { margin-left: auto; background: transparent; color: #fff; border-color: rgba(255,255,255,.35); }
+/* en el móvil: todo en una columna */
+#graficas { grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr)); }
+@media (max-width: 760px) {
+  header { flex-wrap: wrap; gap: .5em 1em; }
+  .explorador { grid-template-columns: 1fr; }
+  .param { grid-template-columns: 1fr; gap: .2em; }
+  .entrada { grid-template-columns: 1fr 1fr; }
+  .entrada > :first-child, .entrada canvas { grid-column: 1 / -1; }
+  nav { overflow-x: auto; } nav button { flex: none; }
+  .tabla-env { overflow-x: auto; }
+  .panel { padding: .6em .6em; }
+}

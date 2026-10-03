@@ -6,7 +6,7 @@ import { T, idioma, ponerIdioma } from './idioma.js';
 const raiz = new URL('../', import.meta.url);
 const PAGINAS = [
   ['portada', 'index.html', 'Inicio', 'Home'],
-  ['vivo', 'vivo/', 'Simulación', 'Simulation'],
+  ['simulacion', 'portada/simulacion.html', 'Simulación', 'Simulation'],
   ['editor', 'graficos/pruebas-morta/borneo/editor.html', 'Editor de modelos', 'Model editor'],
   ['galeria', 'graficos/pruebas-morta/borneo/galeria.html', 'Galería', 'Gallery'],
   ['motor', 'interfaz/', 'El motor', 'The engine'],
