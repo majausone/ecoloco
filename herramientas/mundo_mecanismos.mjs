@@ -8,8 +8,8 @@
 //
 // Uso: node herramientas/mundo_mecanismos.mjs [--dias 20]
 import { readFileSync } from 'node:fs';
-import { Mundo } from '../mundo/mundo.js?v=202610032115';
-import { reiniciarIds } from '../mundo/agentes.js?v=202610032115';
+import { Mundo } from '../mundo/mundo.js?v=202610052205';
+import { reiniciarIds } from '../mundo/agentes.js?v=202610052205';
 
 const args = process.argv.slice(2);
 const dias = Number(args[args.indexOf('--dias') + 1] || 20);

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ver un modelo</title>
+<style>html,body{margin:0;height:100%;background:#6f9a92;overflow:hidden}canvas{display:block}#t{position:fixed;left:8px;top:6px;font:13px system-ui;color:#fff;text-shadow:0 1px 2px #000}</style>
+</head>
+<body>
+<div id="t"></div>
+<script type="module">
+/* Un modelo solo, de cerca, con cámaras fijas (para comparar y hacer capturas):
+   ver.html?id=pantera-nebulosa[&cubos=1][&anim=andar&t=0.4][&vista=lado|tres|frente|arriba][&rejilla=4] */
+import * as THREE from '../vendor/three.module.js';
+import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610052205';
+import { crearAnimal } from './animales.js?v=202610052205';
+import { crearPlanta } from './plantas.js?v=202610052205';
+import { crearAnimal as crearAnimalCubos } from './animales-cubos.js?v=202610052205';
+import { crearPlanta as crearPlantaCubos } from './plantas-cubos.js?v=202610052205';
+const q = new URLSearchParams(location.search);
+const id = q.get('id') || 'pantera-nebulosa', cubos = !!q.get('cubos'), vista = q.get('vista') || 'tres';
+const e = ANIMALES.find((x) => x.id === id) || PLANTAS.find((x) => x.id === id) || SETAS.find((x) => x.id === id);
+const animal = ANIMALES.includes(e);
+const W = innerWidth, H = innerHeight;
+const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(W, H); renderer.shadowMap.enabled = true;
+document.body.append(renderer.domElement);
+const escena = new THREE.Scene(); escena.background = new THREE.Color('#6f9a92');
+const m = animal ? (cubos ? crearAnimalCubos(e) : crearAnimal(e)) : (cubos ? crearPlantaCubos(e) : crearPlanta(e));
+const tam = Math.max(m.tam.x, m.tam.y, m.tam.z);
+const sol = new THREE.DirectionalLight('#fff2d8', 3); sol.position.set(-tam, tam * 1.8, tam * 1.2); sol.castShadow = true;
+Object.assign(sol.shadow.camera, { left: -tam * 1.5, right: tam * 1.5, top: tam * 1.5, bottom: -tam * 1.5, near: 0.01, far: tam * 8 }); sol.shadow.mapSize.set(2048, 2048);
+escena.add(sol, new THREE.HemisphereLight('#d8e8d0', '#3a4a30', 1.4));
+const suelo = new THREE.Mesh(new THREE.PlaneGeometry(tam * 6, tam * 6).rotateX(-Math.PI / 2), new THREE.MeshLambertMaterial({ color: '#4a6a36' })); suelo.receiveShadow = true; escena.add(suelo);
+escena.add(m.raiz);
+const anim = q.get('anim'); if (anim) m.poner(anim, 0);
+const c = m.centro.clone(), d = tam * (animal ? 1.6 : 1.9);
+const cam = new THREE.PerspectiveCamera(35, W / H, tam * 0.01, tam * 30);
+const pos = { lado: [0, 0.05, 1], tres: [0.7, 0.35, 0.75], frente: [1, 0.15, 0.05], arriba: [0.05, 1, 0.3] }[vista];
+cam.position.set(c.x + pos[0] * d, c.y + pos[1] * d, c.z + pos[2] * d); cam.lookAt(c);
+const t0 = Number(q.get('t') || 0.3);
+let tri = 0; m.raiz.traverse((o) => { if (o.isMesh && o.geometry) tri += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3 * (o.isInstancedMesh ? o.count : 1); });
+document.getElementById('t').textContent = `${e.nombre} · ${cubos ? 'cubos' : 'suave'} · ${Math.round(tri)} triángulos`;
+function pintar(t) { m.paso(t); renderer.render(escena, cam); }
+pintar(t0);
+window.__ver = { m, pintar, listo: true };
+</script>
+</body>
+</html>

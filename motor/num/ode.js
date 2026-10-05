@@ -2,8 +2,9 @@
 // (scipy 1.18.1: _ivp/rk.py, common.py, base.py, ivp.py), reproduciendo cada operación:
 // los productos K·a van por dgemv de OpenBLAS y la norma por ddot, como en numpy.
 
-import { pow } from './ucrt.js?v=202610032115';
-import { dotMatVec, ddot } from './np.js?v=202610032115';
+import { pow } from './ucrt.js?v=202610052205';
+import { dotMatVec, ddot } from './np.js?v=202610052205';
+import { f64 } from './f64.js?v=202610052205';
 
 const SAFETY = 0.9, MIN_FACTOR = 0.2, MAX_FACTOR = 10;
 const C = [0, 1 / 5, 3 / 10, 4 / 5, 8 / 9, 1];
@@ -34,7 +35,7 @@ export function solveIvpRK45(fun, t0, tf, y0, { rtol = 1e-3, atol = 1e-6 } = {})
   const f = (t, y) => { nfev++; return fun(t, y); };
   const direccion = tf !== t0 ? Math.sign(tf - t0) : 1;
   let t = t0;
-  let y = Float64Array.from(y0);
+  let y = f64(y0);
   let fy = f(t, y);
   // select_initial_step
   let hAbs;
@@ -43,15 +44,15 @@ export function solveIvpRK45(fun, t0, tf, y0, { rtol = 1e-3, atol = 1e-6 } = {})
     if (n === 0) hAbs = Infinity;
     else if (intervalo === 0.0) hAbs = 0.0;
     else {
-      const escala = Float64Array.from(y, (v) => atol + Math.abs(v) * rtol);
-      const d0 = norma(Float64Array.from(y, (v, i) => v / escala[i]));
-      const d1 = norma(Float64Array.from(fy, (v, i) => v / escala[i]));
+      const escala = f64(y, (v) => atol + Math.abs(v) * rtol);
+      const d0 = norma(f64(y, (v, i) => v / escala[i]));
+      const d1 = norma(f64(fy, (v, i) => v / escala[i]));
       let h0 = (d0 < 1e-05 || d1 < 1e-05) ? 1e-06 : 0.01 * d0 / d1;
       h0 = Math.min(h0, intervalo);
       const hd = h0 * direccion;
-      const y1 = Float64Array.from(y, (v, i) => v + hd * fy[i]);
+      const y1 = f64(y, (v, i) => v + hd * fy[i]);
       const f1 = f(t0 + h0 * direccion, y1);
-      const d2 = norma(Float64Array.from(f1, (v, i) => (v - fy[i]) / escala[i])) / h0;
+      const d2 = norma(f64(f1, (v, i) => (v - fy[i]) / escala[i])) / h0;
       let h1;
       if (d1 <= 1e-15 && d2 <= 1e-15) h1 = Math.max(1e-06, h0 * 0.001);
       else h1 = pow(0.01 / Math.max(d1, d2), 1 / (4 + 1));
@@ -79,7 +80,7 @@ export function solveIvpRK45(fun, t0, tf, y0, { rtol = 1e-3, atol = 1e-6 } = {})
       K[0].set(fy);
       for (let s = 1; s < N_STAGES; s++) {
         const a = A[s];
-        const dy = dotMatVec(n, s, (i, j) => K[j][i], Float64Array.from(a.slice(0, s)));
+        const dy = dotMatVec(n, s, (i, j) => K[j][i], f64(a.slice(0, s)));
         const yy = new Float64Array(n);
         for (let i = 0; i < n; i++) yy[i] = y[i] + dy[i] * h;
         K[s].set(f(t + C[s] * h, yy));
@@ -89,9 +90,9 @@ export function solveIvpRK45(fun, t0, tf, y0, { rtol = 1e-3, atol = 1e-6 } = {})
       for (let i = 0; i < n; i++) yNew[i] = y[i] + h * db[i];
       fNew = f(t + h, yNew);
       K[N_STAGES].set(fNew);
-      const escala = Float64Array.from(y, (v, i) => atol + Math.max(Math.abs(v), Math.abs(yNew[i])) * rtol);
+      const escala = f64(y, (v, i) => atol + Math.max(Math.abs(v), Math.abs(yNew[i])) * rtol);
       const err = dotMatVec(n, N_STAGES + 1, (i, j) => K[j][i], E);
-      const errEsc = Float64Array.from(err, (v, i) => (v * h) / escala[i]);
+      const errEsc = f64(err, (v, i) => (v * h) / escala[i]);
       const errNorm = norma(errEsc);
       if (errNorm < 1) {
         let factor = errNorm === 0 ? MAX_FACTOR : Math.min(MAX_FACTOR, SAFETY * pow(errNorm, ERROR_EXPONENT));

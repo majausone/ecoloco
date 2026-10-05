@@ -1,12 +1,12 @@
 // Registro de módulos portados. Los que falten se pueden sustituir (solo en pruebas)
 // con los datos del oráculo.
-import { LitterModel } from './litter.js?v=202610032115';
-import { HydrologyModel } from './hydrology.js?v=202610032115';
-import { SoilModel } from './soil.js?v=202610032115';
-import { AbioticSimpleModel } from './abiotic_simple.js?v=202610032115';
-import { AbioticModel } from './abiotic.js?v=202610032115';
-import { PlantsModel } from './plants.js?v=202610032115';
-import { AnimalModel } from './animal.js?v=202610032115';
+import { LitterModel } from './litter.js?v=202610052205';
+import { HydrologyModel } from './hydrology.js?v=202610052205';
+import { SoilModel } from './soil.js?v=202610052205';
+import { AbioticSimpleModel } from './abiotic_simple.js?v=202610052205';
+import { AbioticModel } from './abiotic.js?v=202610052205';
+import { PlantsModel } from './plants.js?v=202610052205';
+import { AnimalModel } from './animal.js?v=202610052205';
 
 export const MODELOS = {
   litter: LitterModel,

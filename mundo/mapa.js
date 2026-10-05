@@ -12,7 +12,7 @@
 // tronco tiene su sitio fijo. Así el bosque es siempre el mismo y, de un día a otro, solo
 // cambia donde el motor dice que nace o muere algo.
 
-import { Azar, ruido2 } from './azar.js?v=202610032115';
+import { Azar, ruido2 } from './azar.js?v=202610052205';
 
 export const BALDOSA = 30;
 
@@ -27,6 +27,8 @@ const ESPECIES_ARBOL = [
 ];
 // cuánta fruta da cada especie respecto a su copa (las higueras, mucha más: especie clave)
 const FRUTO = { higuera: 6, 'palma-cola-pez': 2, dillenia: 1.5, dipterocarpo: 1, agathis: 0.5, roble: 1, pinanga: 1.5, 'jengibre-antorcha': 1 };
+// los árboles de verdad (no las palmas) en los que pueden subir lianas
+const CON_LIANAS = new Set(['dipterocarpo', 'agathis', 'higuera', 'roble', 'dillenia']);
 const SETAS_RAIZ = ['amanita', 'russula', 'boleto-ruibarbo'];
 const SETAS_TRONCO = ['falo-velo', 'estrella-roja', 'copa-tropical', 'repisa', 'poros-luminosos', 'mycena-verde'];
 
@@ -82,6 +84,21 @@ export class Mapa {
       }
     }
     this.quitar = new Set(quitar);
+    // troncos caídos de orilla a orilla (2 a 4 si hay río, repartidos a lo largo de él): de cada uno, sus dos
+    // extremos (en tierra firme, un poco más allá de cada orilla) y su radio. Por ellos cruzan el río los que
+    // no nadan (mundo/dia.js, rutaHasta); vivo/puentes.js los dibuja
+    this.puentes = [];
+    if (this.rio) {
+      const azP = new Azar(semilla, 13), n = 2 + azP.entero(3);
+      for (let k = 0; k < n; k++) {
+        const z = Math.min(this.alto - 6, Math.max(6, this.alto * (k + 0.5 + (azP.r() - 0.5) * 0.5) / n));
+        const xr = this.rioX(z), d = this.rioX(z + 0.5) - this.rioX(z - 0.5), l = Math.hypot(1, d);
+        // (de través: perpendicular al cauce, que va en la dirección (d, 1))
+        const px = 1 / l, pz = -d / l, medio = this.rio.ancho / 2 + 1.4 + azP.r() * 0.8;
+        const p = { id: 'p' + k, x0: xr - px * medio, z0: z - pz * medio, x1: xr + px * medio, z1: z + pz * medio, radio: 0.3 + azP.r() * 0.14 };
+        if (this.enMundo(p.x0, p.z0) && this.enMundo(p.x1, p.z1)) this.puentes.push(p);
+      }
+    }
     this.plantas = null;      // plantas de cada cuadro del motor (las del último día)
   }
 
@@ -119,6 +136,16 @@ export class Mapa {
     const d = this.distRio(x, z);
     if (d < 6) h = Math.min(h, -0.6 + Math.max(0, d) * 0.25 + (h + 0.6) * Math.max(0, d / 6) ** 2); // vaguada del arroyo
     return h;
+  }
+  // el tronco-puente que hay en un punto (a menos de su radio más margen de su eje), con t de 0 a 1 a lo largo, o null
+  puenteEn(x, z, margen = 0) {
+    for (const p of this.puentes) {
+      const ux = p.x1 - p.x0, uz = p.z1 - p.z0, l2 = ux * ux + uz * uz;
+      const t = ((x - p.x0) * ux + (z - p.z0) * uz) / l2;
+      if (t < 0 || t > 1) continue;
+      if (Math.hypot(p.x0 + ux * t - x, p.z0 + uz * t - z) <= p.radio + margen) return { p, t };
+    }
+    return null;
   }
   esAgua(x, z) {
     if (this.distRio(x, z) < 0) return true;
@@ -272,8 +299,62 @@ export class Mapa {
         }
       }
     }
+    // (las lianas, la primera vez que se piden: las del río se enganchan también a árboles de las baldosas de al lado)
+    let lianas = null;
+    Object.defineProperty(b, 'lianas', { get: () => (lianas ||= this._lianas(b)), enumerable: false });
     (this._baldosas ||= new Map()).set(clave, b);
     return b;
+  }
+  // las lianas de una baldosa (no son del motor: van con sus árboles, deterministas por el id de cada uno):
+  // trepadoras por un árbol { tipo: 'tetrastigma' | 'ratan' | 'enredadera', arbol }, cortinas de lianas finas
+  // colgando de una rama { tipo: 'cortina', arbol } y colgantes entre dos { tipo: 'colgante', a, b, fa, fb
+  // (altura de cada extremo, en partes de la de su árbol), rio (si cruza el río), bajo (a cuántos m del suelo
+  // llega el bucle, las que no cruzan el río) }
+  _lianas(b) {
+    const out = [], altos = b.arboles.filter((a) => CON_LIANAS.has(a.especie) && (a.altura || 0) > 7);
+    for (const a of altos) {
+      const az = new Azar(this.semilla, 24, hashTexto(a.id)), u = az.r();
+      if (u < 0.08) out.push({ id: 'l' + a.id, tipo: 'tetrastigma', arbol: a, rafflesia: az.r() < 0.6 });
+      else if (u < 0.2) out.push({ id: 'l' + a.id, tipo: 'ratan', arbol: a });
+      else if (u < 0.5) out.push({ id: 'l' + a.id, tipo: 'enredadera', arbol: a });
+      if (az.r() < 0.22) out.push({ id: 'k' + a.id, tipo: 'cortina', arbol: a });
+    }
+    const colgante = (a, o, rio, az) => {
+      // (las del río, a alturas distintas; las otras, en bucle hasta la altura de la vista o casi hasta el suelo)
+      const fa = rio ? 0.22 + 0.4 * az.r() : 0.55 + 0.25 * az.r(), fb = rio ? Math.min(0.7, Math.max(0.22, fa + (az.r() - 0.5) * 0.2)) : 0.55 + 0.25 * az.r();
+      return { id: 'c' + a.id + '-' + o.id, tipo: 'colgante', a, b: o, fa, fb, rio, bajo: rio ? null : az.r() < 0.3 ? 0.3 + az.r() * 0.7 : 1.4 + az.r() * 3 };
+    };
+    // entre cada árbol alto y su vecino alto más cercano (de 4 a 12 m), en 7 de cada 10 parejas
+    for (const a of altos) {
+      let mejor = null, md = 12;
+      for (const o of altos) { const d = Math.hypot(o.x - a.x, o.z - a.z); if (o !== a && d >= 4 && d < md) { md = d; mejor = o; } }
+      if (!mejor || a.id > mejor.id) continue;
+      const az = new Azar(this.semilla, 25, hashTexto(a.id + '|' + mejor.id));
+      if (az.r() < 0.7) out.push(colgante(a, mejor, false, az));
+    }
+    // y sobre el río: entre un árbol alto de la orilla oeste (de esta baldosa) y otro de la este (de esta o de
+    // las de al lado, que el río suele ir por el borde), cerca del agua (hasta dos por baldosa)
+    if (this.rio) {
+      // (las parejas más cortas, sin repetir árbol)
+      const cerca = (a) => CON_LIANAS.has(a.especie) && (a.altura || 0) > 7 && this.distRio(a.x, a.z) < 16;
+      const orilla = altos.filter(cerca), otros = [], parejas = [], usados = new Set();
+      for (let i = b.bi - 1; i <= b.bi + 1; i++) for (let j = b.bj - 1; j <= b.bj + 1; j++) {
+        if (i < 0 || j < 0 || i * BALDOSA >= this.ancho || j * BALDOSA >= this.alto) continue;
+        for (const o of this.baldosa(i, j).arboles) if (cerca(o)) otros.push(o);
+      }
+      for (const a of orilla) for (const o of otros) {
+        if (Math.sign(a.x - this.rioX(a.z)) >= 0 || Math.sign(o.x - this.rioX(o.z)) <= 0) continue;
+        const d = Math.hypot(o.x - a.x, o.z - a.z);
+        if (d < 24) parejas.push([d, a, o]);
+      }
+      parejas.sort((p, q) => p[0] - q[0] || (p[1].id < q[1].id ? -1 : 1));
+      for (const [, a, o] of parejas) {
+        if (usados.has(a) || usados.has(o) || usados.size >= 4) continue;
+        usados.add(a); usados.add(o);
+        out.push(colgante(a, o, true, new Azar(this.semilla, 26, hashTexto(a.id + '|' + o.id))));
+      }
+    }
+    return out;
   }
   // si un punto está dentro del cuadrado del mapa (con un margen en m)
   dentro(x, z, m = 0) { return x >= m && z >= m && x <= this.ancho - m && z <= this.alto - m; }

@@ -1,30 +1,66 @@
 /* LOS ANIMALES EN PANTALLA. Todos los animales del mapa, con su línea de tiempo del día
    (fotogramas clave del trabajador: cuándo, dónde, rumbo, estado). Se dibujan así:
-   - los más cercanos (hasta CERCANOS, a menos de CERCA m), con el modelo articulado del
-     Observer y su animación (vivo/animaciones.js);
-   - el resto, con una versión de 3 cajas de su especie (cuerpo, cabeza y patas, con sus
-     colores), dibujada con instancias: una sola llamada de dibujo por especie, aunque sean
-     miles;
-   - más allá de lo que se distingue (según su tamaño), nada.
+   - los más cercanos (hasta CERCANOS, a menos de CERCA_X veces su tamaño y como mucho CERCA m),
+     con su modelo suave con esqueleto
+     (graficos/pruebas-morta/borneo/animales.js) y su animación (vivo/animaciones.js): una
+     llamada de dibujo cada uno;
+   - a media distancia (hasta MEDIO_X veces su tamaño), la malla de ~100 triángulos con las
+     animaciones grabadas en una textura (lejos.js): toda la especie en una llamada, aunque sean
+     miles, cada uno con su animación;
+   - más lejos, hasta lo que se distingue (según su tamaño), un recorte plano de 2 triángulos;
+   - más allá, nada.
    La posición de cada animal se interpola entre sus fotogramas clave. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032115';
-import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales.js?v=202610032115';
-import { CLAVE, TICS } from '../mundo/dia.js?v=202610032115';
-import { ESTADOS, COMPORTAMIENTO } from '../mundo/especies.js?v=202610032115';
-import { fundir } from './fundir.js?v=202610032115';
-import { animar } from './animaciones.js?v=202610032115';
+import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052205';
+import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales.js?v=202610052205';
+import { hornearVAT, filaVAT, materialVAT, hacerImpostor, materialImpostor } from '../graficos/pruebas-morta/borneo/lejos.js?v=202610052205';
+import { CLAVE } from '../mundo/dia.js?v=202610052205';
+import { ESTADOS, COMPORTAMIENTO } from '../mundo/especies.js?v=202610052205';
+import { fundir } from './fundir.js?v=202610052205';
+import { animar, COMO_SE_VE } from './animaciones.js?v=202610052205';
+import { conTransparencia } from './transparencia.js?v=202610052205';
 
-const CERCA = 30, CERCANOS = 60;
+// hasta dónde va cada nivel, en veces el tamaño del animal (con un mínimo y un máximo en metros)
+const CERCA = 30, CERCANOS = 60, CERCA_X = 35, MEDIO_X = 35;
 // los pequeños, más grandes para que se vean (como en el bioma del Observer)
 export const ESCALA = { insecto: 2.6, gusano: 2.6, alado: 2.2, rana: 1.8, reptil: 1.2, serpiente: 1.1 };
-const E_DORMIR = ESTADOS.indexOf('dormir'), E_MUERTO = ESTADOS.indexOf('muerto'), E_MORIR = ESTADOS.indexOf('morir'), E_IRSE = ESTADOS.indexOf('irse');
+const E_DORMIR = ESTADOS.indexOf('dormir'), E_IRSE = ESTADOS.indexOf('irse');
+// los estados en los que se anda (o se trepa o se nada): ahí el paso de las patas va con lo que de verdad avanza
+const ANDANDO = new Set(['andar', 'correr', 'huir', 'acechar', 'trepar', 'nadar', 'llegar', 'irse'].map((n) => ESTADOS.indexOf(n)));
+// (corriendo, la animación es la de correr: su paso normal, unos 2,5 tamaños de cuerpo por segundo)
+const CORRIENDO = new Set(['correr', 'huir', 'atacar'].map((n) => ESTADOS.indexOf(n)));
+// el ritmo de la animación de andar según lo que avanza en pantalla (con su tamaño DIBUJADO, s.tam): a su
+// ritmo normal a unos 0,8 tamaños de cuerpo por segundo (corriendo, 2,5), más deprisa si va más deprisa (hasta 3 veces) y más
+// despacio si va más despacio; parado, las patas quietas (si no, patinan: andan en el sitio o se deslizan)
+function pasoDe(a, dt) {
+  const px = a._px ?? a.x, pz = a._pz ?? a.z, py = a._py ?? a.y;
+  a._px = a.x; a._pz = a.z; a._py = a.y;
+  const v = Math.hypot(a.x - px, a.z - pz, a.y - py) / Math.max(dt, 1e-3);
+  a.velVis = a.velVis == null ? v : a.velVis * 0.8 + v * 0.2;
+  if (!ANDANDO.has(a.estado)) return 1;
+  const k = a.velVis / (a.s.tam * (CORRIENDO.has(a.estado) ? 2.5 : 0.8));
+  return k < 0.04 ? 0 : Math.min(3, k);
+}
 const angulo = (a, b, f) => { let d = b - a; d = Math.atan2(Math.sin(d), Math.cos(d)); return a + d * f; };
 
-export function crearManada({ escena, ox, oz, cima }) {
-  const especies = new Map(); // id -> { e, tam, color, simple: InstancedMesh, ids: [] }
-  // ---- por especie: medidas, colores y la versión de 3 cajas
+// encima(x, z): la altura de algo por lo que se anda por encima del suelo (un tronco-puente, vivo/puentes.js) o null
+// colgando(x, z): la altura de una liana por la que se cruza en alto (vivo/lianas.js) o null
+export function crearManada({ escena, ox, oz, cima, renderer = null, encima = null, colgando = null }) {
+  const especies = new Map(); // id -> { e, esc, tam, vat, imp, ids..., libres }
+  // un InstancedMesh que crece si hace falta
+  const crecer = (malla, n) => {
+    if (n <= malla.instanceMatrix.count) return malla;
+    const nuevo = new THREE.InstancedMesh(malla.geometry, malla.material, Math.max(64, 2 ** Math.ceil(Math.log2(n))));
+    for (const [k, a] of Object.entries(malla.geometry.attributes)) if (a.isInstancedBufferAttribute) {
+      const b = new THREE.InstancedBufferAttribute(new Float32Array(nuevo.instanceMatrix.count * a.itemSize), a.itemSize); b.array.set(a.array); b.setUsage(THREE.DynamicDrawUsage); malla.geometry.setAttribute(k, b);
+    }
+    nuevo.instanceMatrix.array.set(malla.instanceMatrix.array); // (lo ya puesto en este fotograma)
+    Object.assign(nuevo, { frustumCulled: false, castShadow: false, receiveShadow: malla.receiveShadow });
+    escena.remove(malla); malla.dispose(); escena.add(nuevo);
+    return nuevo;
+  };
+  // ---- por especie: medidas, la malla de media distancia (con sus animaciones en textura) y el recorte
   function especie(id) {
     let s = especies.get(id);
     if (s) return s;
@@ -33,41 +69,37 @@ export function crearManada({ escena, ox, oz, cima }) {
     const m = fundir(crearAnimal(e));
     const esc = ESCALA[e.modelo.rig] ?? 1;
     const tam = m.tam || new THREE.Vector3(0.3, 0.3, 0.3);
-    // el color: la media de los colores del modelo, y uno más oscuro para las patas
-    const media = new THREE.Color(0, 0, 0); let n = 0;
-    m.raiz.traverse((o) => { const c = o.geometry?.attributes?.color; if (!c) return; for (let k = 0; k < c.count; k += 7) { media.r += c.getX(k); media.g += c.getY(k); media.b += c.getZ(k); n++; } });
-    if (n) media.multiplyScalar(1 / n); else media.set('#6a5a4a');
-    const oscuro = media.clone().multiplyScalar(0.6), claro = media.clone().lerp(new THREE.Color('#ffffff'), 0.15);
-    const L = tam.x * esc, H = tam.y * esc, W = tam.z * esc;
-    const cajas = [
-      [0, H * 0.55, 0, L * 0.7, H * 0.5, W * 0.9, media],
-      [L * 0.42, H * 0.72, 0, L * 0.26, H * 0.4, W * 0.7, claro],
-      [0, H * 0.16, 0, L * 0.55, H * 0.32, W * 0.6, oscuro],
-    ];
-    const geo = juntar(cajas);
-    const simple = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true }), 64);
-    simple.count = 0; simple.frustumCulled = false; simple.castShadow = false; simple.receiveShadow = true;
-    escena.add(simple);
-    // los modelos articulados que sobran (se reutilizan) y la distancia hasta la que se ve
-    s = { e, esc, tam: Math.max(L, H, W), simple, ids: [], libres: [m], lejos: Math.max(25, Math.max(L, H, W) * 160), hogar: COMPORTAMIENTO[id]?.hogar };
+    const L = tam.x * esc, H = tam.y * esc, W = tam.z * esc, grande = Math.max(L, H, W);
+    // media distancia: la malla ligera, por instancias, con su fotograma (aVat) por instancia
+    const vat = hornearVAT(e, m);
+    const geoV = vat.geo.clone();
+    const aVat = new THREE.InstancedBufferAttribute(new Float32Array(64 * 3), 3); aVat.setUsage(THREE.DynamicDrawUsage);
+    geoV.setAttribute('aVat', aVat);
+    const mallaV = new THREE.InstancedMesh(geoV, conTransparencia(materialVAT(e, vat)), 64);
+    Object.assign(mallaV, { frustumCulled: false, castShadow: false, receiveShadow: true }); mallaV.count = 0;
+    escena.add(mallaV);
+    // muy lejos: el recorte (si hay renderer para pintarlo)
+    let mallaI = null;
+    // (sin impostor: quitado a petición; todos con su malla en 3D)
+    if (false) {
+      const imp = hacerImpostor(e, renderer, m);
+      mallaI = new THREE.InstancedMesh(imp.geo, conTransparencia(materialImpostor(imp.textura)), 64);
+      Object.assign(mallaI, { frustumCulled: false, castShadow: false, receiveShadow: false }); mallaI.count = 0;
+      escena.add(mallaI);
+    }
+    s = { e, esc, tam: grande, vat, mallaV, mallaI, idsV: [], idsI: [], nV: 0, nI: 0, libres: [m], lejos: 5000, cerca: Math.min(CERCA, Math.max(6, grande * CERCA_X)), medio: Math.max(Math.min(CERCA, Math.max(6, grande * CERCA_X)), grande * MEDIO_X), hogar: COMPORTAMIENTO[id]?.hogar,
+      base: {}, anims: { anims: vat.anims } };
     especies.set(id, s);
     return s;
   }
-  const CAJA = new THREE.BoxGeometry(1, 1, 1);
-  function juntar(cajas) {
-    const g = new THREE.BufferGeometry(), P = CAJA.attributes.position, N = CAJA.attributes.normal, I = CAJA.index.array, nv = P.count;
-    const pos = new Float32Array(cajas.length * nv * 3), nor = new Float32Array(cajas.length * nv * 3), col = new Float32Array(cajas.length * nv * 3), idx = [];
-    cajas.forEach(([x, y, z, sx, sy, sz, c], j) => {
-      for (let k = 0; k < nv; k++) {
-        const o = (j * nv + k) * 3;
-        pos[o] = x + P.getX(k) * sx; pos[o + 1] = y + P.getY(k) * sy; pos[o + 2] = z + P.getZ(k) * sz;
-        nor[o] = N.getX(k); nor[o + 1] = N.getY(k); nor[o + 2] = N.getZ(k); col[o] = c.r; col[o + 1] = c.g; col[o + 2] = c.b;
-      }
-      for (let k = 0; k < I.length; k++) idx.push(I[k] + j * nv);
-    });
-    g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
-    g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.setIndex(idx);
-    return g;
+  // la animación de un estado para la malla de media distancia (la misma que elegiría el modelo de cerca)
+  function animDe(s, estado) {
+    let a = s.base[estado];
+    if (a) return a;
+    const nombre = ESTADOS[estado] || 'quieto', como = COMO_SE_VE[nombre] || COMO_SE_VE.quieto;
+    a = typeof como.base === 'function' ? como.base(s.anims) : como.base;
+    if (!s.vat.filas[a]) a = 'quieto';
+    return (s.base[estado] = { anim: a, ritmo: como.ritmo || 1, fijo: !!como.fijo });
   }
 
   // ---- los animales del día
@@ -85,7 +117,7 @@ export function crearManada({ escena, ox, oz, cima }) {
       let a = animales.get(id);
       // (un id que ahora es de otro animal, tras volver atrás en el tiempo: se rehace)
       if (a && a.s !== s) { soltarModelo(a); animales.delete(id); a = null; }
-      if (!a) animales.set(id, (a = { id, s, i: 0, x: 0, y: 0, z: 0, rumbo: 0, estado: 0, valor: 0, visible: false, modelo: null, desc }));
+      if (!a) animales.set(id, (a = { id, s, i: 0, x: 0, y: 0, z: 0, rumbo: 0, estado: 0, valor: 0, visible: false, modelo: null, desc, vEstado: -1, vReloj: Math.random() * 3 }));
       a.k = d.claves[j]; a.i = 0; a.desc = desc;
     });
   }
@@ -106,16 +138,22 @@ export function crearManada({ escena, ox, oz, cima }) {
     }
     const p = o + CLAVE, f = Math.min(1, (tic - k[o]) / Math.max(1e-6, k[p] - k[o]));
     a.x = k[o + 1] + (k[p + 1] - k[o + 1]) * f; a.y = k[o + 2] + (k[p + 2] - k[o + 2]) * f; a.z = k[o + 3] + (k[p + 3] - k[o + 3]) * f;
-    a.rumbo = angulo(k[o + 4], k[p + 4], f);
+    // hacia dónde mira: si en este tramo se desplaza, hacia donde va (el tramo es una recta de un
+    // fotograma clave al siguiente; mezclar el rumbo de un extremo con el del otro lo hacía andar de
+    // lado o de espaldas cuando arrancaba en otra dirección de la que miraba); si no, el de los extremos
+    const dx = k[p + 1] - k[o + 1], dz = k[p + 3] - k[o + 3];
+    a.rumbo = Math.hypot(dx, dz) > 0.05 ? Math.atan2(dz, dx) : angulo(k[o + 4], k[p + 4], f);
     return true;
   }
 
-  // ---- modelos articulados para los cercanos
+  // ---- modelos con esqueleto para los cercanos
   function tomarModelo(a) {
     const s = a.s;
     let m = s.libres.pop();
     if (!m) m = fundir(crearAnimal(s.e));
     m.raiz.scale.setScalar(s.esc); m.raiz.userData.bs = m.raiz.scale.clone();
+    // (la sombra de los diminutos ni se ve: solo la echan los de más de 35 cm)
+    if (m.suave) m.suave.malla.castShadow = s.tam > 0.35;
     const g = new THREE.Group(); g.add(m.raiz); g.userData.id = a.id;
     escena.add(g);
     a.modelo = { m, g, tam: s.tam, estado: null, reloj: 0, desde: 0 };
@@ -128,8 +166,7 @@ export function crearManada({ escena, ox, oz, cima }) {
   }
 
   const mat = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), sc = new THREE.Vector3(1, 1, 1), eje = new THREE.Vector3(0, 1, 0);
-  const tumbado = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-  const medidas = { dibujados: 0, articulados: 0, instancias: 0 };
+  const medidas = { dibujados: 0, articulados: 0, instancias: 0, medios: 0, recortes: 0 };
   let cuadro = 0;
   return {
     medidas, animales, ponerDia, pose,
@@ -138,8 +175,8 @@ export function crearManada({ escena, ox, oz, cima }) {
     actualizar(tic, cam, dt, siempre = new Set()) {
       if (!dia) return;
       cuadro++;
-      for (const s of especies.values()) if (s) { s.ids.length = 0; s.n = 0; }
-      // los candidatos a modelo articulado: los más cercanos
+      for (const s of especies.values()) if (s) { s.nV = 0; s.nI = 0; }
+      // los candidatos a modelo con esqueleto: los más cercanos
       const cerca = [];
       for (const a of animales.values()) {
         // los lejanos se recalculan uno de cada 6 fotogramas (no se nota a esa distancia)
@@ -151,7 +188,7 @@ export function crearManada({ escena, ox, oz, cima }) {
         const ex = a.x - ox - cam.x, ez = a.z - oz - cam.z, d = Math.sqrt(ex * ex + ez * ez + (a.y - cam.y) ** 2);
         a.dist = d;
         if (d > lejos && !siempre.has(a.id)) { a.visible = false; continue; }
-        if (d < CERCA || siempre.has(a.id)) cerca.push(a);
+        if (d < a.s.cerca || siempre.has(a.id)) cerca.push(a);
       }
       cerca.sort((x, y) => x.dist - y.dist);
       const articulados = new Set(cerca.slice(0, CERCANOS).map((a) => a.id));
@@ -167,40 +204,62 @@ export function crearManada({ escena, ox, oz, cima }) {
           dentro = -a.s.tam * 0.55;
         }
         dibujados++;
-        const y = cima(a.x, a.z) + a.y + dentro;
+        // (encima de un tronco-puente, por encima de él: los que lo cruzan andando, sobre su lomo; los que
+        // vuelan bajo por encima del río, sin atravesarlo; las lombrices, que van enterradas, también por encima)
+        const sobre = encima?.(a.x, a.z);
+        let y = Math.max(cima(a.x, a.z) + a.y + dentro, sobre != null ? sobre + (a.y < 0.5 ? Math.max(0, a.y) : 0.05) : -Infinity);
+        const ritmo = pasoDe(a, dt);
+        // (cruzando en alto por una liana: sobre ella, que cuelga en curva)
+        const enLiana = a.y > 1 ? colgando?.(a.x, a.z) : null;
+        if (enLiana != null) y = enLiana + 0.04;
+        a.yVis = y; // (la altura a la que se dibuja: para las pruebas)
+        // (el giro, suave: en unas décimas de segundo, sin saltos al empezar un tramo nuevo)
+        a.rumboVis = a.rumboVis == null ? a.rumbo : angulo(a.rumboVis, a.rumbo, 1 - Math.exp(-dt * 10));
         if (articulados.has(a.id)) {
           if (!a.modelo) tomarModelo(a);
           const mo = a.modelo;
-          mo.g.position.set(a.x - ox, y, a.z - oz); mo.g.rotation.y = -a.rumbo;
-          animar(mo, a.estado, dt);
+          mo.g.position.set(a.x - ox, y, a.z - oz); mo.g.rotation.y = -a.rumboVis;
+          animar(mo, a.estado, dt * ritmo);
           nArt++;
           continue;
         }
         if (a.modelo) soltarModelo(a);
-        // la versión de cajas (los muertos, tumbados)
         const s = a.s;
-        if (s.n >= s.simple.instanceMatrix.count) {
-          const nuevo = new THREE.InstancedMesh(s.simple.geometry, s.simple.material, s.simple.instanceMatrix.count * 2);
-          Object.assign(nuevo, { frustumCulled: false, castShadow: false, receiveShadow: true });
-          escena.remove(s.simple); s.simple.dispose(); escena.add(nuevo); s.simple = nuevo;
+        q.setFromAxisAngle(eje, -a.rumboVis);
+        mat.compose(p.set(a.x - ox, y, a.z - oz), q, sc.setScalar(s.esc));
+        if (a.dist < s.medio || !s.mallaI) {
+          // media distancia: su animación grabada (el reloj de cada uno, como el del modelo de cerca)
+          const b = animDe(s, a.estado);
+          if (a.vEstado !== a.estado) { a.vEstado = a.estado; a.vDesde = 0; }
+          a.vDesde += dt * b.ritmo * ritmo; a.vReloj += dt * b.ritmo * ritmo;
+          if (s.nV >= s.mallaV.instanceMatrix.count) s.mallaV = crecer(s.mallaV, s.nV + 1);
+          s.mallaV.setMatrixAt(s.nV, mat);
+          filaVAT(s.vat, b.anim, s.vat.filas[b.anim]?.bucle ? a.vReloj : (b.fijo ? 100 : a.vDesde), s.mallaV.geometry.attributes.aVat.array, s.nV * 3);
+          s.idsV[s.nV++] = a.id;
+        } else {
+          if (s.nI >= s.mallaI.instanceMatrix.count) s.mallaI = crecer(s.mallaI, s.nI + 1);
+          s.mallaI.setMatrixAt(s.nI, mat);
+          s.idsI[s.nI++] = a.id;
         }
-        q.setFromAxisAngle(eje, -a.rumbo);
-        if (a.estado === E_MUERTO || a.estado === E_MORIR) q.multiply(tumbado);
-        mat.compose(p.set(a.x - ox, y, a.z - oz), q, sc);
-        s.simple.setMatrixAt(s.n, mat); s.ids[s.n] = a.id; s.n++;
       }
-      let inst = 0;
-      for (const s of especies.values()) if (s) { s.simple.count = s.n; s.simple.instanceMatrix.needsUpdate = true; inst += s.n; }
-      medidas.dibujados = dibujados; medidas.articulados = nArt; medidas.instancias = inst;
+      let inst = 0, medios = 0, recortes = 0;
+      for (const s of especies.values()) if (s) {
+        // (las vacías, ocultas: si no, cada una sigue costando su llamada de dibujo)
+        s.mallaV.count = s.nV; s.mallaV.visible = s.nV > 0; medios += s.nV;
+        if (s.nV) { s.mallaV.instanceMatrix.needsUpdate = true; s.mallaV.geometry.attributes.aVat.needsUpdate = true; }
+        if (s.mallaI) { s.mallaI.count = s.nI; s.mallaI.visible = s.nI > 0; if (s.nI) s.mallaI.instanceMatrix.needsUpdate = true; recortes += s.nI; }
+        inst += s.nV + s.nI;
+      }
+      Object.assign(medidas, { dibujados, articulados: nArt, instancias: inst, medios, recortes });
     },
     // qué animal hay en una instancia o en un modelo (para seleccionarlo con el ratón)
     idDe(obj, instancia) {
-      for (const s of especies.values()) if (s && s.simple === obj) return s.ids[instancia];
+      for (const s of especies.values()) if (s) { if (s.mallaV === obj) return s.idsV[instancia]; if (s.mallaI === obj) return s.idsI[instancia]; }
       let o = obj; while (o && o.userData.id === undefined) o = o.parent;
       return o?.userData.id;
     },
     // el largo del animal dibujado de una especie (para el tamaño de su hogar)
     tamDe(id) { const s = especie(id); return s ? s.tam : 0.3; },
-    objetos() { const out = []; for (const s of especies.values()) if (s) out.push(s.simple); for (const a of animales.values()) if (a.modelo) out.push(a.modelo.g); return out; },
+    objetos() { const out = []; for (const s of especies.values()) if (s) { out.push(s.mallaV); if (s.mallaI) out.push(s.mallaI); } for (const a of animales.values()) if (a.modelo) out.push(a.modelo.g); return out; },
   };
 }

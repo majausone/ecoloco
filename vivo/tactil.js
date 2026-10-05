@@ -5,7 +5,9 @@
      cerrarlos, atrás), como la rueda del ratón;
    - arrastrar con dos dedos desplaza la cámara (lo que se ve sigue a los dedos), como el botón
      central del ratón. Pellizcar y arrastrar se pueden hacer a la vez.
-   Un toque sin arrastrar sigue siendo un clic (selecciona el animal o la planta). */
+   Un toque sin arrastrar sigue siendo un clic (selecciona el animal o la planta).
+   Siguiendo a un animal (la cámara en órbita): un dedo gira ALREDEDOR de él, pellizcar acerca o
+   aleja y arrastrar con dos dedos desvía (vivo/vivo.js lo suelta si se desvía bastante). */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
 
@@ -37,6 +39,7 @@ export function crearTactil({ lienzo, camara, foco, alMover }) {
     if (dedos.size === 1 && !multi) {
       // un dedo: girar la cámara (a la misma velocidad que el ratón con el botón derecho)
       if (Math.abs(dx) + Math.abs(dy) < 0.3) return;
+      if (c.orbita) { c.girarOrbita(dx, dy); return; }
       c.yaw -= dx * 0.005;
       c.pitch = Math.min(1.5, Math.max(-1.5, c.pitch - dy * 0.005));
       alMover();
@@ -46,6 +49,14 @@ export function crearTactil({ lienzo, camara, foco, alMover }) {
     const ahora = separacion(), paso = ahora.d - antes.d, mx = ahora.x - antes.x, my = ahora.y - antes.y;
     antes = ahora;
     if (!paso && !mx && !my) return;
+    if (c.orbita) {
+      // en órbita: pellizcar acerca o aleja (abrir los dedos acerca) y arrastrar los dos desvía
+      if (paso) c.zoomOrbita(Math.exp(-paso * 0.006));
+      const kd = (c.persp ? c.orbita.dist * 1.2 : c.ortoAlto) / Math.max(300, lienzo.clientHeight);
+      const arriba = new THREE.Vector3().crossVectors(c.derecha(), c.mira());
+      if (mx || my) c.desviarOrbita(c.derecha().multiplyScalar(-mx * kd).addScaledVector(arriba, my * kd));
+      return;
+    }
     // (más deprisa cuanto más lejos está el suelo al que se mira)
     const lejos = Math.max(4, Math.min(300, c.pos.distanceTo(foco()))), k = lejos / Math.max(300, lienzo.clientHeight);
     // pellizco: adelante o atrás, hacia donde se mira

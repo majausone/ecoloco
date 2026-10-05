@@ -1,622 +1,662 @@
 [
- {
-  "id": "pantera-nebulosa",
-  "nombre": "Pantera nebulosa de la Sonda",
-  "cientifico": "Neofelis diardi",
-  "tipo": "animal",
-  "taxon": "Neofelis diardi",
-  "taxon_id": 74753,
-  "foto": "ref/pantera-nebulosa.jpg",
-  "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
- },
- {
-  "id": "gato-leopardo",
-  "nombre": "Gato leopardo de la Sonda",
-  "cientifico": "Prionailurus javanensis",
-  "tipo": "animal",
-  "taxon": "Prionailurus javanensis",
-  "taxon_id": 922736,
-  "foto": "ref/gato-leopardo.jpg",
-  "autor": "(c) matthewkwan, some rights reserved (CC BY-NC-ND), uploaded by matthewkwan"
- },
- {
-  "id": "muntiaco",
-  "nombre": "Muntíaco amarillo de Borneo",
-  "cientifico": "Muntiacus atherodes",
-  "tipo": "animal",
-  "taxon": "Muntiacus atherodes",
-  "taxon_id": 42190,
-  "foto": "ref/muntiaco.jpg",
-  "autor": "(c) eMammal, some rights reserved (CC BY-NC-SA)"
- },
- {
-  "id": "ciervo-raton",
-  "nombre": "Ciervo ratón mayor",
-  "cientifico": "Tragulus napu",
-  "tipo": "animal",
-  "taxon": "Tragulus napu",
-  "taxon_id": 42109,
-  "foto": "ref/ciervo-raton.jpg",
-  "autor": "(c) Royle Safaris, some rights reserved (CC BY-NC), uploaded by Royle Safaris"
- },
- {
-  "id": "orangutan",
-  "nombre": "Orangután de Borneo",
-  "cientifico": "Pongo pygmaeus",
-  "tipo": "animal",
-  "taxon": "Pongo pygmaeus",
-  "taxon_id": 43582,
-  "foto": "ref/orangutan.jpg",
-  "autor": "(c) Zoltan BAGOSI, some rights reserved (CC BY-NC), uploaded by Zoltan BAGOSI"
- },
- {
-  "id": "macaco",
-  "nombre": "Macaco cangrejero",
-  "cientifico": "Macaca fascicularis",
-  "tipo": "animal",
-  "taxon": "Macaca fascicularis",
-  "taxon_id": 43459,
-  "foto": "ref/macaco.jpg",
-  "autor": "(c) Jorge Juan Rueda, all rights reserved, uploaded by Jorge Juan Rueda"
- },
- {
-  "id": "jabali-barbudo",
-  "nombre": "Jabalí barbudo",
-  "cientifico": "Sus barbatus",
-  "tipo": "animal",
-  "taxon": "Sus barbatus",
-  "taxon_id": 42136,
-  "foto": "ref/jabali-barbudo.jpg",
-  "autor": "(c) dushenkov, some rights reserved (CC BY-NC)"
- },
- {
-  "id": "ardilla-prevost",
-  "nombre": "Ardilla de Prevost",
-  "cientifico": "Callosciurus prevostii",
-  "tipo": "animal",
-  "taxon": "Callosciurus prevostii",
-  "taxon_id": 45955,
-  "foto": "ref/ardilla-prevost.jpg",
-  "autor": "(c) ayuwat, some rights reserved (CC BY-NC)"
- },
- {
-  "id": "varano",
-  "nombre": "Varano acuático",
-  "cientifico": "Varanus salvator",
-  "tipo": "animal",
-  "taxon": "Varanus salvator",
-  "taxon_id": 114891,
-  "foto": "ref/varano.jpg",
-  "autor": "(c) Andrew Blayney, all rights reserved, uploaded by Andrew Blayney"
- },
- {
-  "id": "dragon-bosque",
-  "nombre": "Dragón del bosque de Borneo",
-  "cientifico": "Gonocephalus bornensis",
-  "tipo": "animal",
-  "taxon": "Gonocephalus bornensis",
-  "taxon_id": 101756,
-  "foto": "ref/dragon-bosque.jpg",
-  "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
- },
- {
-  "id": "eslizon-solar",
-  "nombre": "Eslizón solar común",
-  "cientifico": "Eutropis multifasciata",
-  "tipo": "animal",
-  "taxon": "Eutropis multifasciata",
-  "taxon_id": 38008,
-  "foto": "ref/eslizon-solar.jpg",
-  "autor": "(c) abdel1980, some rights reserved (CC BY-NC)"
- },
- {
-  "id": "vibora-verde",
-  "nombre": "Víbora verde de Borneo",
-  "cientifico": "Tropidolaemus subannulatus",
-  "tipo": "animal",
-  "taxon": "Tropidolaemus subannulatus",
-  "taxon_id": 114568,
-  "foto": "ref/vibora-verde.jpg",
-  "autor": "(c) diazborneo, some rights reserved (CC BY-NC)"
- },
- {
-  "id": "piton-reticulada",
-  "nombre": "Pitón reticulada",
-  "cientifico": "Malayopython reticulatus",
-  "tipo": "animal",
-  "taxon": "Malayopython reticulatus",
-  "taxon_id": 491869,
-  "foto": "ref/piton-reticulada.jpg",
-  "autor": "(c) honeyroll_ahmad_sah, all rights reserved, uploaded by honeyroll_ahmad_sah"
- },
- {
-  "id": "rana-gigante-rio",
-  "nombre": "Rana gigante de río",
-  "cientifico": "Limnonectes leporinus",
-  "tipo": "animal",
-  "taxon": "Limnonectes leporinus",
-  "taxon_id": 25943,
-  "foto": "ref/rana-gigante-rio.jpg",
-  "autor": "(c) Fajar Kaprawi, some rights reserved (CC BY-NC), uploaded by Fajar Kaprawi"
- },
- {
-  "id": "rana-arboricola",
-  "nombre": "Rana arborícola de orejas oscuras",
-  "cientifico": "Polypedates macrotis",
-  "tipo": "animal",
-  "taxon": "Polypedates macrotis",
-  "taxon_id": 26567,
-  "foto": "ref/rana-arboricola.jpg",
-  "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
- },
- {
-  "id": "aguila-culebrera",
-  "nombre": "Águila culebrera crestada",
-  "cientifico": "Spilornis cheela",
-  "tipo": "animal",
-  "taxon": "Spilornis cheela",
-  "taxon_id": 5158,
-  "foto": "ref/aguila-culebrera.jpg",
-  "autor": "(c) Jono Dashper, all rights reserved, uploaded by Jono Dashper"
- },
- {
-  "id": "buho-pardo",
-  "nombre": "Cárabo pardo",
-  "cientifico": "Strix leptogrammica",
-  "tipo": "animal",
-  "taxon": "Strix leptogrammica",
-  "taxon_id": 19922,
-  "foto": "ref/buho-pardo.jpg",
-  "autor": "(c) Natthaphat Chotjuckdikul, all rights reserved, uploaded by Natthaphat Chotjuckdikul"
- },
- {
-  "id": "calao",
-  "nombre": "Cálao de cresta",
-  "cientifico": "Anorrhinus galeritus",
-  "tipo": "animal",
-  "taxon": "Anorrhinus galeritus",
-  "taxon_id": 5547,
-  "foto": "ref/calao.jpg",
-  "autor": "(c) Christian Schwarz, some rights reserved (CC BY-NC), uploaded by Christian Schwarz"
- },
- {
-  "id": "gallo-bankiva",
-  "nombre": "Gallo bankiva",
-  "cientifico": "Gallus gallus",
-  "tipo": "animal",
-  "taxon": "Gallus",
-  "taxon_id": 879,
-  "foto": "ref/gallo-bankiva.jpg",
-  "autor": "(c) Carlos N. G. Bocos, all rights reserved, uploaded by Carlos N. G. Bocos"
- },
- {
-  "id": "golondrina",
-  "nombre": "Golondrina del Pacífico",
-  "cientifico": "Hirundo javanica",
-  "tipo": "animal",
-  "taxon": "Hirundo javanica",
-  "taxon_id": 1578578,
-  "foto": "ref/golondrina.jpg",
-  "autor": "(c) Edwardson Ocon, all rights reserved, uploaded by Edwardson Ocon"
- },
- {
-  "id": "escarabajo-tigre",
-  "nombre": "Escarabajo tigre dorado",
-  "cientifico": "Cosmodela aurulenta",
-  "tipo": "animal",
-  "taxon": "Cosmodela aurulenta",
-  "taxon_id": 1352453,
-  "foto": "ref/escarabajo-tigre.jpg",
-  "autor": "(c) Nicky Bay, all rights reserved, uploaded by Nicky Bay"
- },
- {
-  "id": "mantis-hoja-seca",
-  "nombre": "Mantis hoja seca gigante",
-  "cientifico": "Deroplatys desiccata",
-  "tipo": "animal",
-  "taxon": "Deroplatys desiccata",
-  "taxon_id": 548630,
-  "foto": "ref/mantis-hoja-seca.jpg",
-  "autor": "(c) T.K.N, some rights reserved (CC BY-NC), uploaded by T.K.N"
- },
- {
-  "id": "libelula",
-  "nombre": "Libélula parasol",
-  "cientifico": "Neurothemis fluctuans",
-  "tipo": "animal",
-  "taxon": "Neurothemis fluctuans",
-  "taxon_id": 107002,
-  "foto": "ref/libelula.jpg",
-  "autor": "(c) budak, some rights reserved (CC BY-NC), uploaded by budak"
- },
- {
-  "id": "fulgorido",
-  "nombre": "Fulgórido (mosca linterna)",
-  "cientifico": "Pyrops whiteheadi",
-  "tipo": "animal",
-  "taxon": "Pyrops whiteheadi",
-  "taxon_id": 246077,
-  "foto": "ref/fulgorido.jpg",
-  "autor": "(c) Albert Kang, some rights reserved (CC BY-NC), uploaded by Albert Kang"
- },
- {
-  "id": "escarabajo-atlas",
-  "nombre": "Escarabajo atlas",
-  "cientifico": "Chalcosoma atlas",
-  "tipo": "animal",
-  "taxon": "Chalcosoma atlas",
-  "taxon_id": 334413,
-  "foto": "ref/escarabajo-atlas.jpg",
-  "autor": "(c) Binturong27, some rights reserved (CC BY-NC), uploaded by Binturong27"
- },
- {
-  "id": "insecto-palo",
-  "nombre": "Insecto palo gigante",
-  "cientifico": "Phobaeticus kirbyi",
-  "tipo": "animal",
-  "taxon": "Phobaeticus kirbyi",
-  "taxon_id": 494701,
-  "foto": "ref/insecto-palo.jpg",
-  "autor": "(c) Bernard DUPONT, some rights reserved (CC BY-SA)"
- },
- {
-  "id": "cigarra",
-  "nombre": "Cigarra gigante",
-  "cientifico": "Megapomponia merula",
-  "tipo": "animal",
-  "taxon": "Megapomponia merula",
-  "taxon_id": 541390,
-  "foto": "ref/cigarra.jpg",
-  "autor": "(c) dhfischer, some rights reserved (CC BY), uploaded by dhfischer"
- },
- {
-  "id": "oruga",
-  "nombre": "Oruga de Rajah Brooke",
-  "cientifico": "Trogonoptera brookiana",
-  "tipo": "animal",
-  "taxon": "Trogonoptera brookiana",
-  "taxon_id": 347385,
-  "foto": "ref/oruga.jpg",
-  "autor": "(c) Chan Chee Keong, all rights reserved, uploaded by Chan Chee Keong"
- },
- {
-  "id": "rajah-brooke",
-  "nombre": "Mariposa alas de pájaro de Rajah Brooke",
-  "cientifico": "Trogonoptera brookiana",
-  "tipo": "animal",
-  "taxon": "Trogonoptera brookiana",
-  "taxon_id": 347385,
-  "foto": "ref/rajah-brooke.jpg",
-  "autor": "(c) Chan Chee Keong, all rights reserved, uploaded by Chan Chee Keong"
- },
- {
-  "id": "ninfa-arbol",
-  "nombre": "Ninfa del árbol",
-  "cientifico": "Idea stolli",
-  "tipo": "animal",
-  "taxon": "Idea stolli",
-  "taxon_id": 196818,
-  "foto": "ref/ninfa-arbol.jpg",
-  "autor": "(c) Bernard DUPONT, some rights reserved (CC BY-NC-SA)"
- },
- {
-  "id": "lombriz",
-  "nombre": "Lombriz de tierra",
-  "cientifico": "Oligochaeta",
-  "tipo": "animal",
-  "taxon": "Megascolecidae",
-  "taxon_id": 85887,
-  "foto": "ref/lombriz.jpg",
-  "autor": "(c) usaviah, some rights reserved (CC BY-NC)"
- },
- {
-  "id": "pelotero",
-  "nombre": "Escarabajo pelotero",
-  "cientifico": "Scarabaeinae",
-  "tipo": "animal",
-  "taxon": "Scarabaeinae",
-  "taxon_id": 125819,
-  "foto": "ref/pelotero.jpg",
-  "autor": "(c) jiangyou, all rights reserved, uploaded by jiangyou"
- },
- {
-  "id": "termita",
-  "nombre": "Termita en procesión",
-  "cientifico": "Hospitalitermes",
-  "tipo": "animal",
-  "taxon": "Hospitalitermes",
-  "taxon_id": 506302,
-  "foto": "ref/termita.jpg",
-  "autor": "(c) Fan Gao, all rights reserved, uploaded by Fan Gao"
- },
- {
-  "id": "dipterocarpo",
-  "nombre": "Seraya (dipterocarpo emergente)",
-  "cientifico": "Shorea",
-  "tipo": "planta",
-  "taxon": "Shoreae",
-  "taxon_id": 1611195,
-  "foto": "ref/dipterocarpo.jpg",
-  "autor": "(c) narido, some rights reserved (CC BY-NC), uploaded by narido"
- },
- {
-  "id": "agathis",
-  "nombre": "Kauri de Borneo",
-  "cientifico": "Agathis borneensis",
-  "tipo": "planta",
-  "taxon": "Agathis borneensis",
-  "taxon_id": 142739,
-  "foto": "ref/agathis.jpg",
-  "autor": "(c) Alena Uvírová, some rights reserved (CC BY-NC), uploaded by Alena Uvírová"
- },
- {
-  "id": "higuera",
-  "nombre": "Higuera estranguladora",
-  "cientifico": "Ficus",
-  "tipo": "planta",
-  "taxon": "Ficus",
-  "taxon_id": 50999,
-  "foto": "ref/higuera.jpg",
-  "autor": "(c) Rudy Gelis, all rights reserved, uploaded by Rudy Gelis"
- },
- {
-  "id": "roble",
-  "nombre": "Roble tropical",
-  "cientifico": "Lithocarpus",
-  "tipo": "planta",
-  "taxon": "Lithocarpus",
-  "taxon_id": 53956,
-  "foto": "ref/roble.jpg",
-  "autor": "(c) Toby Y, some rights reserved (CC BY), uploaded by Toby Y"
- },
- {
-  "id": "dillenia",
-  "nombre": "Simpoh gajah",
-  "cientifico": "Dillenia excelsa",
-  "tipo": "planta",
-  "taxon": "Dillenia excelsa",
-  "taxon_id": 425584,
-  "foto": "ref/dillenia.jpg",
-  "autor": "(c) tlaloc27, some rights reserved (CC BY), uploaded by tlaloc27"
- },
- {
-  "id": "pino-apio",
-  "nombre": "Pino apio",
-  "cientifico": "Phyllocladus hypophyllus",
-  "tipo": "planta",
-  "taxon": "Phyllocladus hypophyllus",
-  "taxon_id": 54689,
-  "foto": "ref/pino-apio.jpg",
-  "autor": "Daderot, no known copyright restrictions (public domain)"
- },
- {
-  "id": "rododendro",
-  "nombre": "Rododendro de flor larga",
-  "cientifico": "Rhododendron longiflorum",
-  "tipo": "planta",
-  "taxon": "Rhododendron longiflorum",
-  "taxon_id": 426558,
-  "foto": "ref/rododendro.jpg",
-  "autor": "(c) Clivid, some rights reserved (CC BY-ND)"
- },
- {
-  "id": "palma-cola-pez",
-  "nombre": "Palma cola de pez gigante",
-  "cientifico": "Caryota no",
-  "tipo": "planta",
-  "taxon": "Caryota no",
-  "taxon_id": 348511,
-  "foto": "ref/palma-cola-pez.jpg",
-  "autor": "(c) Bernard DUPONT, some rights reserved (CC BY-NC-SA)"
- },
- {
-  "id": "pinanga",
-  "nombre": "Palmita de sotobosque",
-  "cientifico": "Pinanga veitchii",
-  "tipo": "planta",
-  "taxon": "Pinanga veitchii",
-  "taxon_id": 365892,
-  "foto": "ref/pinanga.jpg",
-  "autor": "(c) Ryan E. Gray, some rights reserved (CC BY-NC), uploaded by Ryan E. Gray"
- },
- {
-  "id": "jengibre-antorcha",
-  "nombre": "Jengibre antorcha",
-  "cientifico": "Etlingera elatior",
-  "tipo": "planta",
-  "taxon": "Etlingera elatior",
-  "taxon_id": 126577,
-  "foto": "ref/jengibre-antorcha.jpg",
-  "autor": "(c) Marcos Silveira, all rights reserved, uploaded by Marcos Silveira"
- },
- {
-  "id": "phrynium",
-  "nombre": "Phrynium",
-  "cientifico": "Phrynium villosulum",
-  "tipo": "planta",
-  "taxon": "Phrynium villosulum",
-  "taxon_id": 426412,
-  "foto": "ref/phrynium.jpg",
-  "autor": "(c) Albert Kang, some rights reserved (CC BY-NC), uploaded by Albert Kang"
- },
- {
-  "id": "helecho-dipteris",
-  "nombre": "Helecho de hoja ancha",
-  "cientifico": "Dipteris conjugata",
-  "tipo": "planta",
-  "taxon": "Dipteris conjugata",
-  "taxon_id": 130823,
-  "foto": "ref/helecho-dipteris.jpg",
-  "autor": "(c) 國立臺灣博物館, some rights reserved (CC BY), uploaded by 國立臺灣博物館"
- },
- {
-  "id": "cuerno-alce",
-  "nombre": "Helecho cuerno de alce",
-  "cientifico": "Platycerium coronarium",
-  "tipo": "planta",
-  "taxon": "Platycerium coronarium",
-  "taxon_id": 425758,
-  "foto": "ref/cuerno-alce.jpg",
-  "autor": "(c) hyla_21, all rights reserved"
- },
- {
-  "id": "rhaphidophora",
-  "nombre": "Trepadora de hojas en teja",
-  "cientifico": "Rhaphidophora korthalsii",
-  "tipo": "planta",
-  "taxon": "Rhaphidophora korthalsii",
-  "taxon_id": 354692,
-  "foto": "ref/rhaphidophora.jpg",
-  "autor": "(c) cheavy, some rights reserved (CC BY-NC), uploaded by cheavy"
- },
- {
-  "id": "orquidea-tigre",
-  "nombre": "Orquídea tigre",
-  "cientifico": "Grammatophyllum speciosum",
-  "tipo": "planta",
-  "taxon": "Grammatophyllum speciosum",
-  "taxon_id": 344825,
-  "foto": "ref/orquidea-tigre.jpg",
-  "autor": "(c) Steven Chong, some rights reserved (CC BY-NC), uploaded by Steven Chong"
- },
- {
-  "id": "nepenthes-stenophylla",
-  "nombre": "Planta jarra",
-  "cientifico": "Nepenthes stenophylla",
-  "tipo": "planta",
-  "taxon": "Nepenthes stenophylla",
-  "taxon_id": 441247,
-  "foto": "ref/nepenthes-stenophylla.jpg",
-  "autor": "(c) Shawn O'Donnell, some rights reserved (CC BY), uploaded by Shawn O'Donnell"
- },
- {
-  "id": "nepenthes-rajah",
-  "nombre": "Planta jarra gigante",
-  "cientifico": "Nepenthes rajah",
-  "tipo": "planta",
-  "taxon": "Nepenthes rajah",
-  "taxon_id": 441244,
-  "foto": "ref/nepenthes-rajah.jpg",
-  "autor": "anonymous, no known copyright restrictions (public domain)"
- },
- {
-  "id": "rafflesia",
-  "nombre": "Rafflesia",
-  "cientifico": "Rafflesia keithii",
-  "tipo": "planta",
-  "taxon": "Rafflesia keithii",
-  "taxon_id": 337567,
-  "foto": "ref/rafflesia.jpg",
-  "autor": "(c) Natalia Rojas-Estevez, some rights reserved (CC BY-NC), uploaded by Natalia Rojas-Estevez"
- },
- {
-  "id": "amanita",
-  "nombre": "Amanita esculpida",
-  "cientifico": "Amanita sculpta",
-  "tipo": "seta",
-  "taxon": "Amanita sculpta",
-  "taxon_id": 895595,
-  "foto": "ref/amanita.jpg",
-  "autor": "(c) HUANG QIN, all rights reserved, uploaded by HUANG QIN"
- },
- {
-  "id": "russula",
-  "nombre": "Russula roja",
-  "cientifico": "Russula",
-  "tipo": "seta",
-  "taxon": "Russulales",
-  "taxon_id": 48341,
-  "foto": "ref/russula.jpg",
-  "autor": "(c) Jason Hollinger, some rights reserved (CC BY)"
- },
- {
-  "id": "boleto-ruibarbo",
-  "nombre": "Boleto ruibarbo",
-  "cientifico": "Boletellus obscurecoccineus",
-  "tipo": "seta",
-  "taxon": "Boletellus obscurecoccineus",
-  "taxon_id": 355979,
-  "foto": "ref/boleto-ruibarbo.jpg",
-  "autor": "(c) Adam, all rights reserved, uploaded by Adam"
- },
- {
-  "id": "falo-velo",
-  "nombre": "Falo de velo",
-  "cientifico": "Phallus indusiatus",
-  "tipo": "seta",
-  "taxon": "Phallus indusiatus",
-  "taxon_id": 1473224,
-  "foto": "ref/falo-velo.jpg",
-  "autor": "(c) Linda Reinhold, some rights reserved (CC BY-NC), uploaded by Linda Reinhold"
- },
- {
-  "id": "estrella-roja",
-  "nombre": "Hongo estrella roja",
-  "cientifico": "Aseroe rubra",
-  "tipo": "seta",
-  "taxon": "Aseroe rubra",
-  "taxon_id": 381310,
-  "foto": "ref/estrella-roja.jpg",
-  "autor": "(c) Loy Xingwen, some rights reserved (CC BY-NC), uploaded by Loy Xingwen"
- },
- {
-  "id": "copa-tropical",
-  "nombre": "Copa tropical peluda",
-  "cientifico": "Cookeina tricholoma",
-  "tipo": "seta",
-  "taxon": "Cookeina tricholoma",
-  "taxon_id": 204575,
-  "foto": "ref/copa-tropical.jpg",
-  "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
- },
- {
-  "id": "repisa",
-  "nombre": "Repisa de pie amarillo",
-  "cientifico": "Microporus xanthopus",
-  "tipo": "seta",
-  "taxon": "Microporus xanthopus",
-  "taxon_id": 370262,
-  "foto": "ref/repisa.jpg",
-  "autor": "(c) tansh91, some rights reserved (CC BY-NC), uploaded by tansh91"
- },
- {
-  "id": "poros-luminosos",
-  "nombre": "Poros luminosos",
-  "cientifico": "Favolaschia manipularis",
-  "tipo": "seta",
-  "taxon": "Favolaschia manipularis",
-  "taxon_id": 699912,
-  "foto": "ref/poros-luminosos.jpg",
-  "autor": "(c) Gim Siew Tan, some rights reserved (CC BY-NC), uploaded by Gim Siew Tan"
- },
- {
-  "id": "mycena-verde",
-  "nombre": "Seta verde luminosa",
-  "cientifico": "Mycena chlorophos",
-  "tipo": "seta",
-  "taxon": "Mycena chlorophos",
-  "taxon_id": 155173,
-  "foto": "ref/mycena-verde.jpg",
-  "autor": "(c) Craig Robbins, some rights reserved (CC BY-NC), uploaded by Craig Robbins"
- },
- {
-  "id": "termitomyces",
-  "nombre": "Seta de termitero",
-  "cientifico": "Termitomyces",
-  "tipo": "seta",
-  "taxon": "Termitomyces",
-  "taxon_id": 47497,
-  "foto": "ref/termitomyces.jpg",
-  "autor": "(c) copyboy, some rights reserved (CC BY-NC)"
- },
- {
-  "id": "cordyceps",
-  "nombre": "Hongo de las hormigas zombi",
-  "cientifico": "Ophiocordyceps",
-  "tipo": "seta",
-  "taxon": "Ophiocordyceps",
-  "taxon_id": 179205,
-  "foto": "ref/cordyceps.jpg",
-  "autor": "(c) Diana Fuentes, some rights reserved (CC BY-SA), uploaded by Diana Fuentes"
- }
+  {
+    "id": "pantera-nebulosa",
+    "nombre": "Pantera nebulosa de la Sonda",
+    "cientifico": "Neofelis diardi",
+    "tipo": "animal",
+    "taxon": "Neofelis diardi",
+    "taxon_id": 74753,
+    "foto": "ref/pantera-nebulosa.jpg",
+    "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
+  },
+  {
+    "id": "gato-leopardo",
+    "nombre": "Gato leopardo de la Sonda",
+    "cientifico": "Prionailurus javanensis",
+    "tipo": "animal",
+    "taxon": "Prionailurus javanensis",
+    "taxon_id": 922736,
+    "foto": "ref/gato-leopardo.jpg",
+    "autor": "(c) matthewkwan, some rights reserved (CC BY-NC-ND), uploaded by matthewkwan"
+  },
+  {
+    "id": "muntiaco",
+    "nombre": "Muntíaco amarillo de Borneo",
+    "cientifico": "Muntiacus atherodes",
+    "tipo": "animal",
+    "taxon": "Muntiacus atherodes",
+    "taxon_id": 42190,
+    "foto": "ref/muntiaco.jpg",
+    "autor": "(c) eMammal, some rights reserved (CC BY-NC-SA)"
+  },
+  {
+    "id": "ciervo-raton",
+    "nombre": "Ciervo ratón mayor",
+    "cientifico": "Tragulus napu",
+    "tipo": "animal",
+    "taxon": "Tragulus napu",
+    "taxon_id": 42109,
+    "foto": "ref/ciervo-raton.jpg",
+    "autor": "(c) Royle Safaris, some rights reserved (CC BY-NC), uploaded by Royle Safaris"
+  },
+  {
+    "id": "orangutan",
+    "nombre": "Orangután de Borneo",
+    "cientifico": "Pongo pygmaeus",
+    "tipo": "animal",
+    "taxon": "Pongo pygmaeus",
+    "taxon_id": 43582,
+    "foto": "ref/orangutan.jpg",
+    "autor": "(c) Zoltan BAGOSI, some rights reserved (CC BY-NC), uploaded by Zoltan BAGOSI"
+  },
+  {
+    "id": "macaco",
+    "nombre": "Macaco cangrejero",
+    "cientifico": "Macaca fascicularis",
+    "tipo": "animal",
+    "taxon": "Macaca fascicularis",
+    "taxon_id": 43459,
+    "foto": "ref/macaco.jpg",
+    "autor": "(c) Jorge Juan Rueda, all rights reserved, uploaded by Jorge Juan Rueda"
+  },
+  {
+    "id": "jabali-barbudo",
+    "nombre": "Jabalí barbudo",
+    "cientifico": "Sus barbatus",
+    "tipo": "animal",
+    "taxon": "Sus barbatus",
+    "taxon_id": 42136,
+    "foto": "ref/jabali-barbudo.jpg",
+    "autor": "(c) dushenkov, some rights reserved (CC BY-NC)"
+  },
+  {
+    "id": "ardilla-prevost",
+    "nombre": "Ardilla de Prevost",
+    "cientifico": "Callosciurus prevostii",
+    "tipo": "animal",
+    "taxon": "Callosciurus prevostii",
+    "taxon_id": 45955,
+    "foto": "ref/ardilla-prevost.jpg",
+    "autor": "(c) ayuwat, some rights reserved (CC BY-NC)"
+  },
+  {
+    "id": "varano",
+    "nombre": "Varano acuático",
+    "cientifico": "Varanus salvator",
+    "tipo": "animal",
+    "taxon": "Varanus salvator",
+    "taxon_id": 114891,
+    "foto": "ref/varano.jpg",
+    "autor": "(c) Andrew Blayney, all rights reserved, uploaded by Andrew Blayney"
+  },
+  {
+    "id": "dragon-bosque",
+    "nombre": "Dragón del bosque de Borneo",
+    "cientifico": "Gonocephalus bornensis",
+    "tipo": "animal",
+    "taxon": "Gonocephalus bornensis",
+    "taxon_id": 101756,
+    "foto": "ref/dragon-bosque.jpg",
+    "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
+  },
+  {
+    "id": "eslizon-solar",
+    "nombre": "Eslizón solar común",
+    "cientifico": "Eutropis multifasciata",
+    "tipo": "animal",
+    "taxon": "Eutropis multifasciata",
+    "taxon_id": 38008,
+    "foto": "ref/eslizon-solar.jpg",
+    "autor": "(c) abdel1980, some rights reserved (CC BY-NC)"
+  },
+  {
+    "id": "vibora-verde",
+    "nombre": "Víbora verde de Borneo",
+    "cientifico": "Tropidolaemus subannulatus",
+    "tipo": "animal",
+    "taxon": "Tropidolaemus subannulatus",
+    "taxon_id": 114568,
+    "foto": "ref/vibora-verde.jpg",
+    "autor": "(c) diazborneo, some rights reserved (CC BY-NC)"
+  },
+  {
+    "id": "piton-reticulada",
+    "nombre": "Pitón reticulada",
+    "cientifico": "Malayopython reticulatus",
+    "tipo": "animal",
+    "taxon": "Malayopython reticulatus",
+    "taxon_id": 491869,
+    "foto": "ref/piton-reticulada.jpg",
+    "autor": "(c) honeyroll_ahmad_sah, all rights reserved, uploaded by honeyroll_ahmad_sah"
+  },
+  {
+    "id": "rana-gigante-rio",
+    "nombre": "Rana gigante de río",
+    "cientifico": "Limnonectes leporinus",
+    "tipo": "animal",
+    "taxon": "Limnonectes leporinus",
+    "taxon_id": 25943,
+    "foto": "ref/rana-gigante-rio.jpg",
+    "autor": "(c) Fajar Kaprawi, some rights reserved (CC BY-NC), uploaded by Fajar Kaprawi"
+  },
+  {
+    "id": "rana-arboricola",
+    "nombre": "Rana arborícola de orejas oscuras",
+    "cientifico": "Polypedates macrotis",
+    "tipo": "animal",
+    "taxon": "Polypedates macrotis",
+    "taxon_id": 26567,
+    "foto": "ref/rana-arboricola.jpg",
+    "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
+  },
+  {
+    "id": "aguila-culebrera",
+    "nombre": "Águila culebrera crestada",
+    "cientifico": "Spilornis cheela",
+    "tipo": "animal",
+    "taxon": "Spilornis cheela",
+    "taxon_id": 5158,
+    "foto": "ref/aguila-culebrera.jpg",
+    "autor": "(c) Jono Dashper, all rights reserved, uploaded by Jono Dashper"
+  },
+  {
+    "id": "buho-pardo",
+    "nombre": "Cárabo pardo",
+    "cientifico": "Strix leptogrammica",
+    "tipo": "animal",
+    "taxon": "Strix leptogrammica",
+    "taxon_id": 19922,
+    "foto": "ref/buho-pardo.jpg",
+    "autor": "(c) Natthaphat Chotjuckdikul, all rights reserved, uploaded by Natthaphat Chotjuckdikul"
+  },
+  {
+    "id": "calao",
+    "nombre": "Cálao de cresta",
+    "cientifico": "Anorrhinus galeritus",
+    "tipo": "animal",
+    "taxon": "Anorrhinus galeritus",
+    "taxon_id": 5547,
+    "foto": "ref/calao.jpg",
+    "autor": "(c) Christian Schwarz, some rights reserved (CC BY-NC), uploaded by Christian Schwarz"
+  },
+  {
+    "id": "gallo-bankiva",
+    "nombre": "Gallo bankiva",
+    "cientifico": "Gallus gallus",
+    "tipo": "animal",
+    "taxon": "Gallus",
+    "taxon_id": 879,
+    "foto": "ref/gallo-bankiva.jpg",
+    "autor": "(c) Carlos N. G. Bocos, all rights reserved, uploaded by Carlos N. G. Bocos"
+  },
+  {
+    "id": "golondrina",
+    "nombre": "Golondrina del Pacífico",
+    "cientifico": "Hirundo javanica",
+    "tipo": "animal",
+    "taxon": "Hirundo javanica",
+    "taxon_id": 1578578,
+    "foto": "ref/golondrina.jpg",
+    "autor": "(c) Edwardson Ocon, all rights reserved, uploaded by Edwardson Ocon"
+  },
+  {
+    "id": "escarabajo-tigre",
+    "nombre": "Escarabajo tigre dorado",
+    "cientifico": "Cosmodela aurulenta",
+    "tipo": "animal",
+    "taxon": "Cosmodela aurulenta",
+    "taxon_id": 1352453,
+    "foto": "ref/escarabajo-tigre.jpg",
+    "autor": "(c) Nicky Bay, all rights reserved, uploaded by Nicky Bay"
+  },
+  {
+    "id": "mantis-hoja-seca",
+    "nombre": "Mantis hoja seca gigante",
+    "cientifico": "Deroplatys desiccata",
+    "tipo": "animal",
+    "taxon": "Deroplatys desiccata",
+    "taxon_id": 548630,
+    "foto": "ref/mantis-hoja-seca.jpg",
+    "autor": "(c) T.K.N, some rights reserved (CC BY-NC), uploaded by T.K.N"
+  },
+  {
+    "id": "libelula",
+    "nombre": "Libélula parasol",
+    "cientifico": "Neurothemis fluctuans",
+    "tipo": "animal",
+    "taxon": "Neurothemis fluctuans",
+    "taxon_id": 107002,
+    "foto": "ref/libelula.jpg",
+    "autor": "(c) budak, some rights reserved (CC BY-NC), uploaded by budak"
+  },
+  {
+    "id": "fulgorido",
+    "nombre": "Fulgórido (mosca linterna)",
+    "cientifico": "Pyrops whiteheadi",
+    "tipo": "animal",
+    "taxon": "Pyrops whiteheadi",
+    "taxon_id": 246077,
+    "foto": "ref/fulgorido.jpg",
+    "autor": "(c) Albert Kang, some rights reserved (CC BY-NC), uploaded by Albert Kang"
+  },
+  {
+    "id": "escarabajo-atlas",
+    "nombre": "Escarabajo atlas",
+    "cientifico": "Chalcosoma atlas",
+    "tipo": "animal",
+    "taxon": "Chalcosoma atlas",
+    "taxon_id": 334413,
+    "foto": "ref/escarabajo-atlas.jpg",
+    "autor": "(c) Binturong27, some rights reserved (CC BY-NC), uploaded by Binturong27"
+  },
+  {
+    "id": "insecto-palo",
+    "nombre": "Insecto palo gigante",
+    "cientifico": "Phobaeticus kirbyi",
+    "tipo": "animal",
+    "taxon": "Phobaeticus kirbyi",
+    "taxon_id": 494701,
+    "foto": "ref/insecto-palo.jpg",
+    "autor": "(c) Bernard DUPONT, some rights reserved (CC BY-SA)"
+  },
+  {
+    "id": "cigarra",
+    "nombre": "Cigarra gigante",
+    "cientifico": "Megapomponia merula",
+    "tipo": "animal",
+    "taxon": "Megapomponia merula",
+    "taxon_id": 541390,
+    "foto": "ref/cigarra.jpg",
+    "autor": "(c) dhfischer, some rights reserved (CC BY), uploaded by dhfischer"
+  },
+  {
+    "id": "oruga",
+    "nombre": "Oruga de Rajah Brooke",
+    "cientifico": "Trogonoptera brookiana",
+    "tipo": "animal",
+    "taxon": "Trogonoptera brookiana",
+    "taxon_id": 347385,
+    "foto": "ref/oruga.jpg",
+    "autor": "(c) Chan Chee Keong, all rights reserved, uploaded by Chan Chee Keong"
+  },
+  {
+    "id": "rajah-brooke",
+    "nombre": "Mariposa alas de pájaro de Rajah Brooke",
+    "cientifico": "Trogonoptera brookiana",
+    "tipo": "animal",
+    "taxon": "Trogonoptera brookiana",
+    "taxon_id": 347385,
+    "foto": "ref/rajah-brooke.jpg",
+    "autor": "(c) Chan Chee Keong, all rights reserved, uploaded by Chan Chee Keong"
+  },
+  {
+    "id": "ninfa-arbol",
+    "nombre": "Ninfa del árbol",
+    "cientifico": "Idea stolli",
+    "tipo": "animal",
+    "taxon": "Idea stolli",
+    "taxon_id": 196818,
+    "foto": "ref/ninfa-arbol.jpg",
+    "autor": "(c) Bernard DUPONT, some rights reserved (CC BY-NC-SA)"
+  },
+  {
+    "id": "lombriz",
+    "nombre": "Lombriz de tierra",
+    "cientifico": "Oligochaeta",
+    "tipo": "animal",
+    "taxon": "Megascolecidae",
+    "taxon_id": 85887,
+    "foto": "ref/lombriz.jpg",
+    "autor": "(c) usaviah, some rights reserved (CC BY-NC)"
+  },
+  {
+    "id": "pelotero",
+    "nombre": "Escarabajo pelotero",
+    "cientifico": "Scarabaeinae",
+    "tipo": "animal",
+    "taxon": "Scarabaeinae",
+    "taxon_id": 125819,
+    "foto": "ref/pelotero.jpg",
+    "autor": "(c) jiangyou, all rights reserved, uploaded by jiangyou"
+  },
+  {
+    "id": "termita",
+    "nombre": "Termita en procesión",
+    "cientifico": "Hospitalitermes",
+    "tipo": "animal",
+    "taxon": "Hospitalitermes",
+    "taxon_id": 506302,
+    "foto": "ref/termita.jpg",
+    "autor": "(c) Fan Gao, all rights reserved, uploaded by Fan Gao"
+  },
+  {
+    "id": "dipterocarpo",
+    "nombre": "Seraya (dipterocarpo emergente)",
+    "cientifico": "Shorea",
+    "tipo": "planta",
+    "taxon": "Shoreae",
+    "taxon_id": 1611195,
+    "foto": "ref/dipterocarpo.jpg",
+    "autor": "(c) narido, some rights reserved (CC BY-NC), uploaded by narido"
+  },
+  {
+    "id": "agathis",
+    "nombre": "Kauri de Borneo",
+    "cientifico": "Agathis borneensis",
+    "tipo": "planta",
+    "taxon": "Agathis borneensis",
+    "taxon_id": 142739,
+    "foto": "ref/agathis.jpg",
+    "autor": "(c) Alena Uvírová, some rights reserved (CC BY-NC), uploaded by Alena Uvírová"
+  },
+  {
+    "id": "higuera",
+    "nombre": "Higuera estranguladora",
+    "cientifico": "Ficus",
+    "tipo": "planta",
+    "taxon": "Ficus",
+    "taxon_id": 50999,
+    "foto": "ref/higuera.jpg",
+    "autor": "(c) Rudy Gelis, all rights reserved, uploaded by Rudy Gelis"
+  },
+  {
+    "id": "roble",
+    "nombre": "Roble tropical",
+    "cientifico": "Lithocarpus",
+    "tipo": "planta",
+    "taxon": "Lithocarpus",
+    "taxon_id": 53956,
+    "foto": "ref/roble.jpg",
+    "autor": "(c) Toby Y, some rights reserved (CC BY), uploaded by Toby Y"
+  },
+  {
+    "id": "dillenia",
+    "nombre": "Simpoh gajah",
+    "cientifico": "Dillenia excelsa",
+    "tipo": "planta",
+    "taxon": "Dillenia excelsa",
+    "taxon_id": 425584,
+    "foto": "ref/dillenia.jpg",
+    "autor": "(c) tlaloc27, some rights reserved (CC BY), uploaded by tlaloc27"
+  },
+  {
+    "id": "pino-apio",
+    "nombre": "Pino apio",
+    "cientifico": "Phyllocladus hypophyllus",
+    "tipo": "planta",
+    "taxon": "Phyllocladus hypophyllus",
+    "taxon_id": 54689,
+    "foto": "ref/pino-apio.jpg",
+    "autor": "Daderot, no known copyright restrictions (public domain)"
+  },
+  {
+    "id": "rododendro",
+    "nombre": "Rododendro de flor larga",
+    "cientifico": "Rhododendron longiflorum",
+    "tipo": "planta",
+    "taxon": "Rhododendron longiflorum",
+    "taxon_id": 426558,
+    "foto": "ref/rododendro.jpg",
+    "autor": "(c) Clivid, some rights reserved (CC BY-ND)"
+  },
+  {
+    "id": "palma-cola-pez",
+    "nombre": "Palma cola de pez gigante",
+    "cientifico": "Caryota no",
+    "tipo": "planta",
+    "taxon": "Caryota no",
+    "taxon_id": 348511,
+    "foto": "ref/palma-cola-pez.jpg",
+    "autor": "(c) Bernard DUPONT, some rights reserved (CC BY-NC-SA)"
+  },
+  {
+    "id": "pinanga",
+    "nombre": "Palmita de sotobosque",
+    "cientifico": "Pinanga veitchii",
+    "tipo": "planta",
+    "taxon": "Pinanga veitchii",
+    "taxon_id": 365892,
+    "foto": "ref/pinanga.jpg",
+    "autor": "(c) Ryan E. Gray, some rights reserved (CC BY-NC), uploaded by Ryan E. Gray"
+  },
+  {
+    "id": "jengibre-antorcha",
+    "nombre": "Jengibre antorcha",
+    "cientifico": "Etlingera elatior",
+    "tipo": "planta",
+    "taxon": "Etlingera elatior",
+    "taxon_id": 126577,
+    "foto": "ref/jengibre-antorcha.jpg",
+    "autor": "(c) Marcos Silveira, all rights reserved, uploaded by Marcos Silveira"
+  },
+  {
+    "id": "phrynium",
+    "nombre": "Phrynium",
+    "cientifico": "Phrynium villosulum",
+    "tipo": "planta",
+    "taxon": "Phrynium villosulum",
+    "taxon_id": 426412,
+    "foto": "ref/phrynium.jpg",
+    "autor": "(c) Albert Kang, some rights reserved (CC BY-NC), uploaded by Albert Kang"
+  },
+  {
+    "id": "helecho-dipteris",
+    "nombre": "Helecho de hoja ancha",
+    "cientifico": "Dipteris conjugata",
+    "tipo": "planta",
+    "taxon": "Dipteris conjugata",
+    "taxon_id": 130823,
+    "foto": "ref/helecho-dipteris.jpg",
+    "autor": "(c) 國立臺灣博物館, some rights reserved (CC BY), uploaded by 國立臺灣博物館"
+  },
+  {
+    "id": "cuerno-alce",
+    "nombre": "Helecho cuerno de alce",
+    "cientifico": "Platycerium coronarium",
+    "tipo": "planta",
+    "taxon": "Platycerium coronarium",
+    "taxon_id": 425758,
+    "foto": "ref/cuerno-alce.jpg",
+    "autor": "(c) hyla_21, all rights reserved"
+  },
+  {
+    "id": "rhaphidophora",
+    "nombre": "Trepadora de hojas en teja",
+    "cientifico": "Rhaphidophora korthalsii",
+    "tipo": "planta",
+    "taxon": "Rhaphidophora korthalsii",
+    "taxon_id": 354692,
+    "foto": "ref/rhaphidophora.jpg",
+    "autor": "(c) cheavy, some rights reserved (CC BY-NC), uploaded by cheavy"
+  },
+  {
+    "id": "orquidea-tigre",
+    "nombre": "Orquídea tigre",
+    "cientifico": "Grammatophyllum speciosum",
+    "tipo": "planta",
+    "taxon": "Grammatophyllum speciosum",
+    "taxon_id": 344825,
+    "foto": "ref/orquidea-tigre.jpg",
+    "autor": "(c) Steven Chong, some rights reserved (CC BY-NC), uploaded by Steven Chong"
+  },
+  {
+    "id": "nepenthes-stenophylla",
+    "nombre": "Planta jarra",
+    "cientifico": "Nepenthes stenophylla",
+    "tipo": "planta",
+    "taxon": "Nepenthes stenophylla",
+    "taxon_id": 441247,
+    "foto": "ref/nepenthes-stenophylla.jpg",
+    "autor": "(c) Shawn O'Donnell, some rights reserved (CC BY), uploaded by Shawn O'Donnell"
+  },
+  {
+    "id": "nepenthes-rajah",
+    "nombre": "Planta jarra gigante",
+    "cientifico": "Nepenthes rajah",
+    "tipo": "planta",
+    "taxon": "Nepenthes rajah",
+    "taxon_id": 441244,
+    "foto": "ref/nepenthes-rajah.jpg",
+    "autor": "anonymous, no known copyright restrictions (public domain)"
+  },
+  {
+    "id": "enredadera",
+    "nombre": "Pimienta trepadora",
+    "cientifico": "Piper porphyrophyllum",
+    "tipo": "planta",
+    "taxon": "Piper porphyrophyllum",
+    "taxon_id": 426429,
+    "foto": "ref/enredadera.jpg",
+    "autor": "(c) Kinmatsu Lin, some rights reserved (CC BY-NC), uploaded by Kinmatsu Lin"
+  },
+  {
+    "id": "liana-colgante",
+    "nombre": "Escalera de mono",
+    "cientifico": "Phanera kockiana",
+    "tipo": "planta",
+    "taxon": "Phanera kockiana",
+    "taxon_id": 1155314,
+    "foto": "ref/liana-colgante.jpg",
+    "autor": "(c) liannh, some rights reserved (CC BY-NC)"
+  },
+  {
+    "id": "ratan",
+    "nombre": "Ratán",
+    "cientifico": "Calamus manan",
+    "tipo": "planta",
+    "taxon": "Calamus manan",
+    "taxon_id": 364813,
+    "foto": "ref/ratan.jpg",
+    "autor": "(c) Ethan Beaver, some rights reserved (CC BY-NC), uploaded by Ethan Beaver"
+  },
+  {
+    "id": "tetrastigma",
+    "nombre": "Liana de la rafflesia",
+    "cientifico": "Tetrastigma diepenhorstii",
+    "tipo": "planta",
+    "taxon": "Tetrastigma (género: la especie no tiene fotos)",
+    "taxon_id": 155916,
+    "foto": "ref/tetrastigma.jpg",
+    "autor": "no rights reserved, uploaded by 葉子"
+  },
+  {
+    "id": "rafflesia",
+    "nombre": "Rafflesia",
+    "cientifico": "Rafflesia keithii",
+    "tipo": "planta",
+    "taxon": "Rafflesia keithii",
+    "taxon_id": 337567,
+    "foto": "ref/rafflesia.jpg",
+    "autor": "(c) Natalia Rojas-Estevez, some rights reserved (CC BY-NC), uploaded by Natalia Rojas-Estevez"
+  },
+  {
+    "id": "amanita",
+    "nombre": "Amanita esculpida",
+    "cientifico": "Amanita sculpta",
+    "tipo": "seta",
+    "taxon": "Amanita sculpta",
+    "taxon_id": 895595,
+    "foto": "ref/amanita.jpg",
+    "autor": "(c) HUANG QIN, all rights reserved, uploaded by HUANG QIN"
+  },
+  {
+    "id": "russula",
+    "nombre": "Russula roja",
+    "cientifico": "Russula",
+    "tipo": "seta",
+    "taxon": "Russulales",
+    "taxon_id": 48341,
+    "foto": "ref/russula.jpg",
+    "autor": "(c) Jason Hollinger, some rights reserved (CC BY)"
+  },
+  {
+    "id": "boleto-ruibarbo",
+    "nombre": "Boleto ruibarbo",
+    "cientifico": "Boletellus obscurecoccineus",
+    "tipo": "seta",
+    "taxon": "Boletellus obscurecoccineus",
+    "taxon_id": 355979,
+    "foto": "ref/boleto-ruibarbo.jpg",
+    "autor": "(c) Adam, all rights reserved, uploaded by Adam"
+  },
+  {
+    "id": "falo-velo",
+    "nombre": "Falo de velo",
+    "cientifico": "Phallus indusiatus",
+    "tipo": "seta",
+    "taxon": "Phallus indusiatus",
+    "taxon_id": 1473224,
+    "foto": "ref/falo-velo.jpg",
+    "autor": "(c) Linda Reinhold, some rights reserved (CC BY-NC), uploaded by Linda Reinhold"
+  },
+  {
+    "id": "estrella-roja",
+    "nombre": "Hongo estrella roja",
+    "cientifico": "Aseroe rubra",
+    "tipo": "seta",
+    "taxon": "Aseroe rubra",
+    "taxon_id": 381310,
+    "foto": "ref/estrella-roja.jpg",
+    "autor": "(c) Loy Xingwen, some rights reserved (CC BY-NC), uploaded by Loy Xingwen"
+  },
+  {
+    "id": "copa-tropical",
+    "nombre": "Copa tropical peluda",
+    "cientifico": "Cookeina tricholoma",
+    "tipo": "seta",
+    "taxon": "Cookeina tricholoma",
+    "taxon_id": 204575,
+    "foto": "ref/copa-tropical.jpg",
+    "autor": "(c) Chien Lee, all rights reserved, uploaded by Chien Lee"
+  },
+  {
+    "id": "repisa",
+    "nombre": "Repisa de pie amarillo",
+    "cientifico": "Microporus xanthopus",
+    "tipo": "seta",
+    "taxon": "Microporus xanthopus",
+    "taxon_id": 370262,
+    "foto": "ref/repisa.jpg",
+    "autor": "(c) tansh91, some rights reserved (CC BY-NC), uploaded by tansh91"
+  },
+  {
+    "id": "poros-luminosos",
+    "nombre": "Poros luminosos",
+    "cientifico": "Favolaschia manipularis",
+    "tipo": "seta",
+    "taxon": "Favolaschia manipularis",
+    "taxon_id": 699912,
+    "foto": "ref/poros-luminosos.jpg",
+    "autor": "(c) Gim Siew Tan, some rights reserved (CC BY-NC), uploaded by Gim Siew Tan"
+  },
+  {
+    "id": "mycena-verde",
+    "nombre": "Seta verde luminosa",
+    "cientifico": "Mycena chlorophos",
+    "tipo": "seta",
+    "taxon": "Mycena chlorophos",
+    "taxon_id": 155173,
+    "foto": "ref/mycena-verde.jpg",
+    "autor": "(c) Craig Robbins, some rights reserved (CC BY-NC), uploaded by Craig Robbins"
+  },
+  {
+    "id": "termitomyces",
+    "nombre": "Seta de termitero",
+    "cientifico": "Termitomyces",
+    "tipo": "seta",
+    "taxon": "Termitomyces",
+    "taxon_id": 47497,
+    "foto": "ref/termitomyces.jpg",
+    "autor": "(c) copyboy, some rights reserved (CC BY-NC)"
+  },
+  {
+    "id": "cordyceps",
+    "nombre": "Hongo de las hormigas zombi",
+    "cientifico": "Ophiocordyceps",
+    "tipo": "seta",
+    "taxon": "Ophiocordyceps",
+    "taxon_id": 179205,
+    "foto": "ref/cordyceps.jpg",
+    "autor": "(c) Diana Fuentes, some rights reserved (CC BY-SA), uploaded by Diana Fuentes"
+  }
 ]

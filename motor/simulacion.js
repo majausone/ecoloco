@@ -8,14 +8,15 @@
 // El escenario es el JSON de herramientas/convertir_entradas.py (o uno editado en la
 // interfaz). El azar se siembra igual que en herramientas/oraculo.py.
 
-import { Arr } from './core/arr.js?v=202610032115';
-import { Datos } from './core/datos.js?v=202610032115';
-import { Rejilla } from './core/rejilla.js?v=202610032115';
-import { LayerStructure, ModelTiming } from './core/componentes.js?v=202610032115';
-import { setupVariables, getModelOrder } from './core/variables.js?v=202610032115';
-import { PyRandom, RandomState } from './azar/mt19937.js?v=202610032115';
-import { Generator } from './azar/pcg64.js?v=202610032115';
-import { MODELOS } from './modelos/index.js?v=202610032115';
+import { Arr } from './core/arr.js?v=202610052205';
+import { Datos } from './core/datos.js?v=202610052205';
+import { Rejilla } from './core/rejilla.js?v=202610052205';
+import { LayerStructure, ModelTiming } from './core/componentes.js?v=202610052205';
+import { setupVariables, getModelOrder } from './core/variables.js?v=202610052205';
+import { PyRandom, RandomState } from './azar/mt19937.js?v=202610052205';
+import { Generator } from './azar/pcg64.js?v=202610052205';
+import { MODELOS } from './modelos/index.js?v=202610052205';
+import { f64 } from './num/f64.js?v=202610052205';
 
 export function decodificar(v) {
   if (v === 'NaN') return NaN;
@@ -87,7 +88,7 @@ export class Simulacion {
     this.model_timing = new ModelTiming(core.timing);
     this.data = new Datos(this.grid, this.meta.variables);
     for (const [nombre, v] of Object.entries(this.escenario.inputs)) {
-      const datos = Float64Array.from(v.data, decodificar);
+      const datos = f64(v.data, decodificar);
       this.data.set(nombre, new Arr(v.dims, v.shape, datos, v.coords));
     }
     this.nombresModelos = Object.keys(this.config).filter((k) => k !== 'core' && k !== 'disturbance');

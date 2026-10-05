@@ -4,11 +4,14 @@
    vértices y un único material por modelo. Las animaciones siguen igual porque solo mueven
    articulaciones. Para el gris de «morir» el material único hace de m.mats (su color
    multiplica a los de los vértices). Hay que llamarlo después de crearAnimal (fijar ya
-   hecho): las mallas nuevas no tienen postura guardada y restaurar() no las toca. */
+   hecho): las mallas nuevas no tienen postura guardada y restaurar() no las toca.
+   (Solo para los modelos de cubos: los suaves de animales.js ya vienen en una malla.) */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
 
 export function fundir(m) {
+  // los animales suaves ya son una sola malla con esqueleto (animales.js): nada que juntar
+  if (m.suave) return m;
   const articulaciones = new Set([m.raiz, ...Object.values(m.piv)]);
   const material = new THREE.MeshLambertMaterial({ vertexColors: true });
   material.userData.base = new THREE.Color(1, 1, 1);

@@ -55,7 +55,8 @@ export function crearCielo({ escena }) {
       return out.set(Math.cos(a), Math.sin(a), 0.32).normalize();
     },
     // cada fotograma: dónde está la cámara, la hora, cuánto es de noche (0–1) y el clima del día
-    actualizar(camPos, hora, noche, clima, t) {
+    // forzar: { lluvia, nieve, niebla, nubes } de 0 a 1 (la pestaña Gráficos) o nada (el del motor)
+    actualizar(camPos, hora, noche, clima, t, forzar = null) {
       sky.position.copy(camPos); estrellas.position.copy(camPos);
       this.direccionSol(hora, sol);
       U.sunPosition.value.copy(sol);
@@ -66,6 +67,8 @@ export function crearCielo({ escena }) {
       tiempo.lluvia = llueve ? Math.min(1, mm / 40) : 0;
       tiempo.nubes = Math.min(1, (clima?.nubes ?? 0.3) * 1.2 + (llueve ? 0.5 : 0) + Math.min(0.3, mm / 100));
       tiempo.niebla = Math.max(madrugada ? Math.max(0, (hum - 88) / 12) : 0, llueve ? 0.4 + tiempo.lluvia * 0.4 : 0);
+      tiempo.nieve = 0;
+      if (forzar) Object.assign(tiempo, forzar);
       U.cloudCoverage.value = 0.15 + tiempo.nubes * 0.7;
       U.cloudDensity.value = Math.min(1, 0.25 + tiempo.nubes * 0.6 + tiempo.lluvia * 0.3);
       U.turbidity.value = 3.5 + tiempo.niebla * 8 + tiempo.nubes * 3;

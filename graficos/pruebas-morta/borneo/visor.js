@@ -3,7 +3,7 @@
    pantalla completa. */
 
 import * as THREE from '../vendor/three.module.js';
-import { retoque } from '../escena-v3.js?v=202610032115';
+import { retoque } from '../escena-v3.js?v=202610052205';
 
 export const LUCES = {
   dia: { cielo: '#7fa8a0', sol: '#fff2d0', fuerza: 3.2, dir: [-0.6, 0.75, 0.35], hemiCielo: '#cfe0c0', hemiSuelo: '#2a3a20', ambiente: 1.4, niebla: '#6a8a7a',
@@ -26,6 +26,14 @@ export class Visor {
     this.camQuad = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.objetivo = null;
     this.pixel = 1; // 1 = resolución nativa; 2, 3... = píxeles más gordos
+    // el antialias: MSAA de 4 muestras en la imagen intermedia (la que luego pasa por el retoque;
+    // el antialias del lienzo no serviría, porque se pinta antes a esa imagen), y las hojas y tarjetas
+    // recortadas con alpha-to-coverage (el MSAA solo no suaviza los recortes). Necesita poder
+    // pintar a coma flotante con muestras (casi siempre; si no, sin antialias)
+    const gl = this.renderer.getContext();
+    this.puedeAA = this.renderer.capabilities.isWebGL2 && gl.getParameter(gl.MAX_SAMPLES) >= 4 && !!(this.renderer.extensions.has('EXT_color_buffer_float') || this.renderer.extensions.has('EXT_color_buffer_half_float'));
+    this.antialias = true;
+    this._aaRepaso = 0;
     this.sombras = sombras;
   }
   luces(escena, nombre, alcance = 30) {
@@ -47,16 +55,23 @@ export class Visor {
   }
   ajustar() {
     const w = Math.max(1, Math.floor(this.lienzo.clientWidth / this.pixel)), h = Math.max(1, Math.floor(this.lienzo.clientHeight / this.pixel));
-    if (this.objetivo && this.objetivo.width === w && this.objetivo.height === h) return;
+    const muestras = this.antialias && this.puedeAA ? 4 : 0;
+    if (this.objetivo && this.objetivo.width === w && this.objetivo.height === h && this.objetivo.samples === muestras) return;
     this.renderer.setSize(w, h, false);
     this.objetivo?.depthTexture?.dispose(); this.objetivo?.dispose();
-    this.objetivo = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, magFilter: THREE.NearestFilter, minFilter: THREE.NearestFilter });
+    this.objetivo = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, magFilter: THREE.NearestFilter, minFilter: THREE.NearestFilter, samples: muestras });
     this.objetivo.depthTexture = new THREE.DepthTexture(w, h);
   }
   pintar(escena, cam) {
     this.ajustar();
     const { width: w, height: h } = this.objetivo;
     if (cam.isPerspectiveCamera) { cam.aspect = w / h; cam.updateProjectionMatrix(); }
+    // (de vez en cuando, los materiales recortados nuevos: alpha-to-coverage si hay antialias)
+    if (this._aaRepaso-- <= 0) {
+      this._aaRepaso = 120;
+      const si = this.objetivo.samples > 0;
+      escena.traverse((o) => { const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : []; for (const m of ms) if (m.alphaTest > 0 && m.alphaToCoverage !== si) { m.alphaToCoverage = si; m.needsUpdate = true; } });
+    }
     this.renderer.setRenderTarget(this.objetivo);
     this.renderer.render(escena, cam);
     const u = this.quad.material.uniforms, p = this.post;

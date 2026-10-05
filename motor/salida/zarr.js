@@ -4,11 +4,12 @@
 // ruta -> Uint8Array, así sirve tanto en Node (se escribe a ficheros) como en el
 // navegador (se empaqueta para descargar).
 
-import { diasAFecha } from '../core/componentes.js?v=202610032115';
+import { diasAFecha } from '../core/componentes.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 const texto = (o) => new TextEncoder().encode(JSON.stringify(o, null, 2));
 
-function bytesF64(a) { return new Uint8Array(Float64Array.from(a).buffer); }
+function bytesF64(a) { return new Uint8Array(f64(a).buffer); }
 function bytesI64(a) { return new Uint8Array(BigInt64Array.from(a, (v) => BigInt(v)).buffer); }
 function bytesI32(a) { return new Uint8Array(Int32Array.from(a).buffer); }
 // '<Un': UTF-32LE de ancho fijo, como numpy

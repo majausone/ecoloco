@@ -15,18 +15,18 @@
 //  5. al acabar, cada cohorte tiene los animales que le tocan.
 // Se mide cuánto sale solo y cuánto se empuja (medidas de cada día).
 
-import { Azar } from './azar.js?v=202610032115';
-import { Mapa, hashTexto } from './mapa.js?v=202610032115';
-import { PuenteMotor } from './puente.js?v=202610032115';
-import { Agente, elegirEspecie, nuevoId, quitarEspecies } from './agentes.js?v=202610032115';
-import { completar, aplicarAlEscenario, opcionesMapa } from './config.js?v=202610032115';
-import { VERTEBRADOS, ESPECIES_DE_GRUPO, E } from './especies.js?v=202610032115';
-import { simularDia, TICS, CLAVE, DETALLE, CLASE_COMIDA, TAREAS } from './dia.js?v=202610032115';
-import { escalarEscenario } from './escala.js?v=202610032115';
-import { Registro } from './registro.js?v=202610032115';
-import { aplicarParametros } from './parametros.js?v=202610032115';
-import { clonarProfundo } from '../motor/clonar.js?v=202610032115';
-import { horquilla, ARBOL } from './posaderos.js?v=202610032115';
+import { Azar } from './azar.js?v=202610052205';
+import { Mapa, hashTexto } from './mapa.js?v=202610052205';
+import { PuenteMotor } from './puente.js?v=202610052205';
+import { Agente, elegirEspecie, nuevoId, quitarEspecies } from './agentes.js?v=202610052205';
+import { completar, aplicarAlEscenario, opcionesMapa } from './config.js?v=202610052205';
+import { VERTEBRADOS, ESPECIES_DE_GRUPO, E } from './especies.js?v=202610052205';
+import { simularDia, puedeCazar, TICS, CLAVE, DETALLE, CLASE_COMIDA, TAREAS } from './dia.js?v=202610052205';
+import { escalarEscenario } from './escala.js?v=202610052205';
+import { Registro } from './registro.js?v=202610052205';
+import { aplicarParametros } from './parametros.js?v=202610052205';
+import { clonarProfundo } from '../motor/clonar.js?v=202610052205';
+import { horquilla, ARBOL } from './posaderos.js?v=202610052205';
 
 // cuántos animales caben: vertebrados en total y de cada grupo de invertebrados (más allá, cada
 // animal representa a varios individuos del motor)
@@ -134,7 +134,12 @@ export class Mundo {
 
   nuevoAnimal(c, az, donde = null) {
     const especie = elegirEspecie(c.grupo, az);
-    const p = donde || this.mapa.puntoEnCelda(0, az);
+    let p = donde || this.mapa.puntoEnCelda(0, az);
+    // (las termitas, junto a su termitero: viven en él)
+    if (c.grupo === 'detritivorous_insect') {
+      const m = this.mapa.termiteroCercano(p.x, p.z);
+      if (m) { const ang = az.r() * 6.283, d = 0.5 + az.r() * 1.5, q = { x: m.x + Math.cos(ang) * d, z: m.z + Math.sin(ang) * d }; if (this.mapa.enMundo(q.x, q.z) && !this.mapa.esAgua(q.x, q.z)) p = q; }
+    }
     const v = this.vale[c.grupo] || 1;
     const a = new Agente({ id: nuevoId(VERTEBRADOS.has(c.grupo) ? 'v' : 'i'), especie, grupo: c.grupo, cohorte: c.id, x: p.x, z: p.z, az, masa: c.masa, adulta: c.adulta, edad: c.edad, vale: v });
     a.territorio = c.territorio;
@@ -142,9 +147,12 @@ export class Mundo {
     a.rango = Math.min(this.lado * 0.6, Math.max(VERTEBRADOS.has(c.grupo) ? 10 : 2, Math.sqrt((c.campeo || 1e4) / Math.PI)));
     if (c.grupo === 'detritivorous_insect') { const m = this.mapa.termiteroCercano(p.x, p.z); if (m) a.hogar = { x: m.x, z: m.z }; }
     else {
-      const ang = az.r() * 6.283, d = az.r() * Math.min(a.rango * 0.3, 30);
+      // (los pequeños que andan, dentro de su zona de vida: COMPORTAMIENTO[].zona)
+      const ang = az.r() * 6.283, d = az.r() * Math.min(a.rango * 0.3, 30, a.e?.zona ? a.e.zona * 0.5 : Infinity);
       const h = { x: p.x + Math.cos(ang) * d, z: p.z + Math.sin(ang) * d };
-      a.hogar = this.hogarEn(a, this.mapa.enMundo(h.x, h.z) && !this.mapa.esAgua(h.x, h.z) ? h : { x: p.x, z: p.z });
+      // (y del mismo lado del río que él, si es de los pequeños: si no, toda su zona quedaría al otro lado)
+      const m = this.mapa, lado = (x, z) => (m.rio ? Math.sign(x - m.rioX(z)) : 0), vale = m.enMundo(h.x, h.z) && !m.esAgua(h.x, h.z) && (!a.e?.zona || lado(h.x, h.z) === lado(p.x, p.z));
+      a.hogar = this.hogarEn(a, vale ? h : { x: p.x, z: p.z });
     }
     return a;
   }
@@ -160,7 +168,7 @@ export class Mundo {
       if (d < md) { md = d; mejor = t; }
     }
     if (!mejor) return p;
-    return { x: mejor.x + 0.35, z: mejor.z, y: horquilla(mejor) * (tipo === 'dormidero_arbol' ? 1.15 : 1), arbol: mejor.id };
+    return { x: mejor.x + 0.35, z: mejor.z, y: horquilla(mejor) * (tipo === 'dormidero_arbol' ? 1.15 : 1), arbol: mejor.id, tronco: { x: mejor.x, z: mejor.z } };
   }
 
   // los que viven en grupo siguen a uno de su especie y cohorte
@@ -290,7 +298,9 @@ export class Mundo {
           const pa = delGrupo ? delGrupo[az.entero(delGrupo.length)] : null;
           const p = tomar(ev.presa, pa);
           if (!p) break;
-          cazas.push({ presa: p.id, grupoPresa: presa.grupo, cazador: pa?.id || null, grupoCazador: cazador.grupo });
+          // (si ese cazador no puede con esa presa por tamaño, no se fuerza a la vista: la presa muere
+          // igualmente al final del día, lejos de la cámara)
+          cazas.push({ presa: p.id, grupoPresa: presa.grupo, cazador: pa && puedeCazar(pa, p) ? pa.id : null, grupoCazador: cazador.grupo });
         }
       } else if (ev.tipo === 'muerte') {
         const c = coh(ev.cohorte);
@@ -329,7 +339,7 @@ export class Mundo {
         for (let j = 0; j < k; j++) {
           const a = tomar(ev.cohorte);
           if (!a) break;
-          const b = this.puntoBorde(az, a);
+          const b = a.vertebrado ? this.puntoBorde(az, a) : { x: a.x, z: a.z };
           programa.push({ tic: ticAleatorio(), tipo: 'se_va', id: a.id, x: b.x, z: b.z });
           medida.salidas++;
         }
@@ -348,6 +358,9 @@ export class Mundo {
         const c = despues.get(ev.cohorte);
         if (!c) continue;
         for (const a of this.vivosDe(c.id)) {
+          // (los pequeños con zona de vida no se van andando a otro sitio del mapa: un insecto no cruza 50 m;
+          // su casa sigue donde estaba, y la de las termitas, su termitero)
+          if (a.e?.zona) { a.territorio = c.territorio; continue; }
           a.territorio = c.territorio; a.hogar = this.hogarEn(a, this.mapa.puntoEnCelda(0, az));
           const lejos = Math.hypot(a.x - a.hogar.x, a.z - a.hogar.z), andar = a.e?.andar || 1;
           if (!a.foco && lejos / andar > 6 * 3600 && Math.hypot(a.x - this.foco.x, a.z - this.foco.z) > RADIO_FOCO) { a.x = a.hogar.x + az.entre(-1, 1); a.z = a.hogar.z + az.entre(-1, 1); }
@@ -368,13 +381,15 @@ export class Mundo {
       else for (let j = 0; j < -k; j++) {
         const ag = tomar(c.id);
         if (!ag) break;
-        const b = this.puntoBorde(az, ag);
+        // (un insecto no cruza el mapa para irse: se pierde entre la hojarasca donde esté)
+        const b = ag.vertebrado ? this.puntoBorde(az, ag) : { x: ag.x, z: ag.z };
         programa.push({ tic: ticAleatorio(), tipo: 'se_va', id: ag.id, x: b.x, z: b.z });
         medida.salidas++;
       }
     }
     for (const v of vienen) {
-      const a = this.nuevoAnimal(v.c, az, v.donde);
+      // (los invertebrados que llegan no vienen andando desde el borde: aparecen ya en su sitio)
+      const a = this.nuevoAnimal(v.c, az, VERTEBRADOS.has(v.c.grupo) ? v.donde : null);
       if (v.padre) { a.hogar = { ...v.padre.hogar }; a.siguiendo = v.padre.vertebrado ? v.padre.id : null; a.rango = v.padre.rango; }
       programa.push({ tic: ticAleatorio(), tipo: 'aparece', agente: a, como: v.como });
       if (v.como === 'nacer') medida.nacimientos++; else medida.llegadas++;

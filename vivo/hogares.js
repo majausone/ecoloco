@@ -12,7 +12,8 @@
    Solo los que están a menos de CERCA m de la cámara. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { COMPORTAMIENTO } from '../mundo/especies.js?v=202610032115';
+import { conTransparencia } from './transparencia.js?v=202610052205';
+import { COMPORTAMIENTO } from '../mundo/especies.js?v=202610052205';
 
 const CERCA = 120;
 const CAJA = new THREE.BoxGeometry(1, 1, 1);
@@ -74,7 +75,7 @@ export function crearHogares({ escena, ox, oz, cima, mapa, tamDe }) {
   // tamDe(especie): el largo del animal dibujado (m), para escalar su hogar
   const capas = {};
   for (const [tipo, cajas] of Object.entries(MODELOS)) {
-    const m = new THREE.InstancedMesh(juntar(cajas), new THREE.MeshLambertMaterial({ vertexColors: true }), 64);
+    const m = new THREE.InstancedMesh(juntar(cajas), conTransparencia(new THREE.MeshLambertMaterial({ vertexColors: true })), 64);
     m.count = 0; m.frustumCulled = false; m.castShadow = tipo !== 'cama'; m.receiveShadow = true;
     escena.add(m);
     capas[tipo] = { malla: m, n: 0 };

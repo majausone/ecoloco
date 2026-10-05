@@ -1,14 +1,15 @@
 // Modelo de suelo (models/soil): env_factors.py, microbial_groups.py, uptake.py, pools.py
 // y soil_model.py. Las ecuaciones de los pools se integran con RK45 (scipy) reproducido.
 
-import { Arr } from '../core/arr.js?v=202610032115';
-import { ModeloBase } from './base.js?v=202610032115';
-import { exp, log10, pow } from '../num/ucrt.js?v=202610032115';
-import { dotVecMat, potArr } from '../num/np.js?v=202610032115';
-import { sumaPy, sumaNp } from '../num/py.js?v=202610032115';
-import { solveIvpRK45 } from '../num/ode.js?v=202610032115';
-import { ZERO_CELSIUS, npMin } from './comun.js?v=202610032115';
-import { mediaCapasActivas, impactoPotencialHidrico, elem, apilarCNP } from './litter.js?v=202610032115';
+import { Arr } from '../core/arr.js?v=202610052205';
+import { ModeloBase } from './base.js?v=202610052205';
+import { exp, log10, pow } from '../num/ucrt.js?v=202610052205';
+import { dotVecMat, potArr } from '../num/np.js?v=202610052205';
+import { sumaPy, sumaNp } from '../num/py.js?v=202610052205';
+import { solveIvpRK45 } from '../num/ode.js?v=202610052205';
+import { ZERO_CELSIUS, npMin } from './comun.js?v=202610052205';
+import { mediaCapasActivas, impactoPotencialHidrico, elem, apilarCNP } from './litter.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 const R_GAS = 8.31446261815324; // scipy.constants.gas_constant
 const V = (n, f) => { const o = new Float64Array(n); for (let i = 0; i < n; i++) o[i] = f(i); return o; };
@@ -505,7 +506,7 @@ export class SoilModel extends ModeloBase {
       claves.forEach((k, j) => { P[k] = y.subarray(j * n, (j + 1) * n); });
       return derivadas(P, ctx);
     };
-    const sol = solveIvpRK45(fun, 0.0, dias, Float64Array.from(y0));
+    const sol = solveIvpRK45(fun, 0.0, dias, f64(y0));
     this.ultimaIntegracion = { pasos: sol.pasos, nfev: sol.nfev };
     const trozo = (k) => sol.y.slice(claves.indexOf(k) * n, (claves.indexOf(k) + 1) * n);
     const nuevos = {};

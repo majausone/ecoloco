@@ -9,13 +9,13 @@
    - y la de la ficha (de un animal, una planta o un hongo), que sale al pulsar uno, lleva su
      nombre y se cierra con una ✕ (se vuelve a la pestaña en la que se estaba). */
 
-import { NOMBRE_CATEGORIA } from '../mundo/registro.js?v=202610032115';
-import { INDICADORES } from '../mundo/registro.js?v=202610032115';
-import { PARAMETROS, NEUTROS } from '../mundo/parametros.js?v=202610032115';
-import { VERTEBRADOS } from '../mundo/especies.js?v=202610032115';
-import { grafica, numero, COLOR } from './grafica.js?v=202610032115';
-import { T, enIngles } from '../comun/idioma.js?v=202610032115';
-import { GRUPO_EN } from '../comun/nombres.js?v=202610032115';
+import { NOMBRE_CATEGORIA } from '../mundo/registro.js?v=202610052205';
+import { INDICADORES } from '../mundo/registro.js?v=202610052205';
+import { PARAMETROS, NEUTROS } from '../mundo/parametros.js?v=202610052205';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610052205';
+import { grafica, numero, COLOR } from './grafica.js?v=202610052205';
+import { T, enIngles } from '../comun/idioma.js?v=202610052205';
+import { GRUPO_EN } from '../comun/nombres.js?v=202610052205';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -42,10 +42,9 @@ const textoParam = (p, o) => (enIngles() ? p.texto(o).replace(',', '.') : p.text
 
 export function crearPanel(ctx) {
   // ctx: { enviar(m), dia(), tic(), velocidad(), ponerVelocidad(v), irADia(n), cerrarFicha() }
-  let pestana = 'mundo', antes = 'mundo';
-  const pestanas = ['mundo', 'animales', 'datos', 'parametros', 'ficha'];
+  let pestana = 'mundo';
+  const pestanas = ['mundo', 'animales', 'datos', 'parametros', 'graficos'];
   function mostrar(p) {
-    if (p !== 'ficha') antes = p;
     pestana = p;
     for (const b of document.querySelectorAll('#pestanas-panel button')) b.classList.toggle('on', b.dataset.p === p);
     for (const q of pestanas) $(`hoja-${q}`).classList.toggle('oculto', q !== p);
@@ -53,18 +52,6 @@ export function crearPanel(ctx) {
     if (p === 'parametros') pintarParametros();
   }
   for (const b of document.querySelectorAll('#pestanas-panel button')) b.onclick = () => mostrar(b.dataset.p);
-  // la pestaña de la ficha: sale con el nombre de lo pulsado; la ✕ la cierra y vuelve a la de antes
-  function verFicha(titulo) {
-    $('pestana-ficha-nombre').textContent = titulo;
-    $('pestana-ficha').title = titulo;
-    $('pestana-ficha').classList.remove('oculto');
-    mostrar('ficha');
-  }
-  function cerrarFicha() {
-    $('pestana-ficha').classList.add('oculto');
-    if (pestana === 'ficha') mostrar(antes);
-  }
-  $('cerrar-ficha').onclick = (e) => { e.stopPropagation(); ctx.cerrarFicha(); };
 
   // ---------------------------------------------------------------- Mundo: velocidad e ir a un día
   const VEL = [[0, '⏸'], [1, '×1'], [10, '×10'], [60, '×60'], [600, '×600'], [Infinity, T('máx', 'max')]];
@@ -189,7 +176,7 @@ export function crearPanel(ctx) {
   }
 
   return {
-    mostrar, recibir, verFicha, cerrarFicha,
+    mostrar, recibir,
     get pestana() { return pestana; },
     // cada poco: la velocidad marcada, el día, y los datos si están a la vista
     actualizar(ms) {

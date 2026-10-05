@@ -1,11 +1,12 @@
 // numpy.random.default_rng(semilla): SeedSequence + PCG64 (XSL-RR 128/64) y las
 // distribuciones de Generator que usa el original (random, gamma con zigurat).
 
-import { log, exp, log1p, pow } from '../num/ucrt.js?v=202610032115';
+import { log, exp, log1p, pow } from '../num/ucrt.js?v=202610052205';
 import {
   KI_DOUBLE, WI_DOUBLE, FI_DOUBLE, KE_DOUBLE, WE_DOUBLE, FE_DOUBLE,
   ZIGGURAT_NOR_R, ZIGGURAT_NOR_INV_R, ZIGGURAT_EXP_R,
-} from './zigurat.js?v=202610032115';
+} from './zigurat.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 const M64 = (1n << 64n) - 1n;
 const M128 = (1n << 128n) - 1n;
@@ -17,11 +18,11 @@ const hexADouble = (h) => {
   return dv.getFloat64(0);
 };
 const KI = KI_DOUBLE.map((h) => BigInt('0x' + h));
-const WI = Float64Array.from(WI_DOUBLE, hexADouble);
-const FI = Float64Array.from(FI_DOUBLE, hexADouble);
+const WI = f64(WI_DOUBLE, hexADouble);
+const FI = f64(FI_DOUBLE, hexADouble);
 const KE = KE_DOUBLE.map((h) => BigInt('0x' + h));
-const WE = Float64Array.from(WE_DOUBLE, hexADouble);
-const FE = Float64Array.from(FE_DOUBLE, hexADouble);
+const WE = f64(WE_DOUBLE, hexADouble);
+const FE = f64(FE_DOUBLE, hexADouble);
 
 // ------------------------------------------------------------------ SeedSequence
 const INIT_A = 0x43b0d7e5, MULT_A = 0x931e8875, INIT_B = 0x8b51f9dd, MULT_B = 0x58f38ded;

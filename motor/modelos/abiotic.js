@@ -4,12 +4,13 @@
 //
 // Convención: arrays por capas como Float64Array de nl*n (fila = capa), por celda de n.
 
-import { Arr } from '../core/arr.js?v=202610032115';
-import { ModeloBase } from './base.js?v=202610032115';
-import { exp, log, log10, pow, sin, cos } from '../num/ucrt.js?v=202610032115';
-import { sumaPares, nansumaEje, nanmediaEje, nanmaxEje, nanminEje, nanmax } from '../num/np.js?v=202610032115';
-import { ZERO_CELSIUS, npMax, npMin, npClip, nanACero, vpSat, calorEspecifico, densidadAire, calorLatente } from './comun.js?v=202610032115';
-import { microclimaSimple, vpdReferencia, perfilDesdeReferencia, emisionOndaLarga } from './abiotic_simple.js?v=202610032115';
+import { Arr } from '../core/arr.js?v=202610052205';
+import { ModeloBase } from './base.js?v=202610052205';
+import { exp, log, log10, pow, sin, cos } from '../num/ucrt.js?v=202610052205';
+import { sumaPares, nansumaEje, nanmediaEje, nanmaxEje, nanminEje, nanmax } from '../num/np.js?v=202610052205';
+import { ZERO_CELSIUS, npMax, npMin, npClip, nanACero, vpSat, calorEspecifico, densidadAire, calorLatente } from './comun.js?v=202610052205';
+import { microclimaSimple, vpdReferencia, perfilDesdeReferencia, emisionOndaLarga } from './abiotic_simple.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 const esNan = (v) => v !== v;
 const fin = Number.isFinite;
@@ -89,7 +90,7 @@ function siguienteValidoAbajo(a, nl, n) {
 }
 
 function mezclarYVentilar(entrada, kmix, vent, lo, hi, sup, nl, n) {
-  const cur = Float64Array.from(entrada);
+  const cur = f64(entrada);
   const arriba = siguienteValidoArriba(cur, nl, n);
   const flujo = new Float64Array(nl * n);
   for (let l = 1; l < nl; l++) {
@@ -128,7 +129,7 @@ function mezclarYVentilar(entrada, kmix, vent, lo, hi, sup, nl, n) {
       flujo[sup * n + i] += vent[i] * dif;
     }
   }
-  const res = Float64Array.from(cur, (v, j) => v + flujo[j]);
+  const res = f64(cur, (v, j) => v + flujo[j]);
   // clamp_variable_within_limits
   const nanMap = Uint8Array.from(res, (v) => (esNan(v) ? 1 : 0));
   let fuera = new Float64Array(n);
@@ -165,13 +166,13 @@ function ondaLargaAbsorbida(dlw, LAI, Tcan, Tsuelo, c, sb, idx, nl, n) {
   for (const l of idx.canopy) esDosel[l] = 1;
   const veg = Uint8Array.from(LAI, (v) => (esNan(v) ? 0 : 1));
   for (let i = 0; i < n; i++) veg[idx.topsoil * n + i] = 0;
-  const laiVeg = Float64Array.from(lai, (v, j) => (veg[j] ? v : 0.0));
+  const laiVeg = f64(lai, (v, j) => (veg[j] ? v : 0.0));
   const fondo = new Uint8Array(nl * n);
   for (let l = 0; l < nl; l++) if (esDosel[l]) for (let i = 0; i < n; i++) fondo[l * n + i] = esNan(LAI[l * n + i]) ? 0 : 1;
   const lwSuelo = new Float64Array(n), lwVeg = new Float64Array(n);
-  const emit = Float64Array.from(Tcan, (t) => emisionOndaLarga(t + ZERO_CELSIUS, c.leaf_emissivity, sb));
+  const emit = f64(Tcan, (t) => emisionOndaLarga(t + ZERO_CELSIUS, c.leaf_emissivity, sb));
   for (let i = 0; i < n; i++) lwSuelo[i] = emisionOndaLarga(Tsuelo[idx.topsoil * n + i] + ZERO_CELSIUS, c.soil_emissivity, sb);
-  const enmasc = Float64Array.from(emit, (v, j) => (fondo[j] ? v : NaN));
+  const enmasc = f64(emit, (v, j) => (fondo[j] ? v : NaN));
   const media = nanmediaEje(enmasc, [nl, n], 0).data;
   for (let i = 0; i < n; i++) lwVeg[i] = fin(media[i]) ? media[i] : dlw[i];
   const cumArriba = new Float64Array(nl * n), cumAbajo = new Float64Array(nl * n);
@@ -228,7 +229,7 @@ function balance(Tc, Ta, et, sw, lw, cp, rho, ra, raPorCelda, lv, eps, sb, n, fl
 }
 
 function secante(residuo, guess, c) {
-  let prev = Float64Array.from(guess);
+  let prev = f64(guess);
   let cur = prev.map((v) => v + c.small_perturbation_second_guess_secant_solver);
   let rPrev = residuo(prev), rCur = residuo(cur);
   const tol = c.denominator_tolerance;
@@ -284,31 +285,31 @@ export class AbioticModel extends ModeloBase {
     const fila = (a, l) => a.subarray(l * n, (l + 1) * n);
     // initialize_state (copias)
     const st = {
-      air_temperature: Float64Array.from(d.get('air_temperature').data),
-      canopy_temperature: Float64Array.from(d.get('canopy_temperature').data),
-      soil_temperature: Float64Array.from(d.get('soil_temperature').data),
-      relative_humidity: Float64Array.from(d.get('relative_humidity').data),
+      air_temperature: f64(d.get('air_temperature').data),
+      canopy_temperature: f64(d.get('canopy_temperature').data),
+      soil_temperature: f64(d.get('soil_temperature').data),
+      relative_humidity: f64(d.get('relative_humidity').data),
       aerodynamic_resistance_soil: d.get('aerodynamic_resistance_soil').data,
     };
     // prepare_static_inputs
     const LH = d.get('layer_heights').data, LAI = d.get('leaf_area_index').data;
-    const alturaDosel = Float64Array.from(fila(LH, 1), nanACero);
+    const alturaDosel = f64(fila(LH, 1), nanACero);
     const subLai = new Float64Array(idx.canopy.length * n);
     idx.canopy.forEach((l, k) => subLai.set(fila(LAI, l), k * n));
     const laiSum = nansumaEje(subLai, [idx.canopy.length, n], 0).data.map(nanACero);
     const ce = d.get('canopy_evaporation').data, tr = d.get('transpiration').data;
-    const et = Float64Array.from(ce, (v, j) => v + tr[j]);
+    const et = f64(ce, (v, j) => v + tr[j]);
     const smv = new Float64Array(nl * n).fill(NaN);
     const SM = d.get('soil_moisture').data;
     idx.soil.forEach((l, k) => { for (let i = 0; i < n; i++) smv[l * n + i] = SM[l * n + i] / cc.meters_to_mm / ls.soil_layer_thickness[k]; });
     const P = perfilDesdeReferencia(ls, d.get('air_temperature'), d.serie('atmospheric_pressure_ref'), t, n).data;
     // calculate_atmospheric_layer_geometry
-    const alt = Float64Array.from(LH);
+    const alt = f64(LH);
     for (const l of idx.canopy) for (let i = 0; i < n; i++) { const j = l * n + i; alt[j] = alt[j] <= c.minimum_mixing_depth ? c.minimum_mixing_depth : alt[j]; }
-    const altC = Float64Array.from(alt, (v, j) => (esNan(LH[j]) ? NaN : v));
+    const altC = f64(alt, (v, j) => (esNan(LH[j]) ? NaN : v));
     const esp = new Float64Array(nl * n).fill(NaN);
     {
-      const sobre = Float64Array.from(altC, (v) => (v > 0 ? v : NaN));
+      const sobre = f64(altC, (v) => (v > 0 ? v : NaN));
       const abajo = siguienteValidoAbajo(sobre, nl, n);
       for (let j = 0; j < nl * n; j++) {
         const valido = altC[j] > 0 && !esNan(altC[j]);
@@ -317,7 +318,7 @@ export class AbioticModel extends ModeloBase {
         esp[j] = b >= 0 ? Math.abs(altC[j] - altC[b * n + (j % n)]) : Math.abs(altC[j]);
       }
     }
-    const medio = Float64Array.from(altC, (v, j) => v - esp[j] / 2);
+    const medio = f64(altC, (v, j) => v - esp[j] / 2);
     const dlw = d.corte('downward_longwave_radiation', t).data;
     const lwAbs = ondaLargaAbsorbida(dlw, LAI, d.get('canopy_temperature').data, d.get('soil_temperature').data, c, sb, idx, nl, n);
     const area = this.grid.cell_area;
@@ -343,7 +344,7 @@ export class AbioticModel extends ModeloBase {
     const dsr = d.corte('downward_shortwave_radiation', t).data;
     const SW = d.get('shortwave_absorption').data;
     const totSW = nansumaEje(SW, [nl, n], 0).data;
-    const swTot = Float64Array.from(SW, (v, j) => {
+    const swTot = f64(SW, (v, j) => {
       const i = j % n;
       const w = v / (totSW[i] === 0.0 ? NaN : totSW[i]);
       const nonPar = dsr[i] * (1 - c.par_fraction_of_shortwave_radiation);
@@ -365,7 +366,7 @@ export class AbioticModel extends ModeloBase {
     const shf = 0.0 + sumaPares(hf, 0, 24, 1);
     if (shf > 0) { const s2 = 0.0 + sumaPares(hf, 0, 24, 1); for (let h = 0; h < 24; h++) hf[h] /= s2; }
     const ea = Tref.map((tt, i) => RHref[i] / 100.0 * vpSat(tt));
-    const rhH = Float64Array.from(aireH, (v, j) => npClip(100.0 * ea[j % n] / vpSat(v), 0.0, 100.0));
+    const rhH = f64(aireH, (v, j) => npClip(100.0 * ea[j % n] / vpSat(v), 0.0, 100.0));
     const se = d.get('soil_evaporation').data;
     // registro horario
     const meta = this.sim.meta.modelos.abiotic;
@@ -379,26 +380,26 @@ export class AbioticModel extends ModeloBase {
       // update_forcing_boundary_conditions
       st.air_temperature.set(aireH.subarray(h * n, (h + 1) * n), 0);
       st.relative_humidity.set(rhH.subarray(h * n, (h + 1) * n), 0);
-      const swh = Float64Array.from(swTot, (v) => v * hf[h]);
-      const eth = Float64Array.from(et, (v) => (esNan(v) ? NaN : (v / dias) * hf[h]));
-      const seh = Float64Array.from(se, (v) => (esNan(v) ? NaN : (v / dias) * hf[h]));
+      const swh = f64(swTot, (v) => v * hf[h]);
+      const eth = f64(et, (v) => (esNan(v) ? NaN : (v / dias) * hf[h]));
+      const seh = f64(se, (v) => (esNan(v) ? NaN : (v / dias) * hf[h]));
       // calculate_thermodynamics
       const esDia = swh.some((v) => nanACero(v) !== 0);
       const TA = st.air_temperature;
-      const rho = Float64Array.from(TA, (v, j) => densidadAire(v, P[j], cc.specific_gas_constant_dry_air, ZERO_CELSIUS));
-      const cp = Float64Array.from(TA, calorEspecifico);
-      const lv = Float64Array.from(TA, (v) => calorLatente(v, ZERO_CELSIUS, c.latent_heat_vap_equ_factors) * 1000);
+      const rho = f64(TA, (v, j) => densidadAire(v, P[j], cc.specific_gas_constant_dry_air, ZERO_CELSIUS));
+      const cp = f64(TA, calorEspecifico);
+      const lv = f64(TA, (v) => calorLatente(v, ZERO_CELSIUS, c.latent_heat_vap_equ_factors) * 1000);
       let raC, raS;
       if (esDia) {
-        const wh = Float64Array.from(fila(alt, 1), (v) => (esNan(v) ? c.wind_reference_height : v));
-        const ws = Float64Array.from({ length: n }, (_, i) => (esNan(viento[n + i]) ? viento[idx.above[0] * n + i] : viento[n + i]));
+        const wh = f64(fila(alt, 1), (v) => (esNan(v) ? c.wind_reference_height : v));
+        const ws = f64({ length: n }, (_, i) => (esNan(viento[n + i]) ? viento[idx.above[0] * n + i] : viento[n + i]));
         raC = resistenciaAerodinamica(wh, z0N, zpdN, ws, k, c.aerodynamic_resistance_canopy_day, c.denominator_tolerance);
         raS = st.aerodynamic_resistance_soil;
       } else {
         raC = new Float64Array(n).fill(c.aerodynamic_resistance_canopy_night);
         raS = new Float64Array(n).fill(c.aerodynamic_resistance_soil_night);
       }
-      const vent = Float64Array.from({ length: n }, (_, i) => {
+      const vent = f64({ length: n }, (_, i) => {
         const ch = alturaDosel[i] + zpdN[i];
         const sinDosel = ch < esp[idx.surface * n + i];
         const v = 1.0 / npMax(raC[i] * ch, c.denominator_tolerance);
@@ -407,15 +408,15 @@ export class AbioticModel extends ModeloBase {
       });
       st.aerodynamic_resistance_canopy = raC; st.aerodynamic_resistance_soil = raS;
       // solve_canopy_temperature_with_air_coupling
-      let aire = Float64Array.from(TA);
-      let dosel = Float64Array.from(st.canopy_temperature);
-      const aireArriba = Float64Array.from(fila(TA, idx.above[0]));
+      let aire = f64(TA);
+      let dosel = f64(st.canopy_temperature);
+      const aireArriba = f64(fila(TA, idx.above[0]));
       let dtInt = c.integration_time_interval;
       const res = (tc) => balance(tc, aire, eth, swh, lwAbs, cp, rho, raC, true, lv, c.leaf_emissivity, sb, n, false);
       for (let it = 0; it < c.maxiter_air_secant_solver; it++) {
         const nuevoDosel = secante(res, dosel, c);
         const fl = balance(nuevoDosel, aire, eth, swh, lwAbs, cp, rho, raC, true, lv, c.leaf_emissivity, sb, n, true);
-        const nuevoAire = Float64Array.from(aire, (v, j) => v + (-fl.sensible_heat_flux[j]) * dtInt / (rho[j] * cp[j] * esp[j]));
+        const nuevoAire = f64(aire, (v, j) => v + (-fl.sensible_heat_flux[j]) * dtInt / (rho[j] * cp[j] * esp[j]));
         const cambioD = nanmax(nuevoDosel.map((v, j) => Math.abs(v - dosel[j])));
         const cambioA = nanmax(nuevoAire.map((v, j) => Math.abs(v - aire[j])));
         if (cambioD > c.max_temperature_change || cambioA > c.max_temperature_change) {
@@ -463,7 +464,7 @@ export class AbioticModel extends ModeloBase {
         return c.soil_thermal_conductivity_dry + ke * (c.soil_thermal_conductivity_saturated - c.soil_thermal_conductivity_dry);
       });
       const difu = kcond.map((kk, j) => kk / vhc[j]);
-      const nuevo = Float64Array.from(Ts);
+      const nuevo = f64(Ts);
       const th = ls.soil_layer_thickness;
       for (let l = 1; l < ns - 1; l++) for (let i = 0; i < n; i++) {
         nuevo[l * n + i] = Ts[l * n + i] + 3600 / pow(th[l], 2) * difu[l * n + i]
@@ -478,14 +479,14 @@ export class AbioticModel extends ModeloBase {
       idx.soil.forEach((l, kk) => st.soil_temperature.set(nuevo.subarray(kk * n, (kk + 1) * n), l * n));
       // update_atmospheric_humidity
       const mwr = cc.molecular_weight_ratio_water_to_dry_air;
-      const esat = Float64Array.from(aire, (v) => vpSat(v));
-      const q = Float64Array.from(esat, (es, j) => { const e = st.relative_humidity[j] / 100.0 * es; return mwr * e / (P[j] - (1 - mwr) * e); });
-      const masa = Float64Array.from(esp, (v, j) => v * area * rho[j]);
-      const anad = Float64Array.from(eth, (v) => 0 + v * cc.mm_to_kg / intervalo * area * intervalo);
+      const esat = f64(aire, (v) => vpSat(v));
+      const q = f64(esat, (es, j) => { const e = st.relative_humidity[j] / 100.0 * es; return mwr * e / (P[j] - (1 - mwr) * e); });
+      const masa = f64(esp, (v, j) => v * area * rho[j]);
+      const anad = f64(eth, (v) => 0 + v * cc.mm_to_kg / intervalo * area * intervalo);
       for (let i = 0; i < n; i++) anad[s * n + i] += seh[i] * cc.mm_to_kg / intervalo * area * intervalo;
-      const qAn = Float64Array.from(q, (v, j) => (v * masa[j] + anad[j]) / masa[j]);
+      const qAn = f64(q, (v, j) => (v * masa[j] + anad[j]) / masa[j]);
       qAn.set(q.subarray(0, n), 0);
-      const mrs = Float64Array.from(esat, (es, j) => mwr * es / (P[j] - es));
+      const mrs = f64(esat, (es, j) => mwr * es / (P[j] - es));
       const maxq = mrs.map((m) => m / (1 + m));
       const subMax = new Float64Array(nAtm * n);
       idx.atm.forEach((l, r) => subMax.set(fila(maxq, l), r * n));

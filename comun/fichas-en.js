@@ -1,7 +1,7 @@
 // Las fichas de las especies en inglés (las de español están en
 // graficos/pruebas-morta/borneo/especies.js): dieta, dónde, nota y, en plantas y hongos, lo que
 // son en el motor. dato(e, 'nota') da el campo en el idioma elegido.
-import { enIngles } from './idioma.js?v=202610032115';
+import { enIngles } from './idioma.js?v=202610052205';
 
 export const FICHA_EN = {
   'pantera-nebulosa': ['Deer, pigs, monkeys, porcupines', 'Maliau and Sabah', 'The largest cat in Borneo. It weighs half as much as the engine group.'],
@@ -54,6 +54,10 @@ export const FICHA_EN = {
   'orquidea-tigre': [null, 'Maliau', 'The largest orchid in the world; it lives on branches.', 'Subcanopy vegetation'],
   'nepenthes-stenophylla': [null, 'Maliau', 'The most observed plant in Maliau. It traps insects in its pitchers.', 'Subcanopy vegetation'],
   'nepenthes-rajah': [null, 'Sabah', 'Huge pitchers on the ground. From Sabah.', 'Subcanopy vegetation'],
+  tetrastigma: [null, 'Borneo', 'A woody liana of the grape family that climbs to the canopy. The rafflesia lives inside it and only its flower shows, by its roots.', 'not in the engine'],
+  ratan: [null, 'Borneo and Malaysia', 'A spiny climbing palm: its long, thin stems climb to the canopy hooking on with spiny whips, and at its foot it forms a clump of feather leaves. Rattan cane comes from it.', 'not in the engine'],
+  'liana-colgante': [null, 'Borneo and Malaysia', 'A liana with a flat, twisted stem that hangs from branch to branch, also over the river, in loops that come down almost to the ground and with curtains of thin stems hanging. Primates use it to cross from tree to tree.', 'not in the engine'],
+  enredadera: [null, 'Borneo and Malaysia', 'A climber of the pepper family that clings to trunks with short roots and covers them with dark heart-shaped leaves with pale veins.', 'not in the engine'],
   rafflesia: [null, 'Sabah and Maliau', 'The largest flower in the world; it lives inside a liana and only the flower shows. Maliau has Rafflesia tengku-adlinii.', 'not in the engine'],
   amanita: [null, 'Maliau', 'It lives on the roots of dipterocarps and feeds them nutrients.', 'Ectomycorrhizal fungi'],
   russula: [null, 'Borneo', 'The genus that most dominates dipterocarp roots.', 'Ectomycorrhizal fungi'],

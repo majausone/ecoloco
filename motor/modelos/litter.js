@@ -1,16 +1,17 @@
 // Modelo de hojarasca (models/litter). Traducción directa, operación a operación, de
 // carbon.py, chemistry.py, env_factors.py, inputs.py, losses.py y litter_model.py.
 
-import { Arr } from '../core/arr.js?v=202610032115';
-import { ModeloBase } from './base.js?v=202610032115';
-import { exp, log10 } from '../num/ucrt.js?v=202610032115';
-import { dotVecMat, potArr, nansumaEje } from '../num/np.js?v=202610032115';
+import { Arr } from '../core/arr.js?v=202610052205';
+import { ModeloBase } from './base.js?v=202610052205';
+import { exp, log10 } from '../num/ucrt.js?v=202610052205';
+import { dotVecMat, potArr, nansumaEje } from '../num/np.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 const ELEM = ['C', 'N', 'P'];
 const POOLS = ['above_metabolic', 'above_structural', 'woody', 'below_metabolic', 'below_structural'];
 
 // ----------------------------------------------------------------- utilidades vectoriales
-const map1 = (a, f) => Float64Array.from(a, f);
+const map1 = (a, f) => f64(a, f);
 function map2(a, b, f) { const o = new Float64Array(a.length); for (let i = 0; i < a.length; i++) o[i] = f(a[i], b[i]); return o; }
 function map3(a, b, c, f) { const o = new Float64Array(a.length); for (let i = 0; i < a.length; i++) o[i] = f(a[i], b[i], c[i]); return o; }
 
@@ -165,8 +166,8 @@ function quimicaEntradas(ent, c) {
     q[`woody_${nut}`] = elem(ent.deadwood_mass, E);
     q[`below_metabolic_${nut}`] = map2(s.root.meta, s.herbivore_waste_below.meta, (a, b) => a + b);
     q[`below_structural_${nut}`] = map2(s.root.struct, s.herbivore_waste_below.struct, (a, b) => a + b);
-    q[`above_metabolic_${nut}`] = Float64Array.from(s.leaf.meta, (v, i) => v + s.subcanopy_veg.meta[i] + s.subcanopy_seed.meta[i] + s.herbivore_waste_above.meta[i]);
-    q[`above_structural_${nut}`] = Float64Array.from(s.leaf.struct, (v, i) => v + s.subcanopy_veg.struct[i] + s.subcanopy_seed.struct[i] + s.herbivore_waste_above.struct[i]);
+    q[`above_metabolic_${nut}`] = f64(s.leaf.meta, (v, i) => v + s.subcanopy_veg.meta[i] + s.subcanopy_seed.meta[i] + s.herbivore_waste_above.meta[i]);
+    q[`above_structural_${nut}`] = f64(s.leaf.struct, (v, i) => v + s.subcanopy_veg.struct[i] + s.subcanopy_seed.struct[i] + s.herbivore_waste_above.struct[i]);
   }
   return q;
 }
@@ -265,13 +266,13 @@ export class LitterModel extends ModeloBase {
       L[`${p}_lignin`] = perdidaLignina(ini[p], L[`${p}_carbon`], ent[p], ligIni[p], qe[`${p}_lignin`], dt);
     }
     const n = ini.woody.length;
-    const sum5 = (k) => Float64Array.from({ length: n }, (_, i) => (L[`above_metabolic_${k}`][i] + L[`above_structural_${k}`][i]
+    const sum5 = (k) => f64({ length: n }, (_, i) => (L[`above_metabolic_${k}`][i] + L[`above_structural_${k}`][i]
       + L[`woody_${k}`][i] + L[`below_metabolic_${k}`][i] + L[`below_structural_${k}`][i]) / (dt * prof));
     const Nmin = sum5('nitrogen'), Pmin = sum5('phosphorus');
     // química nueva
     const nuevaLig = {};
     for (const p of ['above_structural', 'woody', 'below_structural']) {
-      nuevaLig[p] = Float64Array.from({ length: n }, (_, i) => {
+      nuevaLig[p] = f64({ length: n }, (_, i) => {
         const entTot = ent[p][i] * dt;
         const iniLig = ini[p][i] * ligIni[p][i];
         const entLig = entTot * qe[`${p}_lignin`][i];
@@ -282,11 +283,11 @@ export class LitterModel extends ModeloBase {
     for (const [E, nombre] of [['N', 'nitrogen'], ['P', 'phosphorus']]) {
       for (const p of POOLS) {
         const orig = elem(pc[p], E);
-        nut[`${p}_${nombre}`] = Float64Array.from(orig, (o, i) => o + qe[`${p}_${nombre}`][i] * dt - L[`${p}_${nombre}`][i]);
+        nut[`${p}_${nombre}`] = f64(orig, (o, i) => o + qe[`${p}_${nombre}`][i] * dt - L[`${p}_${nombre}`][i]);
       }
     }
     // carbono mineralizado
-    const Cmin = Float64Array.from({ length: n }, (_, i) => {
+    const Cmin = f64({ length: n }, (_, i) => {
       const t = c.cue_metabolic * L.above_metabolic_carbon[i] + c.cue_structural_above_ground * L.above_structural_carbon[i]
         + c.cue_woody * L.woody_carbon[i] + c.cue_metabolic * L.below_metabolic_carbon[i]
         + c.cue_structural_below_ground * L.below_structural_carbon[i];

@@ -1,6 +1,6 @@
 // El crédito de una foto de iNaturalist, en español: «(c) Chien Lee, all rights reserved,
 // uploaded by Chien Lee» → «© Chien Lee, todos los derechos reservados (iNaturalist)».
-import { enIngles } from '../../../comun/idioma.js?v=202610032115';
+import { enIngles } from '../../../comun/idioma.js?v=202610052205';
 // (en inglés, tal cual sin «uploaded by»)
 export function creditoFoto(autor) {
   if (!autor) return '';

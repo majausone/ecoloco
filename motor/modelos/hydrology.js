@@ -1,15 +1,16 @@
 // Modelo hidrológico (models/hydrology): above_ground.py, below_ground.py,
 // hydrology_tools.py y hydrology_model.py, operación a operación.
 
-import { Arr } from '../core/arr.js?v=202610032115';
-import { ModeloBase } from './base.js?v=202610032115';
-import { exp, pow } from '../num/ucrt.js?v=202610032115';
-import { suma, sumaEje, nansumaEje, mediaEje, gradienteEje0, argmax } from '../num/np.js?v=202610032115';
-import { PySet } from '../num/pyset.js?v=202610032115';
+import { Arr } from '../core/arr.js?v=202610052205';
+import { ModeloBase } from './base.js?v=202610052205';
+import { exp, pow } from '../num/ucrt.js?v=202610052205';
+import { suma, sumaEje, nansumaEje, mediaEje, gradienteEje0, argmax } from '../num/np.js?v=202610052205';
+import { PySet } from '../num/pyset.js?v=202610052205';
 import {
   ZERO_CELSIUS, npMax, npMin, npClip, nanACero, vpSat, calorEspecifico, densidadAire, calorLatente,
   pendientePresionSat,
-} from './comun.js?v=202610032115';
+} from './comun.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 const celdas = (n) => Array.from({ length: n }, (_, i) => i);
 
@@ -19,7 +20,7 @@ function mapaDrenaje(grid, elevacion) {
   grid.setNeighbours(Math.sqrt(grid.cell_area));
   const vecinos = grid.neighbours;
   const masBajo = vecinos.map((ids, c) => {
-    const dif = Float64Array.from(ids, (j) => elevacion[c] - elevacion[j]);
+    const dif = f64(ids, (j) => elevacion[c] - elevacion[j]);
     return ids[argmax(dif)];
   });
   const n = masBajo.length;
@@ -35,12 +36,12 @@ function mapaDrenaje(grid, elevacion) {
 }
 
 function enrutar(mapa, sup, sub) {
-  const local = Float64Array.from(sup, (v, i) => nanACero(v) + nanACero(sub[i]));
+  const local = f64(sup, (v, i) => nanACero(v) + nanACero(sub[i]));
   const entrada = new Float64Array(local.length);
   mapa.forEach((ups, c) => {
-    if (ups.length) entrada[c] = suma(Float64Array.from(ups, (u) => local[u]));
+    if (ups.length) entrada[c] = suma(f64(ups, (u) => local[u]));
   });
-  const total = Float64Array.from(local, (v, i) => v + entrada[i]);
+  const total = f64(local, (v, i) => v + entrada[i]);
   if (total.some((v) => v < 0)) throw new Error('The river discharge should not be negative!');
   return total;
 }
@@ -68,7 +69,7 @@ function repartirLluviaMensual(totalMensual, dias, pww, pwd, forma, escala, rng)
 // ------------------------------------------------------------------ below_ground
 function potencialMatricial(efSat, alfa, nvg, tol) {
   const forma = 1 - 1 / nvg;
-  return Float64Array.from(efSat, (e) => {
+  return f64(efSat, (e) => {
     const ee = e + tol;
     return -1 / alfa * pow(pow(ee, -1 / forma) - 1, 1 / nvg);
   });
@@ -98,7 +99,7 @@ export class HydrologyModel extends ModeloBase {
     this.grid.setNeighbours(Math.sqrt(this.grid.cell_area));
     this.drainage_map = mapaDrenaje(this.grid, d.get('elevation').data);
     const ns = ls.n_soil_layers;
-    this.espesorMm = Float64Array.from(ls.soil_layer_thickness, (t) => t * this.core_constants.meters_to_mm);
+    this.espesorMm = f64(ls.soil_layer_thickness, (t) => t * this.core_constants.meters_to_mm);
     for (const v of ['snowfall', 'snow_water_equivalent', 'temperature_driven_snowmelt', 'rain_driven_snowmelt', 'sublimation_snow']) {
       d.set(v, new Arr(['cell_id'], [n], new Float64Array(n), { cell_id: celdas(n) }));
     }
@@ -107,7 +108,7 @@ export class HydrologyModel extends ModeloBase {
     d.set('soil_moisture', sm);
     const ini = new Float64Array(ns * n);
     ls.int.all_soil.forEach((l, k) => { for (let i = 0; i < n; i++) ini[k * n + i] = sm.data[l * n + i] / this.espesorMm[k]; });
-    const ef = Float64Array.from(ini, (v) => (v - c.soil_moisture_residual) / (c.soil_moisture_saturation - c.soil_moisture_residual));
+    const ef = f64(ini, (v) => (v - c.soil_moisture_residual) / (c.soil_moisture_saturation - c.soil_moisture_residual));
     const mp = potencialMatricial(ef, c.air_entry_potential_inverse, c.van_genuchten_nonlinearily_parameter, c.denominator_tolerance);
     const mpa = ls.fromTemplate();
     ls.int.all_soil.forEach((l, k) => { for (let i = 0; i < n; i++) mpa.data[l * n + i] = mp[k * n + i] * c.m_to_kpa; });
@@ -135,7 +136,7 @@ export class HydrologyModel extends ModeloBase {
     };
     d.set('density_air', rellenar((i) => densidadAire(T[i], P[i], cc.specific_gas_constant_dry_air, ZERO_CELSIUS)));
     const she = rellenar((i) => calorEspecifico(T[i]));
-    d.set('specific_heat_air', she.conDatos(Float64Array.from(she.data, (v) => v / 1000.0)));
+    d.set('specific_heat_air', she.conDatos(f64(she.data, (v) => v / 1000.0)));
     d.set('latent_heat_vapourisation', rellenar((i) => calorLatente(T[i], ZERO_CELSIUS, this.abiotic_constants.latent_heat_vap_equ_factors)));
   }
 
@@ -150,7 +151,7 @@ export class HydrologyModel extends ModeloBase {
     // lluvia_paso_diario: a paso de un día el original sortea si el día es húmedo (p_wet_dry) y
     // pierde la lluvia real el 70 % de los días; con la corrección se usa la del día tal cual
     const lluvia0 = this.corr.lluvia_paso_diario && dias === 1
-      ? Float64Array.from(d.corte('precipitation', t).data, (v) => (v > 0 ? v : 0))
+      ? f64(d.corte('precipitation', t).data, (v) => (v > 0 ? v : 0))
       : repartirLluviaMensual(d.corte('precipitation', t).data, dias, this.cfg.p_wet_wet, this.cfg.p_wet_dry,
         this.cfg.rainfall_shape_parameter, this.cfg.rainfall_scale_parameter, this.azar.defaultRng());
     const Tref = d.corte('air_temperature_ref', t).data;
@@ -166,34 +167,34 @@ export class HydrologyModel extends ModeloBase {
     const vsup = fila(d.get('wind_speed'), sup), Psup = fila(d.get('atmospheric_pressure'), sup);
     const LAI = d.get('leaf_area_index');
     const laiSum = nansumaEje(LAI.data, [nl, n], 0).data;
-    const transp = nansumaEje(Float64Array.from(d.get('transpiration').data, (v) => v / dias), [nl, n], 0).data;
-    const topSat = Float64Array.from({ length: n }, () => c.soil_moisture_saturation * this.espesorMm[0]);
-    const topRes = Float64Array.from({ length: n }, () => c.soil_moisture_residual * this.espesorMm[0]);
+    const transp = nansumaEje(f64(d.get('transpiration').data, (v) => v / dias), [nl, n], 0).data;
+    const topSat = f64({ length: n }, () => c.soil_moisture_saturation * this.espesorMm[0]);
+    const topRes = f64({ length: n }, () => c.soil_moisture_residual * this.espesorMm[0]);
     const smAll = d.get('soil_moisture');
     let humedad = new Float64Array(ns * n);
     ls.int.all_soil.forEach((l, k) => humedad.set(smAll.data.subarray(l * n, (l + 1) * n), k * n));
-    let gwSt = Float64Array.from(d.get('groundwater_storage').data);
+    let gwSt = f64(d.get('groundwater_storage').data);
     const cond = nansumaEje(d.get('condensation').data, [nl, n], 0).data.map((v) => v / dias);
     // fin del setup
-    let swe = Float64Array.from(d.get('snow_water_equivalent').data);
+    let swe = f64(d.get('snow_water_equivalent').data);
     const Patm = d.get('atmospheric_pressure').data, LV = d.get('latent_heat_vapourisation').data;
     const SHA = d.get('specific_heat_air').data;
-    const psicro = Float64Array.from(Patm, (p, i) => (SHA[i] / 1000.0) * p / (LV[i] * cc.molecular_weight_ratio_water_to_dry_air));
+    const psicro = f64(Patm, (p, i) => (SHA[i] / 1000.0) * p / (LV[i] * cc.molecular_weight_ratio_water_to_dry_air));
     const diarios = {};
     const apuntar = (k, v) => { (diarios[k] = diarios[k] || []).push(v); };
     const Rn = d.get('net_radiation').data, VPD = d.get('vapour_pressure_deficit').data, TA = d.get('air_temperature').data;
     const RHO = d.get('density_air').data, RA = d.get('aerodynamic_resistance_canopy').data, GS = d.get('stomatal_conductance').data;
     const ip = c.intercept_parameters;
     const k = c.extinction_coefficient_global_radiation;
-    const espesorM = Float64Array.from(this.espesorMm, (v) => v / 1000.0);
-    const prof = Float64Array.from(ls.soil_layer_depths, Math.abs);
+    const espesorM = f64(this.espesorMm, (v) => v / 1000.0);
+    const prof = f64(ls.soil_layer_depths, Math.abs);
     for (let dia = 0; dia < dias; dia++) {
-      const p = Float64Array.from({ length: n }, (_, i) => lluvia[i * dias + dia]);
+      const p = f64({ length: n }, (_, i) => lluvia[i * dias + dia]);
       // interception
       const L = LAI.data;
-      const maxCap = Float64Array.from(L, (l) => ((ip[0] + ip[1] * l) - ip[2] * (l * l)));
+      const maxCap = f64(L, (l) => ((ip[0] + ip[1] * l) - ip[2] * (l * l)));
       for (let i = 0; i < maxCap.length; i++) if (!(L[i] > 0.1)) maxCap[i] = 0.001;
-      const cdf = Float64Array.from(L, (l) => c.veg_density_param * l);
+      const cdf = f64(L, (l) => c.veg_density_param * l);
       const inter = new Float64Array(nl * n).fill(NaN);
       for (let i = 0; i < n; i++) inter[n + i] = maxCap[n + i] * (1 - exp(-cdf[n + i] * p[i] / maxCap[n + i]));
       for (let l = 2; l < nl; l++) {
@@ -222,23 +223,23 @@ export class HydrologyModel extends ModeloBase {
       }
       apuntar('canopy_evaporation', ce);
       const ceros = new Float64Array(n);
-      const nv = Float64Array.from({ length: n }, (_, i) => nieve[i * dias + dia]);
-      swe = Float64Array.from(swe, (s, i) => npMax(s + (((nv[i] - 0) - 0) - 0), 0.0));
+      const nv = f64({ length: n }, (_, i) => nieve[i * dias + dia]);
+      swe = f64(swe, (s, i) => npMax(s + (((nv[i] - 0) - 0) - 0), 0.0));
       apuntar('snowfall', nv); apuntar('snow_water_equivalent', swe);
       apuntar('temperature_driven_snowmelt', ceros); apuntar('sublimation_snow', ceros); apuntar('rain_driven_snowmelt', ceros);
-      const entra = Float64Array.from(p, (v, i) => v + cond[i]);
+      const entra = f64(p, (v, i) => v + cond[i]);
       const ceS = nansumaEje(ce, [nl, n], 0).data, remS = nansumaEje(rem, [nl, n], 0).data;
-      const ps = Float64Array.from(entra, (v, i) => v - npMin(ceS[i] + remS[i], v));
+      const ps = f64(entra, (v, i) => v - npMin(ceS[i] + remS[i], v));
       if (ps.some((v) => v < 0)) throw new Error('Surface precipitation should not be negative!');
       apuntar('precipitation_surface', ps);
       const top = humedad.slice(0, n);
-      const esc = Float64Array.from(ps, (v, i) => { const libre = topSat[i] - top[i]; return v > libre ? v - libre : 0; });
+      const esc = f64(ps, (v, i) => { const libre = topSat[i] - top[i]; return v > libre ? v - libre : 0; });
       apuntar('surface_runoff', esc);
-      const by = Float64Array.from(ps, (v, i) => (v - esc[i]) * (c.bypass_flow_coefficient === 1 ? top[i] / topSat[i]
+      const by = f64(ps, (v, i) => (v - esc[i]) * (c.bypass_flow_coefficient === 1 ? top[i] / topSat[i]
         : powArr(top[i] / topSat[i], c.bypass_flow_coefficient)));
       apuntar('bypass_flow', by);
-      const smi = Float64Array.from(top, (v, i) => npClip(((v + ps[i]) - esc[i]) - by[i], 0, topSat[i]));
-      const vol = Float64Array.from(smi, (v) => v / this.espesorMm[0]);
+      const smi = f64(top, (v, i) => npClip(((v + ps[i]) - esc[i]) - by[i], 0, topSat[i]));
+      const vol = f64(smi, (v) => v / this.espesorMm[0]);
       // soil evaporation
       const se = new Float64Array(n), rsoil = new Float64Array(n);
       for (let i = 0; i < n; i++) {
@@ -264,21 +265,21 @@ export class HydrologyModel extends ModeloBase {
         se[i] = (flujo / LV[sup * n + i]) * exp(-k * laiSum[i]) * cc.seconds_to_day;
       }
       apuntar('soil_evaporation', se); apuntar('aerodynamic_resistance_soil', rsoil);
-      const sme = Float64Array.from(humedad);
+      const sme = f64(humedad);
       for (let i = 0; i < n; i++) sme[i] = npClip(smi[i] - se[i], topRes[i], topSat[i]);
       // vertical flow
-      const smv = Float64Array.from(sme, (v, j) => v / this.espesorMm[Math.floor(j / n)]);
+      const smv = f64(sme, (v, j) => v / this.espesorMm[Math.floor(j / n)]);
       const forma = 1 - 1 / c.van_genuchten_nonlinearily_parameter;
-      const ef = Float64Array.from(smv, (v) => (v - c.soil_moisture_residual) / (c.soil_moisture_saturation - c.soil_moisture_residual));
+      const ef = f64(smv, (v) => (v - c.soil_moisture_residual) / (c.soil_moisture_saturation - c.soil_moisture_residual));
       const mp = potencialMatricial(ef, c.air_entry_potential_inverse, c.van_genuchten_nonlinearily_parameter, c.denominator_tolerance);
       for (let j = 0; j < ef.length; j++) ef[j] += c.denominator_tolerance; // el original lo suma en el sitio
-      const Kef = Float64Array.from(ef, (e) => {
+      const Kef = f64(ef, (e) => {
         const base = 1 - pow(1 - pow(e, 1 / forma), forma);
         return c.saturated_hydraulic_conductivity * powArr(e, c.pore_connectivity_parameter) * (base * base);
       });
       const grad = gradienteEje0(mp, ns, n, prof);
-      const flujoT = Float64Array.from(Kef, (kk, j) => -kk * (grad[j] + 1) * cc.seconds_to_day);
-      const disp = Float64Array.from(smv, (v, j) => (v - c.soil_moisture_residual) * espesorM[Math.floor(j / n)]);
+      const flujoT = f64(Kef, (kk, j) => -kk * (grad[j] + 1) * cc.seconds_to_day);
+      const disp = f64(smv, (v, j) => (v - c.soil_moisture_residual) * espesorM[Math.floor(j / n)]);
       const fmin = new Float64Array(ns * n);
       for (let l = 0; l < ns - 1; l++) for (let i = 0; i < n; i++) {
         const a = flujoT[l * n + i], b = disp[(l + 1) * n + i];
@@ -286,9 +287,9 @@ export class HydrologyModel extends ModeloBase {
       }
       const capGw = c.groundwater_capacity / 1000.0;
       for (let i = 0; i < n; i++) { const a = flujoT[(ns - 1) * n + i]; fmin[(ns - 1) * n + i] = a < capGw ? a : capGw; }
-      const mpOut = Float64Array.from(mp, (v) => (v !== v ? -c.denominator_tolerance : v));
-      const vf = Float64Array.from(fmin, (v) => { const r = Math.abs(v / 1000.0); return r !== r ? c.denominator_tolerance : r; });
-      apuntar('matric_potential', Float64Array.from(mpOut, (v) => v * c.m_to_kpa));
+      const mpOut = f64(mp, (v) => (v !== v ? -c.denominator_tolerance : v));
+      const vf = f64(fmin, (v) => { const r = Math.abs(v / 1000.0); return r !== r ? c.denominator_tolerance : r; });
+      apuntar('matric_potential', f64(mpOut, (v) => v * c.m_to_kpa));
       apuntar('vertical_flow', vf);
       const ss = new Float64Array(n);
       for (let i = 0; i < n; i++) {
@@ -318,12 +319,12 @@ export class HydrologyModel extends ModeloBase {
       apuntar('groundwater_storage', gwN); apuntar('subsurface_flow', subF); apuntar('baseflow', base);
       const supR = enrutar(this.drainage_map, esc, new Float64Array(n));
       apuntar('surface_runoff_routed_plus_local', supR);
-      const subR0 = Float64Array.from(subF, (v, i) => v + base[i] + ss[i]);
+      const subR0 = f64(subF, (v, i) => v + base[i] + ss[i]);
       const subR = enrutar(this.drainage_map, new Float64Array(n), subR0);
       apuntar('subsurface_runoff_routed_plus_local', subR);
-      const tot = Float64Array.from(supR, (v, i) => v + subR[i]);
+      const tot = f64(supR, (v, i) => v + subR[i]);
       apuntar('total_runoff', tot);
-      apuntar('river_discharge_rate', Float64Array.from(tot, (v) => v / cc.meters_to_mm / dias / cc.seconds_to_day * this.grid.cell_area));
+      apuntar('river_discharge_rate', f64(tot, (v) => v / cc.meters_to_mm / dias / cc.seconds_to_day * this.grid.cell_area));
       humedad = nueva;
       gwSt = gwN;
     }

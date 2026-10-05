@@ -4,9 +4,10 @@
      listado de los animales del mapa, agrupados por especie (con cuántos hay; los
      representantes cuentan los individuos del motor a los que representan). Cada especie se
      abre y enseña los más cercanos a la cámara.
-   - Pulsar un animal (en el listado o en la escena) lo selecciona: la cámara va a él y lo
-     sigue, y su ficha se abre en una pestaña nueva del panel, con su nombre y una ✕ para
-     cerrarla (se vuelve a la pestaña en la que se estaba).
+   - Pulsar un animal (en el listado o en la escena) lo selecciona y abre su ficha en una ventana
+     a la derecha, encima del panel (en su mismo sitio), con una ✕ arriba; se cierra con la ✕, con Esc o pinchando fuera de la ventana
+     y del seleccionado. Desde el listado la cámara además va a él y lo sigue; pinchado en la
+     escena, la cámara se queda donde está (el botón «seguir» de la ficha la lleva).
    - La ficha de un animal, en vivo: quién es, cómo está (hambre, sed, sueño, condición), qué
      hace y por qué, hacia dónde o a por quién va, cómo es su especie, su hogar y territorio y
      lo que ha hecho hoy. Si muere, lo dice; si se va o deja de verse, también.
@@ -17,13 +18,14 @@
    seleccionado (hambre, sed, sueño, tarea; se pide al trabajador), de la descripción de los
    animales que manda el trabajador y de las plantas del mapa (mundo/mapa.js). */
 
-import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032115';
-import { COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610032115';
-import { CLAVE, DETALLE, TAREAS } from '../mundo/dia.js?v=202610032115';
-import { T, enIngles, num } from '../comun/idioma.js?v=202610032115';
-import { ayuda } from '../comun/ayuda.js?v=202610032115';
-import { NOMBRE_EN, nombreEsp, categoria } from '../comun/nombres.js?v=202610032115';
-import { dato } from '../comun/fichas-en.js?v=202610032115';
+import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052205';
+import { COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610052205';
+import { CLAVE, DETALLE, TAREAS } from '../mundo/dia.js?v=202610052205';
+import { T, enIngles, num } from '../comun/idioma.js?v=202610052205';
+import { ayuda } from '../comun/ayuda.js?v=202610052205';
+import { NOMBRE_EN, nombreEsp, categoria } from '../comun/nombres.js?v=202610052205';
+import { pulsar, despues } from './pulsar.js?v=202610052205';
+import { dato } from '../comun/fichas-en.js?v=202610052205';
 
 const $ = (id) => document.getElementById(id);
 const FICHA = Object.fromEntries(ANIMALES.map((e) => [e.id, e]));
@@ -46,7 +48,7 @@ const COMIDA_LISTA = { fruta: ['fruta', 'fruit'], fruta_suelo: ['fruta caída', 
 const HOGAR = { madriguera: ['su madriguera', 'its burrow'], nido_arbol: ['su nido', 'its nest'], dormidero_arbol: ['su dormidero', 'its roost'], cama: ['su cama de hojas', 'its leaf bed'], termitero: ['el termitero', 'the termite mound'], ninguno: null };
 const HOGAR_TIPO = { madriguera: ['madriguera', 'burrow'], nido_arbol: ['nido en un árbol', 'nest in a tree'], dormidero_arbol: ['dormidero en un árbol', 'roost in a tree'], cama: ['cama de hojas en el suelo', 'leaf bed on the ground'], termitero: ['termitero', 'termite mound'], ninguno: ['ninguno (descansa donde esté)', 'none (rests wherever it is)'] };
 const CAZA = { acecho: ['al acecho', 'stalking'], emboscada: ['emboscada', 'ambush'], lengua: ['con la lengua', 'with its tongue'], picada: ['en picado', 'diving'], al_vuelo: ['al vuelo', 'on the wing'], persecucion: ['persiguiendo', 'chasing'] };
-const ACTIVIDAD = { diurno: ['diurno', 'diurnal'], nocturno: ['nocturno', 'nocturnal'], crepuscular: ['crepuscular', 'crepuscular'], catemeral: ['a cualquier hora', 'at any hour'] };
+const ACTIVIDAD = { diurno: ['diurno', 'diurnal'], nocturno: ['nocturno', 'nocturnal'], crepuscular: ['crepuscular', 'crepuscular'], vespertino: ['de la tarde a la noche', 'from dusk through the night'], catemeral: ['a cualquier hora', 'at any hour'] };
 const CORTEJO = { acicalar: ['acicalarse', 'grooming'], canto: ['canto', 'song'], cauto: ['cauto', 'cautious'], croar: ['croar', 'croaking'], enredarse: ['enredarse', 'entwining'], exhibicion: ['exhibición', 'display'],
   flexiones: ['flexiones', 'push-ups'], ladrido: ['ladrido', 'barking'], llamada: ['llamada', 'calling'], lucha: ['lucha', 'fighting'], persecucion: ['persecución', 'chase'], regalo: ['regalo', 'gift'], vuelo_nupcial: ['vuelo nupcial', 'nuptial flight'] };
 const MESES_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'], MESES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -256,7 +258,7 @@ export function crearFicha(ctx) {
     const meses = enIngles() ? MESES_EN : MESES_ES;
     const cria = e.cria ? `${e.cria.meses.length === 12 ? T('todo el año', 'all year') : e.cria.meses.map((x) => meses[x - 1]).join(', ')} · ${e.cria.crias} ${T('cría(s)', 'young')} · ${e.cria.dias} ${T('días', 'days')} · ${T('cortejo', 'courtship')}: ${t2(CORTEJO[e.cria.cortejo]) || e.cria.cortejo}` : T('no cría (larva)', 'does not breed (larva)');
     const especie = [
-      [T('Velocidad', 'Speed'), T(`anda a ${num(e.andar)} m/s, corre a ${num(e.correr)} m/s`, `walks at ${num(e.andar)} m/s, runs at ${num(e.correr)} m/s`)], [T('Vista', 'Sight'), `${num(e.vista)} m`], [T('Horario', 'Activity'), t2(ACTIVIDAD[e.actividad]) || e.actividad],
+      [T('Velocidad', 'Speed'), T(`anda a ${num(e.andar)} m/s, corre a ${num(e.correr)} m/s${e.rapido > 1 ? ` (en pantalla, ${num(e.rapido)} veces más rápido: a su tamaño no se nota y se ve que anda)` : ''}`, `walks at ${num(e.andar)} m/s, runs at ${num(e.correr)} m/s${e.rapido > 1 ? ` (on screen, ${num(e.rapido)} times faster: at its size it does not show, and you can see it walk)` : ''}`)], [T('Vista', 'Sight'), `${num(e.vista)} m`], [T('Horario', 'Activity'), t2(ACTIVIDAD[e.actividad]) || e.actividad],
       [T('Come', 'Eats'), (e.come || []).map((c) => t2(COMIDA_LISTA[c]) || c).join(', ')],
       ...(e.caza ? [[T('Caza', 'Hunts'), T(`${t2(CAZA[e.caza]) || e.caza}, acierta ${Math.round((e.exito ?? 0.3) * 100)} %`, `${t2(CAZA[e.caza]) || e.caza}, succeeds ${Math.round((e.exito ?? 0.3) * 100)} %`)]] : []),
       [T('Alerta', 'Alertness'), e.alerta ? T(`ve venir al peligro a ${e.alerta} m`, `spots danger at ${e.alerta} m`) : T('no se entera', 'does not notice')], [T('Refugio', 'Refuge'), t2(REFUGIO[e.refugio]) || e.refugio], [T('Hogar', 'Home'), t2(HOGAR_TIPO[e.hogar]) || e.hogar],
@@ -271,15 +273,24 @@ export function crearFicha(ctx) {
     }
     if (a.rango) tierra.push([T('Territorio', 'Territory'), T(`se mueve unos ${num(Math.round(a.rango))} m alrededor de ${e.hogar === 'ninguno' ? 'su sitio' : 'su hogar'}`, `moves about ${num(Math.round(a.rango))} m around its ${e.hogar === 'ninguno' ? 'spot' : 'home'}`)]);
     const hist = d.agentes[sel] ? historial(sel, t) : [];
-    caja.innerHTML = `<div class="cab"><div><div class="nom">${esc(nombreEsp(esp) || a.especie)}</div><div class="cien">${esc(esp.cientifico || '')}</div></div>
-      <div class="acc"><button id="f-seguir" class="${seguido ? 'on' : ''}" title="${T('La cámara lo sigue', 'The camera follows it')}">${seguido ? T('siguiendo', 'following') : T('seguir', 'follow')}</button></div></div>
-      ${estado}
+    // la cabecera (el nombre y el botón «seguir») no se rehace cada 200 ms como el resto: solo al cambiar
+    // de animal, y el botón cambia de texto y de clase en el mismo nodo. Si el botón se sustituyera entre
+    // que se pone el dedo y llega el click, el toque no haría nada (el botón tocado ya no existe); se
+    // escucha desde la caja, que no cambia (abajo, con pulsar())
+    const cab = `<div class="cab"><div><div class="nom">${esc(nombreEsp(esp) || a.especie)}</div><div class="cien">${esc(esp.cientifico || '')}</div></div>
+      <div class="acc"><button id="f-seguir" title="${T('La cámara lo sigue', 'The camera follows it')}"></button></div></div>`;
+    if (!caja.querySelector(':scope > #f-cab')) caja.innerHTML = '<div id="f-cab"></div><div id="f-cuerpo"></div>';
+    const fc = $('f-cab');
+    if (fc.dataset.html !== cab) { fc.innerHTML = cab; fc.dataset.html = cab; }
+    const bs = $('f-seguir'), txt = seguido ? T('siguiendo', 'following') : T('seguir', 'follow');
+    if (bs.textContent !== txt) bs.textContent = txt;
+    bs.classList.toggle('on', seguido);
+    $('f-cuerpo').innerHTML = `${estado}
       <h4>${T('Quién es', 'Who it is')}</h4>${tabla(quien)}
       ${como.length ? `<h4>${T('Cómo está', 'How it is')}</h4>${tabla(como)}` : ''}
       <h4>${T('Hoy', 'Today')}</h4>${hist.length ? `<div class="hist">${hist.map(([k, s]) => `<div><b>${hhmm(k)}</b> ${esc(s)}</div>`).join('')}</div>` : '<div class="gris">—</div>'}
       <h4>${T('Su hogar y su territorio', 'Its home and territory')}</h4>${tabla(tierra)}
       <h4>${T('Cómo es su especie', 'What its species is like')}</h4>${tabla(especie)}${nota(esp)}`;
-    $('f-seguir').onclick = () => (ctx.seguido() === sel ? ctx.dejarDeSeguir() : ctx.seguir(sel));
   }
 
   // ---------------------------------------------------------------- la ficha de una planta o un hongo
@@ -363,37 +374,41 @@ export function crearFicha(ctx) {
     }).join('');
     const caja = $('lista');
     const scroll = caja.scrollTop;
-    caja.innerHTML = `<div class="gris tot">${T('Animales en el mapa', 'Animals on the map')}: ${ctx.total()} · ${buscar ? `${grupos.length} ${T('de', 'of')} ` : ''}${todos} ${T('especies', 'species')}</div>${html || `<div class="gris tot">${T('Ninguna especie con ese nombre.', 'No species with that name.')}</div>`}`;
+    // (solo si ha cambiado: rehacerlo igual cada 700 ms perdería los toques que cojan un repintado)
+    const nuevo = `<div class="gris tot">${T('Animales en el mapa', 'Animals on the map')}: ${ctx.total()} · ${buscar ? `${grupos.length} ${T('de', 'of')} ` : ''}${todos} ${T('especies', 'species')}</div>${html || `<div class="gris tot">${T('Ninguna especie con ese nombre.', 'No species with that name.')}</div>`}`;
+    if (caja.dataset.html === nuevo) return;
+    caja.innerHTML = nuevo; caja.dataset.html = nuevo;
     caja.scrollTop = scroll;
     for (const el of caja.querySelectorAll('.esp')) el.onclick = () => { const sp = el.dataset.esp; abiertos.has(sp) ? abiertos.delete(sp) : abiertos.add(sp); ultimoListado = 0; listado(); };
     for (const el of caja.querySelectorAll('.uno')) el.onclick = () => seleccionar(el.dataset.id, true);
   }
+
+  // el botón «seguir» de la ficha, escuchado desde su caja (que no se rehace nunca) y con pulsar() (en el
+  // móvil, el primer toque tras un deslizamiento no da click)
+  pulsar($('ficha'), '#f-seguir', () => { if (!sel) return; if (ctx.seguido() === sel) ctx.dejarDeSeguir(); else ctx.seguir(sel); despues(ficha); });
 
   // ---------------------------------------------------------------- selección
   function seleccionar(id, seguir = true) {
     sel = id; planta = null;
     ultimo = null;
     if (id) {
-      if (!abierto) abrir(true);
       const a = ctx.dia()?.agentes[id];
       if (a) abiertos.add(a.especie);
       if (seguir) ctx.seguir(id);
       ctx.verFicha(a ? nombreDe(a.especie) : T('Animal', 'Animal'));
-    } else { ctx.dejarDeSeguir(); ctx.cerrarFicha(); }
+    } else ctx.cerrarFicha();
     ultimoListado = 0; ultimaFicha = 0;
     if (id) ficha();
   }
   // una planta o una seta pulsada en la escena (tipo 'arbol' o 'seta'; p: la del mapa)
   function seleccionarPlanta(tipo, p) {
     sel = null; ultimo = null; planta = { tipo, p };
-    ctx.dejarDeSeguir();
-    if (!abierto) abrir(true);
     ctx.verFicha(nombreDe(p.especie));
     ultimaFicha = 0;
     fichaPlanta();
   }
-  // la ✕ de la pestaña de la ficha
-  function cerrar() { sel = null; planta = null; ultimo = null; ctx.dejarDeSeguir(); ctx.cerrarFicha(); }
+  // la ✕ de la pestaña de la ficha (cerrarla no deja de seguir: para eso, la ✕ de «Siguiendo»)
+  function cerrar() { sel = null; planta = null; ultimo = null; ctx.cerrarFicha(); }
 
   // al cambiar de día: si el seleccionado ya no sale, se guarda lo último que se sabía
   function nuevoDia(anterior) {
@@ -411,13 +426,14 @@ export function crearFicha(ctx) {
   }
 
   return {
-    seleccionar, seleccionarPlanta, cerrar, nuevoDia, abrir,
+    seleccionar, seleccionarPlanta, cerrar, nuevoDia, abrir, nombreDe,
     get seleccionado() { return sel; },
     get planta() { return planta; },
     actualizar(ms, pestana) {
-      if (!ctx.dia() || !abierto) return;
-      if (pestana === 'animales' && ms - ultimoListado > 700) { ultimoListado = ms; listado(); }
-      if (pestana === 'ficha' && ms - ultimaFicha > (planta ? 1000 : 200)) { ultimaFicha = ms; ficha(); }
+      if (!ctx.dia()) return;
+      if (abierto && pestana === 'animales' && ms - ultimoListado > 700) { ultimoListado = ms; listado(); }
+      // la ficha (en su ventana), si hay algo seleccionado
+      if ((sel || planta) && ms - ultimaFicha > (planta ? 1000 : 200)) { ultimaFicha = ms; ficha(); }
     },
   };
 }

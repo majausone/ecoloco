@@ -8,7 +8,7 @@
 // (hambre, sed, sueño) van en horas de juego; el movimiento, en metros por tic a velocidad
 // natural de pantalla (una especie que anda a 1 m/s recorre 1 m por tic).
 
-import { COMPORTAMIENTO, ESPECIES_DE_GRUPO, VERTEBRADOS, activo, E } from './especies.js?v=202610032115';
+import { COMPORTAMIENTO, ESPECIES_DE_GRUPO, VERTEBRADOS, activo, E } from './especies.js?v=202610052205';
 
 let siguiente = 0;
 export const nuevoId = (prefijo) => `${prefijo}${(siguiente++).toString(36)}`;
@@ -69,6 +69,7 @@ export class Agente {
     this._nidoNoche = null;
     this._deQuien = null; this._antes = null;
     this._k = null; this._d = null; this._n = 0; this._fino = false; this._fase = 0; this._ultimo = -99; this._pendiente = -1;
+    this.arbol = null; this._tramo = null; // (los que trepan: el tronco del árbol en el que están y el tramo de camino)
   }
 }
 
@@ -84,7 +85,7 @@ export function Copia(a) {
   this.marca = a.marca; this.siguiendo = a.siguiendo; this.presa = a.presa; this.cazadoPor = a.cazadoPor; this.comiendo = a.comiendo;
   this.valor = a.valor; this.rango = a.rango; this.foco = a.foco; this.salio = a.salio;
   this.posado = a.posado; this.nidos = a.nidos; this._nidoNoche = a._nidoNoche;
-  this._deQuien = a._deQuien; this._antes = a._antes;
+  this._deQuien = a._deQuien; this._antes = a._antes; this.arbol = a.arbol; this._tramo = a._tramo;
   this._k = a._k; this._d = a._d; this._n = a._n; this._fino = a._fino; this._fase = a._fase; this._ultimo = a._ultimo; this._pendiente = a._pendiente;
 }
 Copia.prototype = Agente.prototype;

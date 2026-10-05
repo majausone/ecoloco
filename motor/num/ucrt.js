@@ -6,10 +6,11 @@
 // FMA de ucrtbase.dll (ver herramientas/extraer_tablas_ucrt.py). Las constantes y tablas
 // salen de la propia DLL. El `Math.exp` de JS (fdlibm) difiere en ~7% de los valores.
 
-import { fma } from './fma.js?v=202610032115';
+import { fma } from './fma.js?v=202610052205';
 import {
   EXP_T1, EXP_T2, EXP_T3, LOG_TINV, LOG_TA, LOG_TB, POW_LOG, POW_EXP, LOG10_TA, LOG10_TB,
-} from './tablas_ucrt.js?v=202610032115';
+} from './tablas_ucrt.js?v=202610052205';
+import { f64 } from './f64.js?v=202610052205';
 
 const buf = new ArrayBuffer(8);
 const F = new Float64Array(buf);
@@ -20,7 +21,7 @@ function hexADouble(h) {
   U[0] = parseInt(h.slice(8), 16);
   return F[0];
 }
-const tabla = (hs) => Float64Array.from(hs, hexADouble);
+const tabla = (hs) => f64(hs, hexADouble);
 const K = hexADouble;
 function dbl(hi, lo) { U[1] = hi; U[0] = lo; return F[0]; }
 
@@ -339,28 +340,37 @@ const P_INVLN2N = K('40771547652b82fe'), P_SHIFT = K('4238000000008000'),
 const P_C3 = K('3fc555555555543c'), P_C2 = K('3fdffffffffffdbd'), P_C5 = K('3f81111167a4b553'),
   P_C4 = K('3fa55555cf16e1ed');
 const P_1009 = K('7f00000000000000'), P_M1022 = K('0010000000000000');
-const MASK64 = 0xffffffffffffffffn;
-
-const big = (hi, lo) => (BigInt(hi) << 32n) | BigInt(lo);
+// Las operaciones de enteros de 64 bits del original, con las dos palabras de 32 bits (hi, lo) y sin BigInt
+// (que era casi la mitad del tiempo de todo el motor): son comparaciones y máscaras de enteros, sin coma
+// flotante, y dan lo mismo que con BigInt en todos los patrones (comprobado con millones al azar y todos los
+// bordes de signo, exponente y mantisa).
+// (x << 1) en 64 bits: la palabra alta y la baja
+const dosAlta = (h, l) => (((h << 1) | (l >>> 31)) >>> 0);
+const dosBaja = (l) => (l << 1) >>> 0;
 
 // 0: no entero, 1: entero impar, 2: entero par
 function checkint(yh, yl) {
   const e = (yh >>> 20) & 0x7ff;
   if (e < 0x3ff) return 0;
   if (e > 0x3ff + 52) return 2;
-  const m = 1n << BigInt(0x3ff + 52 - e);
-  const iy = big(yh, yl);
-  if (iy & (m - 1n)) return 0;
-  if (iy & m) return 1;
-  return 2;
+  // (el bit de las unidades está en la posición s: los de debajo, la parte fraccionaria)
+  const s = 0x3ff + 52 - e;
+  if (s < 32) {
+    if (s && (yl & (0xffffffff >>> (32 - s)))) return 0;
+    return (yl >>> s) & 1 ? 1 : 2;
+  }
+  const t = s - 32;
+  if (yl || (t && (yh & (0xffffffff >>> (32 - t))))) return 0;
+  return (yh >>> t) & 1 ? 1 : 2;
 }
+// ((ix ^ 0x0008000000000000) << 1) > 0xfff0000000000000
 function issignaling(hi, lo) {
-  const ix = ((big(hi, lo) ^ 0x8000000000000n) << 1n) & MASK64;
-  return ix > 0xfff0000000000000n;
+  const h = dosAlta(hi ^ 0x80000, lo), l = dosBaja(lo);
+  return h > 0xfff00000 || (h === 0xfff00000 && l > 0);
 }
+// 2*ix - 1 >= 2*0x7ff0000000000000 - 1 (sin signo): cero, infinito o NaN
 function zeroinfnan(hi, lo) {
-  const v = (big(hi, lo) << 1n) & MASK64;
-  return ((v - 1n) & MASK64) >= 0xffdfffffffffffffn;
+  return ((hi & 0x7fffffff) === 0 && lo === 0) || dosAlta(hi, lo) >= 0xffe00000;
 }
 
 function expInline(ehi, elo, signBias) {
@@ -432,11 +442,11 @@ export function pow(x, y) {
     if (zeroinfnan(yh, yl)) {
       if ((yh & 0x7fffffff) === 0 && yl === 0) return issignaling(xh, xl) ? x + y : 1.0;
       if (xh === 0x3ff00000 && xl === 0) return issignaling(yh, yl) ? x + y : 1.0;
-      const ax2 = (big(xh, xl) << 1n) & MASK64;
-      const ay2 = (big(yh, yl) << 1n) & MASK64;
-      if (ax2 > 0xffe0000000000000n || ay2 > 0xffe0000000000000n) return x + y;
-      if (ax2 === 0x7fe0000000000000n) return 1.0;
-      if ((ax2 < 0x7fe0000000000000n) === !(yh >>> 31)) return 0.0;
+      // (2·|x| y 2·|y| en 64 bits, comparados por palabras)
+      const axh = dosAlta(xh, xl), axl = dosBaja(xl), ayh = dosAlta(yh, yl), ayl = dosBaja(yl);
+      if (axh > 0xffe00000 || (axh === 0xffe00000 && axl > 0) || ayh > 0xffe00000 || (ayh === 0xffe00000 && ayl > 0)) return x + y;
+      if (axh === 0x7fe00000 && axl === 0) return 1.0;
+      if ((axh < 0x7fe00000) === !(yh >>> 31)) return 0.0;
       return y * y;
     }
     if (zeroinfnan(xh, xl)) {

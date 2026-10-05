@@ -5,7 +5,7 @@
 //
 // Uso: node herramientas/preparar_maliau.mjs [datos/escenarios/maliau.json] [datos/calibracion/maliau.json]
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { activarCorrecciones } from '../motor/correcciones.js?v=202610032115';
+import { activarCorrecciones } from '../motor/correcciones.js?v=202610052205';
 
 const ruta = process.argv[2] || 'datos/escenarios/maliau.json';
 const cal = process.argv[3] || 'datos/calibracion/maliau.json';

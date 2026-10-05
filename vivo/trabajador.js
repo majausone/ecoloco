@@ -27,12 +27,12 @@
 //   { tipo: 'salto', dia }                     el mundo ha ido a otro día
 //   { tipo: 'error', mensaje }
 
-import { Mundo } from '../mundo/mundo.js?v=202610032115';
-import { reiniciarIds, idActual } from '../mundo/agentes.js?v=202610032115';
-import { indicadores, INDICADORES } from '../mundo/registro.js?v=202610032115';
-import { aplicarParametros } from '../mundo/parametros.js?v=202610032115';
-import { clonarProfundo } from '../motor/clonar.js?v=202610032115';
-import { VERTEBRADOS } from '../mundo/especies.js?v=202610032115';
+import { Mundo } from '../mundo/mundo.js?v=202610052205';
+import { reiniciarIds, idActual } from '../mundo/agentes.js?v=202610052205';
+import { indicadores, INDICADORES } from '../mundo/registro.js?v=202610052205';
+import { aplicarParametros } from '../mundo/parametros.js?v=202610052205';
+import { clonarProfundo } from '../motor/clonar.js?v=202610052205';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610052205';
 
 const ADELANTO = 2;
 let mundo = null, calculando = false, visto = -1, ultimo = -1, inicio = null, conInstantaneas = false, prediccion = null;

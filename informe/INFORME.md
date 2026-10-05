@@ -1016,3 +1016,97 @@ portada (y «Generar el mundo») abren otra pestaña.
 tronco; nadie huye por el aire salvo los voladores; serpientes con ondulación lateral de verdad
 (cada tramo sobre el camino de la cabeza, 0 mm de error); lo que tapa al animal seguido se vuelve
 transparente; las mariposas con destino ya se mueven.
+
+## Plantas con ez-tree, animales suaves, lianas, puentes, insectos y un motor más rápido (2026-10-03/04)
+
+Fuera los cubos: plantas, setas y animales pasan a mallas suaves, **sin gastar más gráfica**
+(medido contra la versión de cubos, commit `ac296e6`, en la misma máquina: RTX 3090, 1600 × 900,
+Playwright sin ventana). Las versiones de cubos quedan en `plantas-cubos.js` y `animales-cubos.js`.
+
+**Plantas (las 18) y setas (las 11).** Los árboles los hace **ez-tree** (Dan Greenheck, MIT), copiado
+del proyecto tarántula (commit `ed45a94`) en `graficos/vendor/ez-tree/` con su licencia y un README de
+cambios: usa el three.js del proyecto, sin empaquetador ni texturas de archivo, y apunta el esqueleto y
+las hojas. De cada árbol se toma ese esqueleto y la malla se hace en `plantas.js` a dos detalles con la
+misma semilla (de cerca; a media distancia sin ramitas, tubos de menos lados y menos hojas más grandes).
+Dipterocarpo con contrafuertes y frutos de dos alas, kauri con la corteza a placas, higuera con la
+celosía de raíces subiendo hasta la copa, pino apio cónico (ez-tree perenne), dillenia con sus hojas
+enormes y flores amarillas. Lo demás con tiras curvas (frondas de palma con foliolos en cola de pez,
+helechos, jengibre, phrynium, orquídea, cuerno de alce), tubos (tallos, raíces, lianas) y piezas de
+revolución (jarras de nepenthes, rafflesia, todas las setas, el velo de encaje del falo). Las hojas y
+flores son tarjetas recortadas (`alphaTest`) de un atlas de 16 casillas **pintado por código**
+(`plantas-textura.js`: no hay imágenes ni hace falta crédito). El viento va en el shader (cada vértice
+lleva cuánto se mece), igual que crecer, florecer y marchitarse en el editor. En el bosque: cada planta
+suave es una malla por nivel, por instancias; de lejos (más de 140 m) los árboles son un **impostor**
+(el árbol pintado de lado y desde arriba en una textura, en dos tarjetas: 4 triángulos), siempre dentro
+del cuadrado. La sombra la echa la versión ligera.
+**Cada ejemplar distinto y siempre igual:** su variante sale de su id y de su giro (azar de la semilla
+del mundo), con un tono propio por ejemplar; el tamaño, el del motor, como antes. **Posaderos**
+(`mundo/posaderos.js`): flores, frutos, hojas (donde se pegan a la ramita) y ramas finas (encima de
+cada sección) de la geometría nueva, y la horquilla donde el tronco se parte; la prueba de «los que
+vuelan, parados, están sobre algo real» sigue pasando. Las plantas se siguen pulsando (el rayo va contra
+tronco y copa del motor) y en el editor siguen crecer, florecer, fructificar, marchitarse y caer.
+
+**Animales (los 33).** Cada especie se monta con sus cubos de siempre (esqueleto, piezas y animaciones)
+y de ahí sale su malla (`suavizar.js`): cada pieza gruesa pasa a una forma redondeada (a medias caja
+roma y elipsoide) y todas se funden con una unión suave (SDF); la superficie sale con *surface nets* y
+se simplifica con cuádricas de error a **620–1.290 triángulos** de cerca (según el tamaño) y **80–230**
+de lejos. Cada vértice se ata a los huesos de las piezas que tiene cerca (pesos suaves en las juntas):
+los huesos son las articulaciones de siempre, así que andar, correr, comer, atacar, dormir de lado,
+morir, volar, reptar... siguen tal cual, y `m.piv`, `m.anims`, `m.raiz`, `m.mats`, `m.tam`, `m.datos`,
+`m.paso` y `m.poner` también. Ojos con su hueso (se cierran al dormir), lengua con el suyo. Lo fino no se
+funde: alas, élitros y lengua como láminas; patas de insecto, antenas y bigotes como palos. El
+**pelaje** se pinta por código en 256 × 256 (`pelaje.js`): tres vistas (perfil, lomo y vientre) con
+los colores de cada pieza y el dibujo de cada especie según sus fotos (las nubes con borde negro de la
+pantera, los lunares macizos y en filas del gato leopardo, la red de la pitón, las rayas de la garganta
+del ciervo ratón, los puntos redondos de ranas y lagartos); el shader toma de cada vista según hacia
+dónde mira la piel. La pantera (larga, baja, de patas cortas, cola larga y gruesa) y el gato leopardo
+(alto de patas, cola corta anillada, orejas negras con mancha blanca) se distinguen por la forma.
+**Para miles:** de cerca (hasta 35 veces su tamaño, 60 como mucho) el modelo con esqueleto, una llamada
+cada uno; a media distancia la malla ligera con las animaciones **grabadas en una textura** (VAT), toda
+la especie en una llamada; más lejos un recorte plano de 2 triángulos. Las mallas se hacen al cargar en
+4 Web Workers mientras la simulación prepara el mundo.
+
+**Cuánto cuesta** (ms por fotograma esperando a la GPU; mediana de tres pasadas alternas de cada
+versión; `herramientas/medir_vivo.mjs`, `ab_vivo.mjs`, `ab_banco.mjs`):
+
+| Mundo vivo | Cubos | Suave | Triángulos (cubos → suave) | Llamadas |
+|---|---|---|---|---|
+| 100 m, cámara de inicio | 6,45 | **6,10** | 3,13 M → 1,69 M | 352 → 207 |
+| 100 m, dentro del bosque (60 animales de cerca) | 11,57 | 12,54 ¹ | 6,12 M → 2,50 M | 1.421 → 337 |
+| 100 m, desde lo alto | 6,79 | **4,89** | 7,36 M → 2,63 M | 379 → 191 |
+| 500 m, cámara de inicio | 9,89 | **8,42** | 13,1 M → 8,06 M | 412 → 222 |
+| 500 m, dentro del bosque | 12,80 | **10,60** | 13,0 M → 8,05 M | 1.329 → 250 |
+| 500 m, desde lo alto | 9,51 | **7,69** | 12,9 M → 8,12 M | 392 → 210 |
+| 1000 m (A/B intercalado) | 8,1 / 9,0 / 8,0 | 7,9 / 9,0 / 7,7 | 13,6–14,3 M → 8,0–8,4 M | ~400 → ~350 |
+
+¹ En A/B intercalado (las dos abiertas a la vez, midiendo por turnos) esa vista da 17,0 (cubos)
+frente a 16,7 (suave): la diferencia de la tabla está dentro del ruido de la máquina, que es grande
+(hasta ±40 % entre pasadas sueltas). Las demás también se midieron intercaladas, con el mismo signo.
+
+| Banco (`vivo/banco.html`), A/B intercalado | Cubos | Suave |
+|---|---|---|
+| 5.000 ranas, de cerca | 5,30 ms · 133 k tri · 723 llamadas | **4,17 ms** · 94 k tri · 124 llamadas |
+| 1.000 panteras, de cerca | 5,14 ms · 87 k tri · 1.034 llamadas | **3,90 ms** · 217 k tri · 124 llamadas |
+| 1.000 panteras, de lejos | 0,82 ms · 36 k tri | **0,74 ms** · 2 k tri |
+
+Las 62 especies en la galería («Cubos y suave»): 187.752 → 106.536 triángulos en total; cada animal
+suave tiene más triángulos que el de cubos (620–1.290 frente a 150–920) pero se pinta de 5 a 10 veces
+más deprisa (una llamada de dibujo en vez de decenas). Carga hasta el primer día: 3,5 s (cubos 2,5 s).
+
+**Capturas** (en `temp/capturas/`): `galeria-prueba.png` (la prueba: pantera, gato leopardo, dillenia,
+palma y helecho, con triángulos y FPS), `galeria-comparar-todas.png` (las 62), `felinos-cubos-suave.png`,
+`hoja-plantas.png`, `hoja-setas.png`, `hoja-animales.png`, `hoja-anim-plantas.png` y
+`hoja-anim-animales.png` (animaciones), `par-100m.png` y `par-500m.png` (la misma vista con cubos y
+suave), `banco-final-rana-gigante-rio-5000-cerca.png`, `vivo-suave-animal5.png` (un muntíaco seguido).
+
+**Lo flojo, dicho claro:**
+- Las **ranas** salen como un bulto redondeado: sus patas plegadas se funden con el cuerpo. Se ven
+  pequeñas y casi siempre de lejos, pero de cerca no son bonitas.
+- El **dipterocarpo** tiene la copa ancha pero no el paraguas plano de un emergente de verdad.
+- El pelaje en tres vistas es simétrico (los dos costados iguales) y se estira un poco en lo que mira
+  de frente (pecho, cara).
+- Algunas animaciones grabadas no cierran justo el ciclo (un saltito al repetirse, solo a media
+  distancia); los recortes de muy lejos enseñan siempre el perfil.
+- Las sombras de las plantas cercanas salen de su versión ligera (copas algo más simples en el suelo).
+- La carga tarda un segundo más (las mallas de los animales se hacen al abrir, en 4 Workers).
+- Lo opcional de Quaternius no se ha hecho: todas las especies salen de sus formas de cubos.

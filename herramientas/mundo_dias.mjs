@@ -4,7 +4,7 @@
 //
 // Uso: node herramientas/mundo_dias.mjs [escenario.json] [--dias 10] [--km2 100] [--semillas 2]
 import { readFileSync } from 'node:fs';
-import { Mundo } from '../mundo/mundo.js?v=202610032115';
+import { Mundo } from '../mundo/mundo.js?v=202610052205';
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : d; };

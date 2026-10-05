@@ -5,8 +5,9 @@
 //  * demografía: Flora, StemAllometry, StemAllocation, GrowthIncrements, Canopy (PPA) con
 //    el brentq de scipy (Zeros/brentq.c) para las alturas de cierre de capa.
 
-import { exp, log, pow } from './num/ucrt.js?v=202610032115';
-import { sumaPares } from './num/np.js?v=202610032115';
+import { exp, log, pow } from './num/ucrt.js?v=202610052205';
+import { sumaPares } from './num/np.js?v=202610052205';
+import { f64 } from './num/f64.js?v=202610052205';
 
 const K_R = 8.3145, K_CO = 209476.0, K_PO = 101325.0, K_TO = 298.15, K_C_MOLMASS = 12.0107,
   K_CTOK = 273.15, K_WATER_MOLMASS = 18.01258;
@@ -98,7 +99,7 @@ export function crearFlora(tabla, camposPorDefecto) {
 // create_cohorts: tabla de cohortes (columnas) uniendo con la flora por pft_name
 export function crearCohortes(flora, generadorId, pft, dbh, nInd) {
   const k = pft.length;
-  const coh = { cohort_id: [], pft_name: pft.slice(), dbh_value: Float64Array.from(dbh), n_individuals: nInd.slice() };
+  const coh = { cohort_id: [], pft_name: pft.slice(), dbh_value: f64(dbh), n_individuals: nInd.slice() };
   for (const v of dbh) if (v <= 0) throw new Error('DBH values must be strictly positive');
   const idx = pft.map((p) => {
     const j = flora.pft_name.indexOf(p);
@@ -107,7 +108,7 @@ export function crearCohortes(flora, generadorId, pft, dbh, nInd) {
   });
   for (const c of Object.keys(flora)) {
     if (c === 'pft_name' || c === 'nPft') continue;
-    coh[c] = Float64Array.from(idx, (j) => flora[c][j]);
+    coh[c] = f64(idx, (j) => flora[c][j]);
   }
   for (let i = 0; i < k; i++) coh.cohort_id.push(generadorId());
   return coh;
@@ -127,8 +128,8 @@ export function concatCohortes(a, b) {
 // ------------------------------------------------------------------ T model
 export function alometria(coh) {
   const k = nCohortes(coh);
-  const A = { cohort_id: coh.cohort_id.slice(), dbh: Float64Array.from(coh.dbh_value) };
-  const f = (fn) => Float64Array.from({ length: k }, (_, i) => fn(i));
+  const A = { cohort_id: coh.cohort_id.slice(), dbh: f64(coh.dbh_value) };
+  const f = (fn) => f64({ length: k }, (_, i) => fn(i));
   A.stem_height = f((i) => coh.h_max[i] * (1 - exp(-coh.a_hd[i] * A.dbh[i] / coh.h_max[i])));
   A.crown_area = f((i) => Math.PI * coh.ca_ratio[i] / (4 * coh.a_hd[i]) * A.dbh[i] * A.stem_height[i]);
   A.crown_fraction = f((i) => A.stem_height[i] / (coh.a_hd[i] * A.dbh[i]));
@@ -144,8 +145,8 @@ export function alometria(coh) {
 export function asignacion(coh, A, gpp) {
   const k = nCohortes(coh);
   for (const g of gpp) if (g < 0) throw new Error('Values in whole_crown_gpp cannot be negative.');
-  const f = (fn) => Float64Array.from({ length: k }, (_, i) => fn(i));
-  const S = { cohort_id: A.cohort_id, whole_crown_gpp: Float64Array.from(gpp) };
+  const f = (fn) => f64({ length: k }, (_, i) => fn(i));
+  const S = { cohort_id: A.cohort_id, whole_crown_gpp: f64(gpp) };
   S.sapwood_respiration = f((i) => A.sapwood_mass[i] * coh.resp_s[i]);
   S.foliage_respiration = f((i) => gpp[i] * coh.resp_f[i]);
   S.fine_root_respiration = f((i) => A.fine_root_mass[i] * coh.resp_r[i]);
@@ -242,7 +243,7 @@ export function dosel(coh, A, areaCelda, gapFraction = 0, tol = 0.001) {
   const k = nCohortes(coh);
   let maxH = -Infinity;
   for (const h of A.stem_height) if (h > maxH || h !== h) maxH = h;
-  const totCopa = sumaNp(Float64Array.from({ length: k }, (_, i) => A.crown_area[i] * coh.n_individuals[i]));
+  const totCopa = sumaNp(f64({ length: k }, (_, i) => A.crown_area[i] * coh.n_individuals[i]));
   const porCapa = areaCelda * (1 - gapFraction);
   const nCapas = Math.trunc(Math.ceil(totCopa / porCapa));
   const alturas = new Float64Array(nCapas);
@@ -250,7 +251,7 @@ export function dosel(coh, A, areaCelda, gapFraction = 0, tol = 0.001) {
   for (let capa = 0; capa < nCapas - 1; capa++) {
     const objetivo = (capa + 1) * porCapa;
     const f = (z) => {
-      const ap = Float64Array.from({ length: k }, (_, i) => {
+      const ap = f64({ length: k }, (_, i) => {
         const q = qZ(z, A.stem_height[i], coh.m[i], coh.n[i]);
         return areaCopaProyectada(z, q, A.stem_height[i], A.crown_area[i], coh.q_m[i], A.crown_z_max[i]) * coh.n_individuals[i];
       });
@@ -271,17 +272,17 @@ export function dosel(coh, A, areaCelda, gapFraction = 0, tol = 0.001) {
   // CohortCanopyData
   const sla = new Float64Array(L * k);
   for (let l = 0; l < L; l++) for (let i = 0; i < k; i++) sla[l * k + i] = pla[l * k + i] - (l === 0 ? 0 : pla[(l - 1) * k + i]);
-  const abs = Float64Array.from({ length: k }, (_, i) => 1.0 - exp(-coh.par_ext[i] * coh.lai[i]));
-  const cla = Float64Array.from(sla, (v, j) => v * coh.n_individuals[j % k]);
+  const abs = f64({ length: k }, (_, i) => 1.0 - exp(-coh.par_ext[i] * coh.lai[i]));
+  const cla = f64(sla, (v, j) => v * coh.n_individuals[j % k]);
   const ala = new Float64Array(L), alai = new Float64Array(L);
   for (let l = 0; l < L; l++) {
-    ala[l] = sumaFila(Float64Array.from({ length: k }, (_, i) => abs[i] * cla[l * k + i])) / areaCelda;
-    alai[l] = sumaFila(Float64Array.from({ length: k }, (_, i) => coh.lai[i] * cla[l * k + i])) / areaCelda;
+    ala[l] = sumaFila(f64({ length: k }, (_, i) => abs[i] * cla[l * k + i])) / areaCelda;
+    alai[l] = sumaFila(f64({ length: k }, (_, i) => coh.lai[i] * cla[l * k + i])) / areaCelda;
   }
   const full = new Float64Array(L + 1);
   full[0] = 1;
   for (let l = 0; l < L; l++) full[l + 1] = full[l] * (1 - ala[l]);
-  const alFapar = Float64Array.from({ length: L }, (_, l) => (-full[l + 1]) - (-full[l]));
+  const alFapar = f64({ length: L }, (_, l) => (-full[l + 1]) - (-full[l]));
   const fapar = new Float64Array(L * k);
   for (let l = 0; l < L; l++) for (let i = 0; i < k; i++) fapar[l * k + i] = full[l] * abs[i];
   return {

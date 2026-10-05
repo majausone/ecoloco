@@ -11,8 +11,8 @@
 //  * ndarray ** escalar: atajos -1 (1/x), 0 (1), 0.5 (sqrt), 1 (x), 2 (x*x); si no, pow.
 //    Un escalar numpy o float de Python ** algo usa siempre pow (sin atajos).
 
-import { fma } from './fma.js?v=202610032115';
-import { pow } from './ucrt.js?v=202610032115';
+import { fma } from './fma.js?v=202610052205';
+import { pow } from './ucrt.js?v=202610052205';
 
 // ------------------------------------------------------------------ sumas
 export function sumaPares(a, off, n, paso) {
@@ -69,7 +69,12 @@ export function sumaEje(a, forma, eje) {
   return { data: out, forma: f };
 }
 
-const sinNan = (a) => Float64Array.from(a, (v) => (v !== v ? 0 : v));
+// (con un bucle: Float64Array.from con función era muy lento; los mismos valores)
+function sinNan(a) {
+  const n = a.length, o = new Float64Array(n);
+  for (let i = 0; i < n; i++) { const v = a[i]; o[i] = v !== v ? 0 : v; }
+  return o;
+}
 
 export function nansuma(a) { return suma(sinNan(a)); }
 export function nansumaEje(a, forma, eje) { return sumaEje(sinNan(a), forma, eje); }
@@ -85,7 +90,9 @@ export function mediaEje(a, forma, eje) {
 // np.nanmean(a, axis): suma sin NaN / número de no-NaN (0/0 -> NaN)
 export function nanmediaEje(a, forma, eje) {
   const r = sumaEje(sinNan(a), forma, eje);
-  const cuenta = sumaEje(Float64Array.from(a, (v) => (v !== v ? 0 : 1)), forma, eje);
+  const n = a.length, unos = new Float64Array(n);
+  for (let i = 0; i < n; i++) { const v = a[i]; unos[i] = v !== v ? 0 : 1; }
+  const cuenta = sumaEje(unos, forma, eje);
   for (let i = 0; i < r.data.length; i++) r.data[i] = r.data[i] / cuenta.data[i];
   return r;
 }

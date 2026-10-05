@@ -47,8 +47,11 @@ export const S = (v) => ({ t: 's', v });
 export const B = (v) => ({ t: 'b', v });
 export const L = (v) => ({ t: 'l', v });
 
+// (las columnas de números, enteros o '%0.5f', nunca llevan comas, comillas ni saltos de línea: no se miran)
 export function tablaCSV(filas, columnas) {
-  const cols = columnas.map((c) => columna(filas.map((f) => (c in f ? f[c] : null))));
-  return filas.map((_, i) => cols.map((c) => csvCampo(c[i])).join(','));
+  const valores = columnas.map((c) => filas.map((f) => (c in f ? f[c] : null)));
+  const numerica = valores.map((vs) => vs.every((v) => v === null || v === undefined || v.t === 'i' || v.t === 'f'));
+  const cols = valores.map((vs, k) => { const c = columna(vs); return numerica[k] ? c : c.map(csvCampo); });
+  return filas.map((_, i) => cols.map((c) => c[i]).join(','));
 }
 

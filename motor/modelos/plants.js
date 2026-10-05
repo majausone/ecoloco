@@ -1,18 +1,19 @@
 // Modelo de plantas (models/plants): biomasses.py, canopy.py, communities.py, fruit.py,
 // subcanopy.py y plants_model.py, con la parte de pyrealm en ../pyrealm.js.
 
-import { Arr } from '../core/arr.js?v=202610032115';
-import { ModeloBase } from './base.js?v=202610032115';
-import { exp, pow } from '../num/ucrt.js?v=202610032115';
-import { sumaPares, nansumaEje } from '../num/np.js?v=202610032115';
-import { sumaNp } from '../num/py.js?v=202610032115';
-import { npClip, npMin, npMax } from './comun.js?v=202610032115';
+import { Arr } from '../core/arr.js?v=202610052205';
+import { ModeloBase } from './base.js?v=202610052205';
+import { exp, pow } from '../num/ucrt.js?v=202610052205';
+import { sumaPares, nansumaEje } from '../num/np.js?v=202610052205';
+import { sumaNp } from '../num/py.js?v=202610052205';
+import { npClip, npMin, npMax } from './comun.js?v=202610052205';
 import {
   pmodel, molesAMm, crearFlora, crearCohortes, concatCohortes, nCohortes, alometria, asignacion, incrementos,
   dosel, pyrealmConst,
-} from '../pyrealm.js?v=202610032115';
-import { ExportadorPlantas } from './plants_export.js?v=202610032115';
-import { diasAFecha } from '../core/componentes.js?v=202610032115';
+} from '../pyrealm.js?v=202610052205';
+import { ExportadorPlantas } from './plants_export.js?v=202610052205';
+import { diasAFecha } from '../core/componentes.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 const ELEM = ['C', 'N', 'P'];
 const suma = (a) => 0.0 + sumaPares(a, 0, a.length, 1);
@@ -41,13 +42,13 @@ class Tejido {
     this.ideal = ratios(coh, def.ideal);
     this.turnRatios = ratios(coh, def.turnRatio);
     const c = A[def.masa];
-    this.masas = Float64Array.from(this.ideal, (r, j) => c[Math.floor(j / 3)] / r);
+    this.masas = f64(this.ideal, (r, j) => c[Math.floor(j / 3)] / r);
   }
 
-  get deficits() { return Float64Array.from(this.masas, (m, j) => this.masas[j - (j % 3)] / this.ideal[j] - m); }
+  get deficits() { return f64(this.masas, (m, j) => this.masas[j - (j % 3)] / this.ideal[j] - m); }
 
   sumar(m) {
-    const u = Float64Array.from(this.masas, (v, j) => v + m[j]);
+    const u = f64(this.masas, (v, j) => v + m[j]);
     this.masas = u.map((v) => (v !== v ? v : (v < 0.0 ? 0.0 : v)));
   }
 
@@ -60,24 +61,24 @@ class Tejido {
 
   recambio(S) {
     const c = S[this.def.turn];
-    return Float64Array.from(this.turnRatios, (r, j) => c[Math.floor(j / 3)] / r);
+    return f64(this.turnRatios, (r, j) => c[Math.floor(j / 3)] / r);
   }
 
   crecer(G) {
     const c = G[this.def.crec];
-    const inc = Float64Array.from(this.ideal, (r, j) => c[Math.floor(j / 3)] / r);
+    const inc = f64(this.ideal, (r, j) => c[Math.floor(j / 3)] / r);
     this.sumar(inc);
     return inc;
   }
 
   relativaPorPft(coh) {
     const k = nCohortes(coh);
-    const c = Float64Array.from({ length: k }, (_, i) => this.masas[i * 3]);
+    const c = f64({ length: k }, (_, i) => this.masas[i * 3]);
     const tot = new Float64Array(k);
     for (const p of new Set(coh.pft_name)) {
       const idx = [];
       coh.pft_name.forEach((q, i) => { if (q === p) idx.push(i); });
-      const s = suma(Float64Array.from(idx, (i) => c[i]));
+      const s = suma(f64(idx, (i) => c[i]));
       for (const i of idx) tot[i] = s;
     }
     return c.map((v, i) => v / tot[i]);
@@ -170,12 +171,12 @@ class BiomasaSotobosque {
       for (let e = 1; e < 3; e++) { if (masas[i * 3 + e] === masas[i * 3 + e]) todosNan = false; else algunNan = true; }
     }
     if (algunNan && !todosNan) throw new Error('Incomplete elemental nutrient masses');
-    this.masas = todosNan && n > 0 ? Float64Array.from(masas, (v, j) => masas[j - (j % 3)] / ideal[j % 3]) : Float64Array.from(masas);
+    this.masas = todosNan && n > 0 ? f64(masas, (v, j) => masas[j - (j % 3)] / ideal[j % 3]) : f64(masas);
     this.ideal = ideal;
   }
 
   quitarFraccion(f) {
-    const perdida = Float64Array.from(this.masas, (v, j) => v * (typeof f === 'number' ? f : f[Math.floor(j / 3)]));
+    const perdida = f64(this.masas, (v, j) => v * (typeof f === 'number' ? f : f[Math.floor(j / 3)]));
     this.masas = this.masas.map((v, j) => v - perdida[j]);
     return new BiomasaSotobosque(perdida, this.ideal);
   }
@@ -183,7 +184,7 @@ class BiomasaSotobosque {
   sumarMasa(o) { this.masas = this.masas.map((v, j) => v + o.masas[j]); }
 
   exceso() {
-    const ex = Float64Array.from(this.masas, (v, j) => {
+    const ex = f64(this.masas, (v, j) => {
       const r = v - this.masas[j - (j % 3)] / this.ideal[j % 3];
       return r !== r ? r : (r < 0 ? 0 : r);
     });
@@ -315,13 +316,13 @@ export class PlantsModel extends ModeloBase {
     const a = ls.int.above[0], off = ls.above_canopy_height_offset;
     for (let i = 0; i < n; i++) LH[a * n + i] = h[i] !== h[i] ? off : h[i] + off;
     ls.setFilledCanopy(h);
-    this.luzBajoDosel = Float64Array.from([...this.doseles.values()], (cn) => (cn === null ? 1 : cn.community_data.transmission_to_ground));
+    this.luzBajoDosel = f64([...this.doseles.values()], (cn) => (cn === null ? 1 : cn.community_data.transmission_to_ground));
     this.mascaraDosel = Uint8Array.from(LAI, (v) => (v === v ? 1 : 0));
   }
 
   capturaLuzSotobosque() {
     const c = this.model_constants, n = this.grid.n_cells, s = this.layer_structure.index_surface_scalar;
-    this.subLai = Float64Array.from({ length: n }, (_, i) => npClip(this.sub.veg.masas[i * 3] * c.subcanopy_specific_leaf_area * c.subcanopy_leaf_fraction, 0, c.subcanopy_maximum_leaf_area_index));
+    this.subLai = f64({ length: n }, (_, i) => npClip(this.sub.veg.masas[i * 3] * c.subcanopy_specific_leaf_area * c.subcanopy_leaf_fraction, 0, c.subcanopy_maximum_leaf_area_index));
     this.subTrans = this.subLai.map((l) => exp(-c.subcanopy_extinction_coef * l));
     this.subFapar = this.subTrans.map((t, i) => this.luzBajoDosel[i] * (1 - t));
     this.data.get('leaf_area_index').data.set(this.subLai, s * n);
@@ -332,7 +333,7 @@ export class PlantsModel extends ModeloBase {
     const d = this.data, ls = this.layer_structure, n = this.grid.n_cells;
     const suelo = this.luzBajoDosel.map((v, i) => v * this.subTrans[i]);
     const fa = d.get('layer_fapar');
-    const abs = fa.conDatos(Float64Array.from(fa.data, (v, j) => v * this.radiacion[j % n]));
+    const abs = fa.conDatos(f64(fa.data, (v, j) => v * this.radiacion[j % n]));
     const top = ls.index_topsoil_scalar;
     for (let i = 0; i < n; i++) abs.data[top * n + i] = this.radiacion[i] * suelo[i];
     d.set('shortwave_absorption', abs);
@@ -353,8 +354,8 @@ export class PlantsModel extends ModeloBase {
     this.mortalidad();
     this.reclutamiento();
     for (const com of this.comunidades.values()) {
-      com.cohortes.lai = Float64Array.from(com.cohortes.lai_base);
-      com.cohortes.tau_f = Float64Array.from(com.cohortes.tau_f_base);
+      com.cohortes.lai = f64(com.cohortes.lai_base);
+      com.cohortes.tau_f = f64(com.cohortes.tau_f_base);
       com.alometria = alometria(com.cohortes);
     }
     this.radiacion = this.data.corte('downward_shortwave_radiation', t).data;
@@ -500,10 +501,10 @@ export class PlantsModel extends ModeloBase {
       // hojas_comidas_por_tallo: lo comido es de toda la cohorte y el follaje de la alometría es
       // por tallo; el original resta lo de toda la cohorte de un solo tallo (con muchos
       // herbívoros o cuadros grandes el índice de hoja sale negativo)
-      const perd = Float64Array.from({ length: k }, (_, i) => ultima[i * 3]);
+      const perd = f64({ length: k }, (_, i) => ultima[i * 3]);
       const media = A.foliage_mass.map((m, i) => m - perd[i] / 2);
-      coh.lai = Float64Array.from({ length: k }, (_, i) => media[i] * coh.sla[i] / A.crown_area[i]);
-      coh.tau_f = Float64Array.from({ length: k }, (_, i) => A.foliage_mass[i] * coh.tau_f[i] / (perd[i] * coh.tau_f[i] + A.foliage_mass[i]));
+      coh.lai = f64({ length: k }, (_, i) => media[i] * coh.sla[i] / A.crown_area[i]);
+      coh.tau_f = f64({ length: k }, (_, i) => A.foliage_mass[i] * coh.tau_f[i] / (perd[i] * coh.tau_f[i] + A.foliage_mass[i]));
     }
   }
 
@@ -552,7 +553,7 @@ export class PlantsModel extends ModeloBase {
       this.gppTallo.set(cell, gs);
       this.transTallo.set(cell, ts);
       for (let l = 0; l < nl; l++) {
-        const fila = Float64Array.from({ length: k }, (_, i) => coh.n_individuals[i] * mm[l * k + i]);
+        const fila = f64({ length: k }, (_, i) => coh.n_individuals[i] * mm[l * k + i]);
         tr[l * n + cell] = this.mascaraDosel[l * n + cell] ? 0.0 + sumaPares(fila, 0, k, 1) : NaN;
       }
     }
@@ -561,11 +562,11 @@ export class PlantsModel extends ModeloBase {
   gppSotobosque() {
     const c = this.model_constants, s = this.layer_structure.index_surface_scalar, n = this.grid.n_cells;
     const secs = this.model_timing.update_interval_seconds;
-    this.subGpp = Float64Array.from({ length: n }, (_, i) => {
+    this.subGpp = f64({ length: n }, (_, i) => {
       const l = this.pm.lue[s * n + i];
       return (l !== l ? 0 : l) * this.radiacion[i] * this.subFapar[i] * c.dsr_to_ppfd * secs;
     });
-    this.subTransp = Float64Array.from({ length: n }, (_, i) => {
+    this.subTransp = f64({ length: n }, (_, i) => {
       const micro = this.subGpp[i] / (pyrealmConst.k_c_molmass * 1000000.0) * this.pm.iwue[s * n + i];
       return molesAMm(micro * 1e-06, this.pm.tc[s * n + i]);
     });
@@ -577,7 +578,7 @@ export class PlantsModel extends ModeloBase {
     const tot = new Float64Array(n);
     for (const [cell, com] of this.comunidades) {
       const ts = this.transTallo.get(cell);
-      tot[cell] = suma(Float64Array.from(ts, (v, i) => v * com.cohortes.n_individuals[i]));
+      tot[cell] = suma(f64(ts, (v, i) => v * com.cohortes.n_individuals[i]));
     }
     const div = Math.floor(this.model_timing.update_interval_seconds / this.core_constants.seconds_to_day);
     this.demanda = tot.map((v, i) => (v + this.subTransp[i]) / div);
@@ -589,7 +590,7 @@ export class PlantsModel extends ModeloBase {
     const sm = this.data.get('soil_moisture').data;
     // agua_sin_negativos: si el suelo baja del agua residual, el original da un factor negativo
     // (y producción negativa); con la corrección se queda en 0
-    const f = Float64Array.from({ length: n }, (_, i) => {
+    const f = f64({ length: n }, (_, i) => {
       const v = npMin(1, (sm[capa * n + i] - this.residuoAgua) / this.demanda[i]);
       return this.corr.agua_sin_negativos ? Math.max(0, v) : v;
     });
@@ -681,14 +682,14 @@ export class PlantsModel extends ModeloBase {
     const dias = this.model_timing.update_interval_days;
     const s = this.layer_structure.index_surface_scalar;
     const T = d.get('air_temperature').data;
-    const frac = Float64Array.from({ length: n }, (_, i) => {
+    const frac = f64({ length: n }, (_, i) => {
       const t = T[s * n + i];
       const dd = t >= 0 ? (t - 0) * dias : 0.0;
       return 1 - exp(-this.model_constants.fallen_fruit_decay_rate * dd);
     });
-    const post = Float64Array.from(ff, (v, j) => v - ffc[j]);
-    const dec = Float64Array.from(post, (v, j) => frac[Math.floor(j / (np * 3))] * v);
-    d.set('fallen_fruit_cnp', d.get('fallen_fruit_cnp').conDatos(Float64Array.from(post, (v, j) => v + ft[j] - dec[j])));
+    const post = f64(ff, (v, j) => v - ffc[j]);
+    const dec = f64(post, (v, j) => frac[Math.floor(j / (np * 3))] * v);
+    d.set('fallen_fruit_cnp', d.get('fallen_fruit_cnp').conDatos(f64(post, (v, j) => v + ft[j] - dec[j])));
     const sumaPft = nansumaEje(dec, [n, np, 3], 1).data;
     const out = this.plantillas.cnp();
     out.data.set(sumaPft.map((v) => v / (this.grid.cell_area * dias)));
@@ -705,7 +706,7 @@ export class PlantsModel extends ModeloBase {
     const ak = vol.map((v, i) => v * da[i]), nk = vol.map((v, i) => v * dn[i]), pk = vol.map((v, i) => v * dp[i]);
     const vm = this.sub.veg.masas;
     for (let i = 0; i < n; i++) { vm[i * 3] += npp[i]; vm[i * 3 + 1] += ak[i] + nk[i]; vm[i * 3 + 2] += pk[i]; }
-    const fr = Float64Array.from({ length: n }, (_, i) => (vm[i * 3] > 0 ? npp[i] / vm[i * 3] * c.subcanopy_reproductive_allocation : 0));
+    const fr = f64({ length: n }, (_, i) => (vm[i * 3] > 0 ? npp[i] / vm[i * 3] * c.subcanopy_reproductive_allocation : 0));
     const asig = this.sub.veg.quitarFraccion(fr);
     const extra = this.sub.veg.exceso();
     const brote = this.sub.seed.quitarFraccion(c.subcanopy_sprout_rate / upy);

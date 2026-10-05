@@ -1,0 +1,53 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Prueba del impostor de 8 vistas</title>
+<!-- Para cada animal y 8 rumbos: la silueta del modelo 3D y la del impostor (graficos/pruebas-morta/borneo/lejos.js),
+     vistos desde la misma cámara; deja en window.resultado lo que se parecen (IoU de las siluetas). La lanza
+     herramientas/prueba_impostor.mjs -->
+<canvas id="c" width="256" height="256"></canvas>
+<script type="module">
+import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
+import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052205';
+import { crearAnimal, prepararSuaves } from '../graficos/pruebas-morta/borneo/animales.js?v=202610052205';
+import { hacerImpostor, materialImpostor } from '../graficos/pruebas-morta/borneo/lejos.js?v=202610052205';
+
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), alpha: true });
+const S = 256, rt = new THREE.WebGLRenderTarget(S, S);
+const ids = new URLSearchParams(location.search).get('ids')?.split(',') || ['pantera-nebulosa', 'ciervo-raton', 'calao-rinoceronte', 'orangutan'];
+const especies = ANIMALES.filter((e) => ids.includes(e.id));
+await prepararSuaves(especies);
+const silueta = (escena, cam) => {
+  renderer.setRenderTarget(rt); renderer.setClearColor(0x000000, 0); renderer.clear(); renderer.render(escena, cam);
+  const px = new Uint8Array(S * S * 4); renderer.readRenderTargetPixels(rt, 0, 0, S, S, px); renderer.setRenderTarget(null);
+  const m = new Uint8Array(S * S); for (let i = 0; i < S * S; i++) m[i] = px[i * 4 + 3] > 128 ? 1 : 0; return m;
+};
+const iou = (a, b) => { let i = 0, u = 0; for (let k = 0; k < a.length; k++) { i += a[k] & b[k]; u += a[k] | b[k]; } return u ? i / u : 1; };
+const resultado = {};
+for (const e of especies) {
+  const m = crearAnimal(e);
+  m.poner('quieto', 0); m.paso(0.3);
+  const imp = hacerImpostor(e, renderer, m);
+  m.poner('quieto', 0); m.paso(0.3);
+  const caja = new THREE.Box3().setFromObject(m.raiz, true), tam = caja.getSize(new THREE.Vector3()), r = Math.max(tam.x, tam.y, tam.z);
+  const luz = () => { const s = new THREE.Scene(); s.add(new THREE.AmbientLight('#fff', 3)); return s; };
+  const malla = new THREE.InstancedMesh(imp.geo, materialImpostor(imp.textura), 1);
+  // la cámara fija, de lado y un poco alta; el animal gira (rumbo como en vivo/manada.js: rotación −rumbo)
+  const cam = new THREE.OrthographicCamera(-r, r, r * 1.2, -r * 0.8, 0.01, r * 20);
+  cam.position.set(0, tam.y * 0.5, r * 6); cam.lookAt(0, tam.y * 0.5, 0);
+  const filas = [];
+  for (let k = 0; k < 8; k++) {
+    const rumbo = (k / 8) * Math.PI * 2 + 0.2; // (no justo en una de las 8 vistas)
+    const e3 = luz(); m.raiz.rotation.set(0, -rumbo, 0); e3.add(m.raiz);
+    const a = silueta(e3, cam); e3.remove(m.raiz); m.raiz.rotation.set(0, 0, 0);
+    const ei = luz(); const q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -rumbo);
+    malla.setMatrixAt(0, new THREE.Matrix4().compose(new THREE.Vector3(), q, new THREE.Vector3(1, 1, 1))); malla.instanceMatrix.needsUpdate = true; ei.add(malla);
+    const b = silueta(ei, cam);
+    // (y la del impostor girado 180°: si el ángulo estuviera al revés, esa se parecería más)
+    malla.setMatrixAt(0, new THREE.Matrix4().compose(new THREE.Vector3(), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -rumbo + Math.PI), new THREE.Vector3(1, 1, 1))); malla.instanceMatrix.needsUpdate = true;
+    const c = silueta(ei, cam);
+    filas.push({ rumbo: +(rumbo * 180 / Math.PI).toFixed(0), bien: +iou(a, b).toFixed(2), alReves: +iou(a, c).toFixed(2) });
+  }
+  resultado[e.id] = filas;
+}
+window.resultado = resultado;
+</script>

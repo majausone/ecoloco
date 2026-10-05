@@ -1,8 +1,9 @@
 // CoreComponents: tiempos del modelo (ModelTiming) y estructura vertical de capas
 // (LayerStructure), como core/core_components.py.
 
-import { Arr } from './arr.js?v=202610032115';
-import { nansumaEje } from '../num/np.js?v=202610032115';
+import { Arr } from './arr.js?v=202610052205';
+import { nansumaEje } from '../num/np.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 // ------------------------------------------------------------------ cantidades de tiempo
 // Factores de pint en segundos (year = 365.25 días, month = year / 12).
@@ -55,7 +56,7 @@ export class LayerStructure {
     this.n_cells = nCells;
     this.microbial_simulation_depth = microbialDepth;
     this.n_canopy_layers = cfg.canopy_layers;
-    this.soil_layer_depths = Float64Array.from(cfg.soil_layers);
+    this.soil_layer_depths = f64(cfg.soil_layers);
     this.n_soil_layers = this.soil_layer_depths.length;
     this.above_canopy_height_offset = cfg.above_canopy_height_offset;
     this.surface_layer_height = cfg.surface_layer_height;
@@ -115,7 +116,7 @@ export class LayerStructure {
     }
     this._base('filled_canopy', filled);
     const bajo = nansumaEje(presente, [nc, n], 0).data;
-    this.lowest_canopy_filled = Float64Array.from(bajo, (v) => (v > 0 ? v : NaN));
+    this.lowest_canopy_filled = f64(bajo, (v) => (v > 0 ? v : NaN));
     this.n_canopy_layers_filled = filled.filter((v) => v).length;
     this._actualizarDerivados();
   }

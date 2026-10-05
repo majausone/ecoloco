@@ -1,7 +1,7 @@
 // Un tamaño con barra y casilla para escribirlo, enlazadas (el del mundo, en km², y el del
 // mapa, en metros de lado). Si «avisar», al cambiarlo pregunta antes (se vuelve a generar el
 // mundo entero) y, si se cancela, vuelve al valor de antes.
-import { T } from './idioma.js?v=202610032115';
+import { T } from './idioma.js?v=202610052205';
 
 export const KM2 = { min: 1, max: 10, paso: 0.1, unidad: 'km²' };
 export const LADO = { min: 50, max: 1000, paso: 10, unidad: 'm' };

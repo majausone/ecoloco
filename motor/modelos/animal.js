@@ -17,14 +17,15 @@
 // Neumaier solo con los primeros). Por eso las masas guardan una marca `n*` que dice si el
 // valor es np.float64. Ver sumaMixta en num/py.js.
 
-import { exp, log, pow, asin } from '../num/ucrt.js?v=202610032115';
-import { suma, sumaEje, media, mediaEje, nanmediaEje } from '../num/np.js?v=202610032115';
-import { sumaMixta, mediaEstadistica, sumaPy } from '../num/py.js?v=202610032115';
-import { PySet } from '../num/pyset.js?v=202610032115';
-import { Arr } from '../core/arr.js?v=202610032115';
-import { diasAFecha } from '../core/componentes.js?v=202610032115';
-import { ModeloBase } from './base.js?v=202610032115';
-import { F, I, S, B, L, tablaCSV } from '../salida/csv.js?v=202610032115';
+import { exp, log, pow, asin } from '../num/ucrt.js?v=202610052205';
+import { suma, sumaEje, media, mediaEje, nanmediaEje } from '../num/np.js?v=202610052205';
+import { sumaMixta, mediaEstadistica, sumaPy } from '../num/py.js?v=202610052205';
+import { PySet, PySetEnteros } from '../num/pyset.js?v=202610052205';
+import { Arr } from '../core/arr.js?v=202610052205';
+import { diasAFecha } from '../core/componentes.js?v=202610052205';
+import { ModeloBase } from './base.js?v=202610052205';
+import { F, I, S, B, L, tablaCSV } from '../salida/csv.js?v=202610052205';
+import { f64 } from '../num/f64.js?v=202610052205';
 
 // ------------------------------------------------------------------ rasgos (animal_traits)
 const D = {};
@@ -124,6 +125,15 @@ export class CNP {
 const masa = (C = 0, N = 0, P = 0, nC = false, nN = false, nP = false) => ({ C, N, P, nC, nN, nP });
 const ELEM = ['C', 'N', 'P'];
 const nk = (e) => `n${e}`;
+// gan += g·conv y noAsim += g·(1 − conv), con sus marcas, para C, N y P (en ese orden; las claves escritas)
+function sumarConv(gan, noAsim, g, conv) {
+  gan.C += g.C * conv; gan.nC = gan.nC || g.nC;
+  noAsim.C += g.C * (1.0 - conv); noAsim.nC = noAsim.nC || g.nC;
+  gan.N += g.N * conv; gan.nN = gan.nN || g.nN;
+  noAsim.N += g.N * (1.0 - conv); noAsim.nN = noAsim.nN || g.nN;
+  gan.P += g.P * conv; gan.nP = gan.nP || g.nP;
+  noAsim.P += g.P * (1.0 - conv); noAsim.nP = noAsim.nP || g.nP;
+}
 
 // ------------------------------------------------------------------ grupos funcionales
 class GrupoFuncional {
@@ -310,9 +320,9 @@ class ResourcePool {
     if (this.pft !== null) a = a.sel('pft', this.pft);
     const area = this.m.grid.cell_area;
     this.porM2 = r.density || (this.m.corr.sotobosque_por_m2 && r.pool_array.startsWith('subcanopy_'));
-    this.elemental = this.porM2 ? Float64Array.from(a.data, (v) => v * area) : Float64Array.from(a.data);
+    this.elemental = this.porM2 ? f64(a.data, (v) => v * area) : f64(a.data);
     this.elemental0 = this.elemental; // agotar_recursos resta sobre una copia
-    if (this.m.corr.agotar_recursos) this.elemental = Float64Array.from(this.elemental0);
+    if (this.m.corr.agotar_recursos) this.elemental = f64(this.elemental0);
     this.consumed_total_mass = new Float64Array(n);
   }
 
@@ -739,38 +749,45 @@ class Cohorte {
     if (!presas.length) return [gan, noAsim];
     const k = this.m.k;
     const thetaOpt = pyMax(k.theta_opt_min_f, this.m.azar.np.normal(k.theta_opt_f, k.sigma_opt_f));
-    const area = this.m.grid.cell_area;
-    const areas = new Map(presas.map((p) => [p, interseccion(this, p).length * area]));
+    const area = this.m.grid.cell_area, np = presas.length;
+    // (lo de cada presa, por su índice: las presas no se repiten, salen de un set)
+    // las celdas que comparte con cada presa, con una máscara de su territorio (lo que cuantasComunes)
+    const mascara = mascaraTerritorio(this, this.m.grid.n_cells), areas = new Float64Array(np);
+    for (let i = 0; i < np; i++) { const t = celdasTerritorio(presas[i]); let nc = 0; for (let j = 0; j < t.length; j++) nc += mascara[t[j]]; areas[i] = nc * area; }
+    soltarMascara(this, mascara);
     const ha = area / 10000.0;
     // clase de tamaño y éxito de ataque de cada presa: en el original se recalculan en cada
     // uso, pero solo dependen de las masas, que no cambian durante el forrajeo
-    const clase = new Map(presas.map((p) => [p, this.massBin(p.mass, thetaOpt)]));
-    const alfa = new Map(presas.map((p) => [p, this.alphaPred(this.wBar(p.mass, thetaOpt))]));
+    const clase = new Array(np), alfa = new Float64Array(np);
+    for (let i = 0; i < np; i++) clase[i] = this.massBin(presas[i].mass, thetaOpt);
+    for (let i = 0; i < np; i++) alfa[i] = this.alphaPred(this.wBar(presas[i].mass, thetaOpt));
     const bins = new Map();
-    for (const p of presas) {
-      const b = clase.get(p);
-      bins.set(b, (bins.has(b) ? bins.get(b) : 0.0) + p.individuals / ha);
+    for (let i = 0; i < np; i++) {
+      const b = clase[i];
+      bins.set(b, (bins.has(b) ? bins.get(b) : 0.0) + presas[i].individuals / ha);
     }
     const sumandos = [], marcas = [];
-    for (const p of presas) {
-      const b = bins.has(clase.get(p)) ? bins.get(clase.get(p)) : 0.0;
+    for (let i = 0; i < np; i++) {
+      const p = presas[i];
+      const b = bins.has(clase[i]) ? bins.get(clase[i]) : 0.0;
       // caza_lineal: encuentros proporcionales a la densidad de presas (Madingley); el
       // original la multiplica además por la densidad de su clase de tamaño
       const bb = this.m.corr.caza_lineal ? 1 : b;
-      sumandos.push(this.hij(p.mass) * Cohorte.kij(alfa.get(p), p.individuals, areas.get(p), bb));
+      sumandos.push(this.hij(p.mass) * Cohorte.kij(alfa[i], p.individuals, areas[i], bb));
       marcas.push(this.nMass || p.nMass);
     }
     const manejo = sumaMixta(sumandos, marcas);
     const conv = this.fg.conversion_efficiency;
-    for (const p of presas) {
-      const a = areas.get(p);
+    for (let i = 0; i < np; i++) {
+      const p = presas[i];
+      const a = areas[i];
       if (a === 0.0) continue;
       // F_i_j_individual
       let F = 0.0;
       const N = p.individuals;
       if (N > 0) {
-        const alpha = alfa.get(p);
-        const tb = clase.get(p);
+        const alpha = alfa[i];
+        const tb = clase[i];
         const theta = bins.has(tb) ? bins.get(tb) : 0.0;
         const kt = Cohorte.kij(alpha, N, a, this.m.corr.caza_lineal ? 1 : theta);
         F = this.individuals * (kt / (1 + manejo)) * (1 / N);
@@ -778,10 +795,7 @@ class Cohorte {
       const consumida = p.mass * p.individuals * (1 - exp(-(F * dtDias)));
       const g = p.getEaten(consumida, this, carcassPools);
       this.recordTrophic('cohort', p.id, g);
-      for (const e of ELEM) {
-        gan[e] += g[e] * conv; gan[nk(e)] = gan[nk(e)] || g[nk(e)];
-        noAsim[e] += g[e] * (1.0 - conv); noAsim[nk(e)] = noAsim[nk(e)] || g[nk(e)];
-      }
+      sumarConv(gan, noAsim, g, conv);
     }
     return [gan, noAsim];
   }
@@ -809,10 +823,7 @@ class Cohorte {
       const g = this.clampRuido(res.gain);
       const w = res.waste ? this.clampRuido(res.waste) : null;
       this.recordTrophic(tipo, String(r.cell_id), g);
-      for (const e of ELEM) {
-        gan[e] += g[e] * conv; gan[nk(e)] = gan[nk(e)] || g[nk(e)];
-        noAsim[e] += g[e] * (1.0 - conv); noAsim[nk(e)] = noAsim[nk(e)] || g[nk(e)];
-      }
+      sumarConv(gan, noAsim, g, conv);
       if (residuosHerb && w) residuosHerb.get(r.cell_id).addWaste(w, r.vertical_occupancy, res.lignin);
     }
     return [gan, noAsim];
@@ -831,10 +842,12 @@ class Cohorte {
     const dtDias = tDieta;
     const gan = masa(0.0, 0.0, 0.0), noAsim = masa(0.0, 0.0, 0.0);
     const sumar = ([g, u]) => {
-      for (const e of ELEM) {
-        gan[e] += g[e]; gan[nk(e)] = gan[nk(e)] || g[nk(e)];
-        noAsim[e] += u[e]; noAsim[nk(e)] = noAsim[nk(e)] || u[nk(e)];
-      }
+      gan.C += g.C; gan.nC = gan.nC || g.nC;
+      noAsim.C += u.C; noAsim.nC = noAsim.nC || u.nC;
+      gan.N += g.N; gan.nN = gan.nN || g.nN;
+      noAsim.N += u.N; noAsim.nN = noAsim.nN || u.nN;
+      gan.P += g.P; gan.nP = gan.nP || g.nP;
+      noAsim.P += u.P; noAsim.nP = noAsim.nP || u.nP;
     };
     const W = this.m.herbivory_waste_pools;
     // tiempo_plantas: las categorías vegetales de la dieta se comen en una sola llamada, así
@@ -907,14 +920,20 @@ class Cohorte {
 
   getPrey(comunidades, dietaPresa) {
     const inv = (dietaPresa & D.INVERTEBRATES) !== 0, vert = (dietaPresa & D.VERTEBRATES) !== 0;
-    const s = new PySet();
+    // (un set de CPython con el hash de cada presa, su número de orden: entero y pequeño, sin BigInt)
+    // (cada presa se mira la primera vez que sale: está en muchas celdas del territorio, y volver a añadirla al
+    // set no hace nada, ni puede cambiar si es presa o no mientras se recorre)
+    // (vista: una marca en la presa con el número de esta llamada, que es lo mismo que un Set de vistas)
+    const s = new PySetEnteros(), vez = ++VECES_GETPREY;
     for (const c of this.territory) {
       for (const p of comunidades.get(c)) {
+        if (p._vistaEn === vez) continue;
+        p._vistaEn = vez;
         if (!this.canPreyOn(p)) continue;
-        if ((inv && p.fg.is_invertebrate) || (vert && p.fg.is_vertebrate)) s._add(p, BigInt(p.orden));
+        if ((inv && p.fg.is_invertebrate) || (vert && p.fg.is_vertebrate)) s.add(p, p.orden);
       }
     }
-    return [...s];
+    return s.toArray();
   }
 
   enTerritorio(mapa, filtro) {
@@ -965,6 +984,31 @@ class Cohorte {
 function conjuntoTerritorio(c) {
   if (c._refTerritorio !== c.territory) { c._refTerritorio = c.territory; c._setTerritorio = new Set(c.territory); }
   return c._setTerritorio;
+}
+// las celdas (sin repetir) del territorio de una cohorte en un Int32Array, en el orden del Set: se rehace solo
+// cuando cambia el territorio, como el Set
+function celdasTerritorio(c) {
+  const s = conjuntoTerritorio(c);
+  if (c._celdasDe !== s) { c._celdasDe = s; c._celdas = Int32Array.from(s); }
+  return c._celdas;
+}
+let VECES_GETPREY = 0;
+// una máscara de las celdas del territorio de una cohorte (1 en las suyas), para contar las comunes con otras; se
+// devuelve a cero al soltarla (un solo array por tamaño de rejilla, reutilizado)
+const MASCARAS = new Map();
+function mascaraTerritorio(a, n) {
+  let m = MASCARAS.get(n);
+  if (!m) MASCARAS.set(n, (m = new Uint8Array(n)));
+  for (const c of conjuntoTerritorio(a)) m[c] = 1;
+  return m;
+}
+function soltarMascara(a, m) { for (const c of conjuntoTerritorio(a)) m[c] = 0; }
+// (cuántas celdas comparten: lo mismo que interseccion(a, b).length, sin hacer la lista)
+function cuantasComunes(a, b) {
+  const sb = conjuntoTerritorio(b);
+  let n = 0;
+  for (const c of conjuntoTerritorio(a)) if (sb.has(c)) n++;
+  return n;
 }
 function interseccion(a, b) {
   const sb = conjuntoTerritorio(b), r = [];
@@ -1209,8 +1253,15 @@ export class AnimalModel extends ModeloBase {
     for (const cell of celdas) this.communities.get(cell).push(c);
   }
 
+  // (quita la cohorte de la lista de cada celda de su territorio, en su sitio y con los demás en el mismo orden:
+  // la busca con indexOf y la quita con splice, las veces que esté; lo mismo que filtrar por id, porque cada id es
+  // de un solo objeto, como ya supone removeDeadCohort)
   abandonCommunities(c) {
-    for (const cell of c.territory) this.communities.set(cell, this.communities.get(cell).filter((x) => x.id !== c.id));
+    for (const cell of c.territory) {
+      const l = this.communities.get(cell);
+      let i = l.indexOf(c);
+      while (i >= 0) { l.splice(i, 1); i = l.indexOf(c, i); }
+    }
   }
 
   _update(t) {
@@ -1258,12 +1309,12 @@ export class AnimalModel extends ModeloBase {
     const llenas = ls.int.filled_canopy;
     let canT = nanmediaEje(filas('canopy_temperature', llenas), [llenas.length, n], 0).data;
     let canD = nanmediaEje(filas('diurnal_temperature_range', llenas), [llenas.length, n], 0).data;
-    const fila = (nombre, l) => Float64Array.from(d.get(nombre).data.subarray(l * n, (l + 1) * n));
+    const fila = (nombre, l) => f64(d.get(nombre).data.subarray(l * n, (l + 1) * n));
     const groT = fila('air_temperature', ls.index_surface_scalar);
     const soiT = fila('soil_temperature', ls.index_topsoil_scalar);
     const groD = fila('diurnal_temperature_range', ls.index_surface_scalar);
     const soiD = fila('diurnal_temperature_range', ls.index_topsoil_scalar);
-    if (canT.every((v) => v !== v)) { canT = Float64Array.from(groT); canD = Float64Array.from(groD); } else {
+    if (canT.every((v) => v !== v)) { canT = f64(groT); canD = f64(groD); } else {
       canT = canT.map((v, i) => (v !== v ? groT[i] : v));
       canD = canD.map((v, i) => (v !== v ? groD[i] : v));
     }
@@ -1286,7 +1337,7 @@ export class AnimalModel extends ModeloBase {
         const temp = mediaEje(apilar(t), [t.length, n], 0).data;
         const rango = mediaEje(apilar(dd), [dd.length, n], 0).data;
         const s = fg.metabolic_type === 'endothermic' ? new Float64Array(n).fill(1)
-          : Float64Array.from(temp, (v, i) => activityWindow(fg, v, rango[i], k));
+          : f64(temp, (v, i) => activityWindow(fg, v, rango[i], k));
         this.thermal_suitability.set(fg.name, s);
       }
     }
@@ -1492,10 +1543,10 @@ export class AnimalModel extends ModeloBase {
   elegirDestino(c, cand) {
     if (this.thermal_suitability === null) return this.azar.py.choice(cand);
     const s = this.thermal_suitability.get(c.fg.name), k = this.k;
-    const base = Float64Array.from(cand, (j) => (s[j] > k.thermal_suitability_floor || s[j] !== s[j] ? s[j] : k.thermal_suitability_floor));
+    const base = f64(cand, (j) => (s[j] > k.thermal_suitability_floor || s[j] !== s[j] ? s[j] : k.thermal_suitability_floor));
     const w = potenciaArr(base, k.thermal_selection_exponent);
     const tot = suma(w);
-    return this.azar.np.choiceConPesos(cand, Float64Array.from(w, (v) => v / tot));
+    return this.azar.np.choiceConPesos(cand, f64(w, (v) => v / tot));
   }
 
   migrate(c, destino) {
@@ -1718,7 +1769,7 @@ export class AnimalModel extends ModeloBase {
 // ndarray ** escalar de Python (atajos de numpy para -1, 0, 0.5, 1, 2)
 function potenciaArr(a, e) {
   if (e === 2) return a.map((x) => x * x);
-  if (e === 1) return Float64Array.from(a);
+  if (e === 1) return f64(a);
   if (e === 0) return a.map(() => 1);
   if (e === 0.5) return a.map((x) => Math.sqrt(x));
   if (e === -1) return a.map((x) => 1 / x);

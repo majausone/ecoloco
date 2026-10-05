@@ -17,27 +17,35 @@
      en Maliau, a 4,8° N); de noche brillan las setas luminosas y salen las luciérnagas. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { particulas } from '../graficos/pruebas-morta/escena-v3.js?v=202610032115';
-import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610032115';
-import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js?v=202610032115';
-import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js?v=202610032115';
-import { Mapa, BALDOSA } from '../mundo/mapa.js?v=202610032115';
-import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610032115';
-import { crearFicha } from './ficha.js?v=202610032115';
-import { crearTactil } from './tactil.js?v=202610032115';
-import { crearTerreno } from './terreno.js?v=202610032115';
-import { crearBosque, LEJOS, uSeguido, uSigue } from './bosque.js?v=202610032115';
-import { crearManada } from './manada.js?v=202610032115';
-import { completar, aTexto, deTexto } from '../mundo/config.js?v=202610032115';
-import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js?v=202610032115';
-import { crearCielo, CAPA_CIELO } from './cielo.js?v=202610032115';
-import { crearHogares } from './hogares.js?v=202610032115';
-import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js?v=202610032115';
-import { ponerAyudas } from '../comun/ayuda.js?v=202610032115';
-import { traducirDom, T, num, enIngles } from '../comun/idioma.js?v=202610032115';
-import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js?v=202610032115';
-import { cabecera } from '../comun/cabecera.js?v=202610032115';
-import { VERTEBRADOS } from '../mundo/especies.js?v=202610032115';
+import { particulas } from '../graficos/pruebas-morta/escena-v3.js?v=202610052205';
+import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052205';
+import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js?v=202610052205';
+import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js?v=202610052205';
+import { Mapa, BALDOSA } from '../mundo/mapa.js?v=202610052205';
+import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610052205';
+import { crearFicha } from './ficha.js?v=202610052205';
+import { crearTactil } from './tactil.js?v=202610052205';
+import { crearTerreno } from './terreno.js?v=202610052205';
+import { crearBosque, LEJOS } from './bosque.js?v=202610052205';
+import { actualizarTransparencia, uTransp } from './transparencia.js?v=202610052205';
+import { crearHierba } from './hierba.js?v=202610052205';
+import { crearPuentes } from './puentes.js?v=202610052205';
+import { crearLianas } from './lianas.js?v=202610052205';
+import { crearPrecipitacion } from './precipitacion.js?v=202610052205';
+import { crearGraficos, leerGraficos } from './graficos.js?v=202610052205';
+import { crearManada } from './manada.js?v=202610052205';
+import { completar, aTexto, deTexto } from '../mundo/config.js?v=202610052205';
+import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js?v=202610052205';
+import { crearCielo, CAPA_CIELO } from './cielo.js?v=202610052205';
+import { crearHogares } from './hogares.js?v=202610052205';
+import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js?v=202610052205';
+import { ponerAyudas } from '../comun/ayuda.js?v=202610052205';
+import { traducirDom, T, num, enIngles } from '../comun/idioma.js?v=202610052205';
+import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js?v=202610052205';
+import { cabecera } from '../comun/cabecera.js?v=202610052205';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610052205';
+import { pulsar, despues } from './pulsar.js?v=202610052205';
+import { prepararSuaves } from '../graficos/pruebas-morta/borneo/animales.js?v=202610052205';
 
 const $ = (id) => document.getElementById(id);
 const lienzo = $('lienzo');
@@ -64,19 +72,23 @@ let CONFIG;
 try { CONFIG = completar(parametros.get('mundo') ? deTexto(parametros.get('mundo')) : { km2: KM2 || undefined, lado: Number(parametros.get('lado')) || undefined, semilla: Number(parametros.get('semilla') || 1) }); }
 catch { CONFIG = completar({}); }
 const DIA = Math.max(0, Number(parametros.get('dia')) || 0);
-const trabajador = new Worker(new URL('./trabajador.js?v=202610032115', import.meta.url), { type: 'module' });
+const trabajador = new Worker(new URL('./trabajador.js?v=202610052205', import.meta.url), { type: 'module' });
+// las mallas suaves de los animales, en paralelo mientras el trabajador genera el mundo
+const T0 = performance.now(), tiemposCarga = {};
+const suaves = prepararSuaves(ANIMALES).then(() => { tiemposCarga.suaves = performance.now() - T0; });
 const cola = [];          // días calculados y aún sin enseñar
-let mapa = null, cx = 0, cz = 0, dia = null, info = null, terreno = null, bosque = null, manada = null, hogares = null;
+let puentes = null, lianas = null, mapa = null, cx = 0, cz = 0, dia = null, info = null, terreno = null, bosque = null, manada = null, hogares = null;
 const detalles = new Map(); // id -> { dia, d: Float32Array } (hambre, sed... del animal seleccionado)
 trabajador.onmessage = ({ data: m }) => {
-  if (m.tipo === 'listo') { info = m; montar(m); }
+  if (m.tipo === 'listo') { info = m; tiemposCarga.listo = performance.now() - T0; suaves.then(() => { montar(m); tiemposCarga.montado = performance.now() - T0; }); }
   else if (m.tipo === 'progreso') $('carga').textContent = T(`Recalculando el motor hasta el día ${m.hasta + 1}: ${m.dia + 1} de ${m.hasta + 1}…`, `Recomputing the engine up to day ${m.hasta + 1}: ${m.dia + 1} of ${m.hasta + 1}…`);
   else if (m.tipo === 'dia') {
+    tiemposCarga.dia ??= performance.now() - T0;
     medidas.calculo.push(m.segundos);
     // tras un salto o un cambio de parámetros, lo de antes ya no vale
     if (saltando != null) { if (m.dia !== saltando) return; saltando = null; cola.length = 0; cola.push(m); tic = 8 * 60; siguienteDia(); return; }
     cola.push(m);
-    if (!dia) siguienteDia();
+    if (!dia && manada) siguienteDia(); // (si aún no está montado, montar() lo pone)
   } else if (m.tipo === 'salto') {
     saltando = m.dia;
   } else if (m.tipo === 'cambiado') {
@@ -122,6 +134,21 @@ function manchaRedonda() {
 }
 // el cielo (Sky de three.js), las estrellas, la luna y el tiempo que hace (vivo/cielo.js)
 const cielo = crearCielo({ escena });
+// la pestaña Gráficos (vivo/graficos.js): hierba, tiempo a mano, viento, sombras...
+const graficos = leerGraficos();
+let hierba = null;
+const precipitacion = crearPrecipitacion(escena);
+function aplicarGraficos() {
+  if (hierba) Object.assign(hierba.ajustes, { activa: graficos.hierba, alto: graficos.altoHierba / 100, densidad: graficos.densidadHierba / 100,
+    grosor: graficos.grosorHierba / 100, variacion: graficos.variacionHierba / 100, manchas: graficos.manchasHierba / 100 });
+  // el verde de la hierba pintado en el suelo, con sus mismas manchas
+  if (terreno) { const u = terreno.uSuelo; u.uSueloHierba.value = graficos.hierba ? 1 : 0; u.uManchas.value = graficos.manchasHierba / 100; u.uVariacion.value = graficos.variacionHierba / 100; }
+  if (visor.sol) visor.sol.castShadow = graficos.sombras;
+  visor.antialias = graficos.antialias !== false; visor._aaRepaso = 0;
+}
+crearGraficos($('graficos'), graficos, aplicarGraficos);
+// el tiempo a mano (o nada: el del motor)
+const tiempoForzado = () => (graficos.tiempo === 'mano' ? { lluvia: graficos.lluvia / 100, nieve: graficos.nieve / 100, niebla: graficos.niebla / 100, nubes: graficos.nubes / 100 } : null);
 const halo = new THREE.Points(new THREE.BufferGeometry(), new THREE.PointsMaterial({ color: '#9aff8a', map: manchaRedonda(), size: 0.7, sizeAttenuation: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
 halo.frustumCulled = false;
 escena.add(halo);
@@ -139,9 +166,8 @@ escena.add(anillo);
 // ------------------------------------------------------------------ luz: día y noche
 // las luciérnagas y la lluvia van alrededor de donde mira la cámara
 const luciernagas = particulas(260, '#f6f08a', 2, Math.random, (r) => ({ x: (r() - 0.5) * 88, y: 0.5 + r() * 3, z: (r() - 0.5) * 88, fase: r() * 9, v: 0.3 + r() * 0.5 }), true);
-const lluvia = particulas(2500, '#9ab8c8', 2, Math.random, (r) => ({ x: (r() - 0.5) * 96, y: r() * 30, z: (r() - 0.5) * 96, v: 14 + r() * 6 }), false, 0.55);
-luciernagas.frustumCulled = false; lluvia.frustumCulled = false;
-escena.add(luciernagas, lluvia);
+luciernagas.frustumCulled = false;
+escena.add(luciernagas);
 const AMANECE = 6.17, ANOCHECE = 18.25;
 const C = (h) => new THREE.Color(h);
 const mezclarColor = (a, b, f) => C(a).lerp(C(b), f);
@@ -188,18 +214,9 @@ function moverParticulas(t, dt, hora, f) {
     pos.needsUpdate = true;
     luciernagas.material.opacity = 0.75 + Math.sin(t * 4) * 0.25;
   }
-  // lluvia: los días de más de 5 mm, aguacero por la tarde (lo típico en Borneo)
-  const mm = dia?.clima?.lluvia || 0;
-  lluvia.visible = mm > 5 && hora >= 14 && hora < 14 + Math.min(8, mm / 4);
-  // más gotas cuanto más llueve
-  lluvia.geometry.setDrawRange(0, Math.round(lluvia.geometry.attributes.position.count * Math.max(0.15, cielo.tiempo.lluvia)));
-  if (lluvia.visible) {
-    pos = lluvia.geometry.attributes.position;
-    // alrededor de la cámara (y no de donde mira), de 20 m por debajo a 10 m por encima
-    const c = camara.pos, y0 = c.y - 20;
-    lluvia.userData.datos.forEach((d, i) => { d.y -= d.v * dt; if (d.y < 0) d.y += 30; pos.setXYZ(i, c.x + d.x * 0.6, y0 + d.y, c.z + d.z * 0.6); });
-    pos.needsUpdate = true;
-  }
+  // lluvia y nieve (GPU, precipitacion.js): las del cielo (el motor: aguacero por la tarde los días
+  // de más de 5 mm) o las que se pongan a mano en Gráficos
+  precipitacion.actualizar(t, camara.pos, cielo.tiempo.lluvia, cielo.tiempo.nieve || 0, graficos.viento / 100);
 }
 
 // ------------------------------------------------------------------ reloj y controles
@@ -225,9 +242,9 @@ window.addEventListener('keydown', (e) => {
   if (k === 'm') return $('medidas').classList.toggle('on');
   if (k === 'g') { seguirSiguiente(e.shiftKey ? -1 : 1); if (seguido) ficha.seleccionar(seguido, false); }
   if (k === 'b') { ficha.abrir(); if ($('panel').classList.contains('on')) panel.mostrar(panel.pestana); }
-  if (k === 'escape') dejarDeSeguir();
-  // mover la cámara a mano deja de seguir (la selección se queda)
-  if ('wasdqe'.includes(k) && k.length === 1) dejarDeSeguir();
+  // (Esc cierra la ficha pero no deja de seguir: para eso, la ✕ de «Siguiendo»; mover la cámara con
+  // WASD siguiendo a un animal la desvía y solo lo suelta si se aleja bastante: acompanar)
+  if (k === 'escape') ficha.cerrar();
 });
 
 // ------------------------------------------------------------------ seleccionar con el ratón
@@ -237,8 +254,8 @@ window.addEventListener('keydown', (e) => {
 let pulsado = null, camActual = null, tactil = null;
 const rayo = new THREE.Raycaster();
 lienzo.addEventListener('pointerdown', (e) => {
+  // (los otros botones, siguiendo a un animal, giran a su alrededor o desplazan: no lo sueltan)
   if (e.button === 0 && !e.altKey) pulsado = { x: e.clientX, y: e.clientY };
-  else dejarDeSeguir(); // mirar, desplazar u orbitar a mano
 });
 lienzo.addEventListener('pointerup', (e) => {
   if (!pulsado || e.button !== 0) return;
@@ -263,10 +280,12 @@ lienzo.addEventListener('pointerup', (e) => {
       if (d < md) { md = d; elegido = a.id; }
     }
   }
-  if (elegido) return ficha.seleccionar(elegido, true);
-  // si no hay animal: una planta o una seta (lo primero que toca el rayo)
+  // (la cámara se queda donde está: para que lo siga, el botón «seguir» de la ficha o la G)
+  if (elegido) return ficha.seleccionar(elegido, false);
+  // si no hay animal: una planta o una seta (lo primero que toca el rayo); si no hay nada, se cierra la ficha
   const pl = plantaEn(rayo.ray);
   if (pl) ficha.seleccionarPlanta(pl.tipo, pl.p);
+  else ficha.cerrar();
 });
 // la planta o la seta que toca un rayo (en coordenadas de la escena): cada árbol es su tronco
 // (un cilindro) y su copa (un cilindro ancho arriba); cada seta, una bolita en el suelo. Se
@@ -300,21 +319,40 @@ function plantaEn(ray) {
 }
 
 // ------------------------------------------------------------------ seguir a un animal
-// G: el siguiente animal a la vista (los grandes primero); la cámara lo acompaña manteniendo
-// la distancia y se puede seguir girando y acercando. Esc: dejar de seguir. El seguido se
-// simula minuto a minuto (se le dice al trabajador).
+// G: el siguiente animal a la vista (los grandes primero). La cámara lo acompaña EN ÓRBITA (camara.js):
+// el botón derecho o un dedo giran alrededor de él, la rueda o pellizcar acercan y alejan; desplazar
+// (botón central, WASD, dos dedos) lo desvía y, si el desvío lo saca de la imagen (su centro, proyectado,
+// fuera de la pantalla, esté la cámara cerca o lejos), lo suelta. Cerrar la ficha no lo suelta; para eso, la ✕ del botón «Siguiendo» de abajo a la derecha.
+// El seguido se simula minuto a minuto (se le dice al trabajador).
+const PROY = new THREE.Vector3();
 let seguido = null, ultimaPos = null;
 function seguir(id) {
   seguido = id; ultimaPos = null;
   trabajador.postMessage({ tipo: 'foco', id });
   const a = manada.animales.get(id);
-  if (a && manada.pose(a, tic)) ponerseCerca(a);
+  if (a && manada.pose(a, tic)) { ponerseCerca(a); camara.orbitar(centroDe(a)); }
+  botonSiguiendo();
 }
 function dejarDeSeguir() {
   if (!seguido) return;
   seguido = null; ultimaPos = null;
+  camara.orbita = null;
   trabajador.postMessage({ tipo: 'foco', id: null });
+  botonSiguiendo();
 }
+// el punto al que se mira del seguido: su centro, a media altura
+const centroDe = (a) => new THREE.Vector3(a.x - cx, cima(a.x, a.z) + a.y + a.s.tam * 0.4, a.z - cz);
+// el botón de abajo a la derecha: «Siguiendo: <nombre>» (abre su ficha) y una ✕ (deja de seguir)
+function botonSiguiendo() {
+  const b = $('siguiendo');
+  if (!seguido) { b.classList.add('oculto'); return; }
+  const esp = dia?.agentes[seguido]?.especie;
+  $('siguiendo-nombre').textContent = T('Siguiendo: ', 'Following: ') + (esp ? ficha.nombreDe(esp) : T('animal', 'animal'));
+  b.classList.remove('oculto');
+}
+// (con pulsar(): en el móvil, el primer toque tras un deslizamiento no da click)
+pulsar($('siguiendo'), '#siguiendo-nombre', () => despues(() => { if (seguido) ficha.seleccionar(seguido, false); }));
+pulsar($('siguiendo'), '#siguiendo-x', () => despues(dejarDeSeguir));
 const panel = crearPanel({
   enviar: (m) => trabajador.postMessage(m), dia: () => dia, tic: () => tic, velocidad: () => velocidad, ponerVelocidad: (v) => ponerVelocidad(v), irADia,
   cerrarFicha: () => ficha.cerrar(),
@@ -323,6 +361,13 @@ const panel = crearPanel({
 });
 // al abrir el panel, la pestaña que estaba (pide sus datos)
 $('b-panel').addEventListener('click', () => { if ($('panel').classList.contains('on')) panel.mostrar(panel.pestana); });
+// la ventana de la ficha: la ✕ la cierra; pinchar fuera de ella también (en la escena, el clic ya
+// elige otra cosa o, si no hay nada, la cierra al soltar)
+pulsar($('ventana-ficha'), '#cerrar-ficha', () => despues(() => ficha.cerrar()));
+document.addEventListener('pointerdown', (e) => {
+  if ($('ventana-ficha').classList.contains('oculto') || e.target === lienzo || $('ventana-ficha').contains(e.target)) return;
+  ficha.cerrar();
+}, true);
 const ficha = crearFicha({
   dia: () => dia, tic: () => tic, mapa: () => mapa,
   animal: (id) => manada?.animales.get(id),
@@ -333,7 +378,9 @@ const ficha = crearFicha({
   seguido: () => seguido,
   foco: () => focoCamara(),
   total: () => `${fmt(contar().v)} ${T('vertebrados', 'vertebrates')} · ${fmtGrande(contar().i)} ${T('invertebrados', 'invertebrates')}`,
-  verFicha: (t) => panel.verFicha(t), cerrarFicha: () => panel.cerrarFicha(),
+  // (la ficha, siempre a la derecha, encima del panel: en su mismo sitio, esté abierto o no)
+  verFicha: () => { $('ventana-ficha').classList.remove('oculto'); document.body.classList.add('ficha-abierta'); },
+  cerrarFicha: () => { $('ventana-ficha').classList.add('oculto'); document.body.classList.remove('ficha-abierta'); },
   animales: () => manada?.animales.values() || [],
 });
 function seguirSiguiente(paso = 1) {
@@ -359,11 +406,17 @@ function acompanar() {
   const a = manada.animales.get(seguido);
   if (!a) { if (dia && !dia.agentes[seguido]) dejarDeSeguir(); return; }
   if (!a.visible) return; // aún no ha nacido o se ha ido: se espera
-  const p = new THREE.Vector3(a.x - cx, cima(a.x, a.z) + a.y, a.z - cz);
-  // si ha dado un salto grande (un día nuevo), la cámara va a él; si no, lo acompaña
-  if (!ultimaPos || p.distanceTo(ultimaPos) > 40) ponerseCerca(a);
-  else camara.pos.add(p.clone().sub(ultimaPos));
-  ultimaPos = p;
+  const c = centroDe(a);
+  if (!camara.orbita) camara.orbitar(c);
+  camara.orbita.centro.copy(c);
+  camara.colocarEnOrbita();
+  camActual = camara.paso(0);
+  // si el desplazamiento lo ha sacado de la imagen, se suelta (y la cámara se queda donde está)
+  if (camara.orbita.desvio.lengthSq() > 0) {
+    camActual.updateMatrixWorld();
+    PROY.copy(c).project(camActual);
+    if (Math.abs(PROY.x) > 1 || Math.abs(PROY.y) > 1 || PROY.z > 1) dejarDeSeguir();
+  }
 }
 
 function siguienteDia() {
@@ -379,6 +432,7 @@ function siguienteDia() {
   manada.ponerDia(d);
   hogares.cambiado();
   medidas.cambioDia = { animales: performance.now() - t0 };
+  tiemposCarga.primerDia ??= performance.now() - T0; tiemposCarga.ponerDia ??= performance.now() - t0;
   sucesos = d.eventos.filter((e) => SUCESOS[e.tipo]).sort((a, b) => a.tic - b.tic);
   if (seguido && !d.agentes[seguido]) dejarDeSeguir();
   trabajador.postMessage({ tipo: 'visto', dia: d.dia });
@@ -404,7 +458,7 @@ function seguirPreparando(ms) {
     const t1 = performance.now(), fin = preparando.next().done, t2 = performance.now();
     preparando.k = (preparando.k || 0) + 1;
     if (t2 - t1 > (medidas.pasoPlantas?.ms || 0)) medidas.pasoPlantas = { ms: t2 - t1, fin, k: preparando.k, mem: performance.memory?.usedJSHeapSize };
-    if (fin) { preparando = null; bosque.cambiado(); ultimoHalo = null; return; }
+    if (fin) { preparando = null; bosque.cambiado(); lianas?.cambiado(); ultimoHalo = null; return; }
   }
 }
 
@@ -512,10 +566,14 @@ function montar(m) {
   // el origen de la escena: el centro del cuadro de partida
   cx = mapa.centro.x; cz = mapa.centro.z;
   terreno = crearTerreno({ escena, mapa, ox: cx, oz: cz });
-  bosque = crearBosque({ escena, mapa, ox: cx, oz: cz, cima, tiempo, viento });
-  manada = crearManada({ escena, ox: cx, oz: cz, cima });
+  bosque = crearBosque({ escena, mapa, ox: cx, oz: cz, cima, tiempo, viento, renderer: visor.renderer });
+  lianas = crearLianas({ escena, mapa, ox: cx, oz: cz, cima, tiempo, viento });
+  puentes = crearPuentes({ escena, mapa, ox: cx, oz: cz, cima });
+  manada = crearManada({ escena, ox: cx, oz: cz, cima, renderer: visor.renderer, encima: puentes.alturaEn, colgando: (x, z) => lianas?.alturaEn(x, z) ?? null });
   hogares = crearHogares({ escena, ox: cx, oz: cz, cima, mapa, tamDe: (e) => manada.tamDe(e) });
   visor.luces(escena, 'dia', 62);
+  hierba = crearHierba({ escena, mapa, ox: cx, oz: cz, cima, orilla: terreno.orilla, tiempo, viento });
+  aplicarGraficos();
   escena.add(visor.sol.target);
   montarAjustes(m);
   hemi = escena.children.find((o) => o.isHemisphereLight);
@@ -528,6 +586,8 @@ function montar(m) {
   tactil = crearTactil({ lienzo, camara: () => camara, alMover: dejarDeSeguir,
     foco: () => { const f = focoCamara(); return new THREE.Vector3(f.x - cx, cima(f.x, f.z), f.z - cz); } });
   ponerVelocidad(1);
+  // (los días que llegaron mientras se preparaban los animales)
+  if (!dia && cola.length) siguienteDia();
   requestAnimationFrame(bucle);
 }
 
@@ -600,44 +660,62 @@ function cuadro(ms) {
     manada.actualizar(tic, camara.pos, dt * Math.min(4, Math.max(1, Math.sqrt(velocidad === Infinity ? 16 : velocidad) / 2)), siempre);
     marca('animales');
     acompanar();
-    // lo que tape al animal que se sigue, a medias (bosque.js)
-    const sg = seguido && manada.animales.get(seguido);
-    uSigue.value = sg && sg.visible ? 1 : 0;
-    if (uSigue.value) uSeguido.value.set(sg.x - cx, cima(sg.x, sg.z) + sg.y + sg.s.tam * 0.4, sg.z - cz);
-    // el anillo bajo el seleccionado
-    const s = ficha.seleccionado && manada.animales.get(ficha.seleccionado);
-    anillo.visible = !!(s && s.visible);
-    if (anillo.visible) { anillo.position.set(s.x - cx, cima(s.x, s.z) + s.y + 0.03, s.z - cz); anillo.scale.setScalar(Math.max(0.35, s.s.tam * 0.7)); }
+    // el seleccionado (o el seguido): su anillo, y lo que lo tape, a medias (transparencia.js)
+    const sg = manada.animales.get(ficha.seleccionado || seguido), pl = ficha.planta;
+    let objetivo = null;
+    if (sg && sg.visible) {
+      const y = cima(sg.x, sg.z) + sg.y;
+      anillo.position.set(sg.x - cx, y + 0.03, sg.z - cz); anillo.scale.setScalar(Math.max(0.35, sg.s.tam * 0.7));
+      objetivo = { centro: new THREE.Vector3(sg.x - cx, y + sg.s.tam * 0.4, sg.z - cz), radio: Math.max(0.3, sg.s.tam * 0.6) };
+    } else if (pl) {
+      const p = pl.p, y = cima(p.x, p.z), arbol = pl.tipo === 'arbol', alto = arbol ? p.altura || 4 : 0.4;
+      const r = arbol ? Math.max(0.6, Math.min(5, Math.sqrt((p.copa || 1) / Math.PI) * 0.7)) : 0.45;
+      anillo.position.set(p.x - cx, y + 0.05, p.z - cz); anillo.scale.setScalar(r);
+      objetivo = { centro: new THREE.Vector3(p.x - cx, y + alto * 0.5, p.z - cz), radio: Math.max(0.4, arbol ? alto * 0.5 : 0.4), planta: { x: p.x - cx, z: p.z - cz } };
+    }
+    anillo.visible = !!objetivo;
+    if (visor.objetivo) actualizarTransparencia(camActual, visor.objetivo.width, visor.objetivo.height, graficos.transparencia ? objetivo : null);
   }
   // el terreno de detalle y el bosque, según dónde está y mira la cámara
   const cp = camara.pos, cerca = { x: cp.x + cx, z: cp.z + cz };
   // el detalle del suelo: donde mira si está cerca, si no, bajo la cámara
   const df = Math.hypot(f.x - cerca.x, f.z - cerca.z) < 60 ? f : cerca;
   terreno.actualizar(df.x, df.z, 4);
+  viento.value = 0.8 * graficos.viento / 100;
+  hierba?.actualizar(camara.pos);
+  if (hierba) terreno.uSuelo.uHierbaZona.value.copy(hierba.zona);
   marca('terreno');
   seguirPreparando(3);
   marca('plantas');
   bosque.actualizar(cp, 4);
+  lianas.actualizar(df.x, df.z);
   marca('bosque');
   hogares.actualizar(dia, cerca.x, cerca.z);
   marca('hogares');
   // el cielo y el tiempo (antes que la luz, que los usa)
   const nocheAntes = cuadro.noche || 0;
-  const tiempoAhora = cielo.actualizar(camActual.position, tic / 60, nocheAntes, dia?.clima, ms / 1000);
+  const tiempoAhora = cielo.actualizar(camActual.position, tic / 60, nocheAntes, dia?.clima, ms / 1000, tiempoForzado());
   const noche = luz(tic / 60);
   cuadro.noche = noche;
   // la niebla: más cerca con neblina o lluvia
-  escena.fog.near = 140 * (1 - 0.8 * tiempoAhora.niebla); escena.fog.far = 480 * (1 - 0.65 * tiempoAhora.niebla);
+  escena.fog.near = 140 * (1 - 0.9 * tiempoAhora.niebla); escena.fog.far = 480 * (1 - 0.82 * tiempoAhora.niebla);
+  // con nieve, la niebla más blanca y algo más cerca
+  if (tiempoAhora.nieve > 0) { escena.fog.color.lerp(new THREE.Color('#dfe6ea').multiplyScalar(1 - noche * 0.8), Math.min(0.7, tiempoAhora.nieve)); escena.fog.far *= 1 - 0.4 * tiempoAhora.nieve; }
   // el agua: sus ondas, el sol y su color con la luz del día
   const ua = terreno.agua.material.uniforms;
   ua.time.value = ms / 1000 * 0.6; ua.sunDirection.value.copy(cielo.sol);
   ua.sunColor.value.copy(visor.sol.color).multiplyScalar(Math.max(0, cielo.sol.y) * (1 - tiempoAhora.nubes * 0.7));
   ua.waterColor.value.set('#123230').multiplyScalar(0.2 + 0.8 * (1 - noche));
+  // el reflejo: el cielo arriba y la niebla en el horizonte (de día, de tarde o de noche)
+  ua.uHorizonte.value.copy(escena.fog.color); ua.uCielo.value.copy(escena.fog.color).lerp(new THREE.Color('#5a8ac8').multiplyScalar(1 - noche * 0.9), 0.55);
+  ua.uNoche.value = noche; ua.uLluvia.value = tiempoAhora.lluvia || 0;
+  // los reflejos del sol en el fondo del agua (en el suelo)
+  terreno.uSuelo.uTiempoS.value = ua.time.value; terreno.uSuelo.uSolS.value.x = Math.max(0, cielo.sol.y) * (1 - tiempoAhora.nubes * 0.8) * (1 - noche);
   if (noche > 0.05 && (!ultimoHalo || Math.hypot(f.x - ultimoHalo.x, f.z - ultimoHalo.z) > 10 || ultimoHalo.dia !== dia?.dia)) { ultimoHalo = { ...f, dia: dia?.dia }; ponerHalo(bosque.luces(f.x, f.z)); }
   moverParticulas(ms / 1000, dt, tic / 60, f);
   marca('luzYparticulas');
   indicador(ms);
-  if (dia && (panel.pestana === 'animales' || panel.pestana === 'ficha')) ficha.actualizar(ms, panel.pestana);
+  if (dia) ficha.actualizar(ms, panel.pestana);
   if (dia && ms - (cuadro.panel || 0) > 400) { cuadro.panel = ms; panel.actualizar(ms); }
   marca('paneles');
   // la sombra del sol, donde mira la cámara
@@ -663,9 +741,10 @@ function focoCamara() {
   return { x, z };
 }
 window.__vivo = {
+  tiemposCarga, graficos, cielo, precipitacion, get hierba() { return hierba; },
   perfil, ficha, panel, trabajador, medidas, medirCuadros, plantaEn, banco, escena, visor, seguirSiguiente, focoCamara, ponerVelocidad, cola,
   get diaCompleto() { return dia; }, get camActual() { return camActual; }, suelo: (x, z) => cima(x, z), irA: (h) => { tic = h * 60; },
   get camara() { return camara; }, get seguido() { return seguido; }, centro: () => [cx, cz], get mapa() { return mapa; },
-  get manada() { return manada; }, get bosque() { return bosque; }, get terreno() { return terreno; }, get hogares() { return hogares; }, enElMapa,
+  get manada() { return manada; }, get puentes() { return puentes; }, get lianas() { return lianas; }, get bosque() { return bosque; }, get terreno() { return terreno; }, get hogares() { return hogares; }, enElMapa,
   get dia() { return dia && { dia: dia.dia, fecha: dia.fecha, tic, simulados: dia.ids.length, medida: dia.medida }; },
 };

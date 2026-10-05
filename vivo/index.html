@@ -31,7 +31,6 @@
   #panel.on { transform:none; }
   body.panel-abierto #resumen { right:458px; }
   #pestanas-panel button .cerrar { margin-left:6px; opacity:.75; } #pestanas-panel button .cerrar:hover { opacity:1; }
-  #pestanas-panel #pestana-ficha { flex:1.5; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .buscador { padding:8px 12px 2px; } .buscador input { width:100%; box-sizing:border-box; background:#1a1512; color:#efe4d2; border:1px solid #4a3c34; border-radius:5px; padding:5px 8px; font:inherit; }
   .dato { font-variant-numeric:tabular-nums; color:#e8a64a; }
   .hoja h4 .ayuda { text-transform:none; letter-spacing:0; }
@@ -70,10 +69,22 @@
   #ajustes button { background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-radius:4px; padding:1px 7px; font:inherit; cursor:pointer; }
   #ajustes .enlace { color:#e8a64a; margin-left:6px; font-size:12.5px; }
   #ajustes button.on { background:#e8a64a; color:#1a1410; border-color:#e8a64a; cursor:default; } #ajustes .nota { font-size:11.5px; margin:4px 0 2px; }
+  /* el botón de abajo a la derecha mientras se sigue a un animal (a la izquierda del panel o la ficha si están abiertos) */
+  #siguiendo { position:fixed; right:12px; bottom:calc(14px + env(safe-area-inset-bottom)); display:flex; z-index:21; transition:right .2s; }
+  #siguiendo.oculto { display:none; }
+  #siguiendo button { font:inherit; color:#efe4d2; background:rgba(20,16,15,.88); border:1px solid #e8a64a; padding:8px 12px; cursor:pointer; min-height:40px; }
+  #siguiendo-nombre { border-radius:20px 0 0 20px; max-width:60vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #siguiendo-x { border-radius:0 20px 20px 0; border-left:none !important; color:#e8a64a !important; font-size:15px; min-width:42px; }
+  body.panel-abierto #siguiendo, body.ficha-abierta #siguiendo { right:412px; }
+  @media (max-width: 700px) { body.panel-abierto #siguiendo, body.ficha-abierta #siguiendo { right:12px; } }
   #aviso { left:50%; top:52px; transform:translateX(-50%); padding:6px 12px; display:none; } #aviso.on { display:block; }
   #hoja-animales { padding:0; overflow:hidden; }
-  #hoja-ficha { padding:0; }
-  #ficha { padding:10px 12px 6px; overflow:auto; font-size:12.5px; }
+  /* la ficha: una ventana encima de todo, con su ✕ arriba */
+  #ventana-ficha { position:fixed; top:34px; right:0; bottom:0; width:400px; max-width:100vw; display:flex; flex-direction:column; background:#14100f; border-left:1px solid #e8a64a; box-shadow:-6px 0 24px rgba(0,0,0,.5); z-index:20; }
+  body.ficha-abierta #b-panel { right:412px; } body.ficha-abierta #b-ayuda { right:421px; } body.ficha-abierta #resumen { right:458px; }
+  #cerrar-ficha { position:absolute; top:6px; right:6px; width:30px; height:30px; border-radius:50%; border:1px solid #e8a64a; background:#2a221e; color:#e8a64a; font-size:16px; line-height:1; cursor:pointer; z-index:1; }
+  #cerrar-ficha:hover { background:#e8a64a; color:#1a1410; }
+  #ficha { padding:10px 44px 8px 12px; overflow:auto; font-size:12.5px; }
   #ficha .nada { opacity:.75; padding:6px 0; }
   #ficha .cab { display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
   #ficha .nom { font-size:15px; color:#e8a64a; } #ficha .cien { font-style:italic; opacity:.75; }
@@ -86,6 +97,26 @@
   #ficha .aviso { margin-top:7px; padding:6px 8px; background:#2a2a2e; border-radius:5px; } #ficha .aviso.muerto { background:#3a1e1c; color:#f0b0a0; }
   #ficha .hist div { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } #ficha .hist b { color:#e8a64a; font-weight:normal; font-variant-numeric:tabular-nums; }
   #ficha .nota { margin-top:4px; font-size:12px; }
+  /* en el móvil: el panel ocupa la pantalla (las huellas, encima, lo cierran), el indicador se parte en dos líneas */
+  #lienzo { touch-action:none; }
+  @media (max-width:700px) {
+    #panel, #ventana-ficha { width:100%; border-left:none; box-sizing:border-box; }
+    #panel { padding-top:44px; }
+    body.panel-abierto #b-panel, body.ficha-abierta #b-panel { right:10px; z-index:4; }
+    body.panel-abierto #b-ayuda, body.ficha-abierta #b-ayuda { right:56px; top:52px; z-index:4; }
+    #indicador { white-space:normal; max-width:calc(100vw - 70px); font-size:12px; }
+    #resumen { left:10px; right:10px !important; width:auto; top:96px; max-height:45vh; font-size:12px; }
+    body.panel-abierto #resumen, body.panel-abierto #indicador, body.ficha-abierta #resumen, body.ficha-abierta #indicador { display:none; }
+    #pestanas-panel button { padding:5px 2px; font-size:12px; }
+    #ajustes .fila { flex-wrap:wrap; }
+  }
+  /* la pestaña Gráficos */
+  #graficos { padding:4px 12px 12px; }
+  #graficos .g-fila { display:flex; align-items:center; gap:8px; margin:5px 0; }
+  #graficos .g-nom { width:112px; opacity:.8; } #graficos input[type=range] { flex:1; accent-color:#e8a64a; }
+  #graficos .g-val { width:52px; text-align:right; font-variant-numeric:tabular-nums; }
+  #graficos .g-radios { gap:14px; } #graficos .g-apagado { opacity:.4; pointer-events:none; }
+  #graficos button { background:#2a221e; color:#efe4d2; border:1px solid #4a3c34; border-radius:5px; padding:4px 10px; font:inherit; cursor:pointer; }
   .barra { display:inline-block; width:110px; height:8px; background:#3a2f29; border-radius:4px; overflow:hidden; vertical-align:middle; margin-right:6px; }
   .barra span { display:block; height:100%; }
   .gris { opacity:.65; }
@@ -96,19 +127,6 @@
   #lista .esp .sub { font-size:11px; padding-left:14px; } #lista .flecha { display:inline-block; width:10px; opacity:.7; }
   #lista .indiv { padding:0 0 4px 26px; } #lista .uno { padding:2px 8px; cursor:pointer; border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #lista .uno:hover { background:#2a221e; } #lista .uno.sel { background:#4a3a24; }
-
-  /* en el móvil: el panel ocupa la pantalla (las huellas, encima, lo cierran), el indicador se parte en dos líneas */
-  #lienzo { touch-action:none; }
-  @media (max-width:700px) {
-    #panel { width:100%; border-left:none; padding-top:44px; box-sizing:border-box; }
-    body.panel-abierto #b-panel { right:10px; z-index:4; }
-    body.panel-abierto #b-ayuda { right:56px; top:52px; z-index:4; }
-    #indicador { white-space:normal; max-width:calc(100vw - 70px); font-size:12px; }
-    #resumen { left:10px; right:10px !important; width:auto; top:96px; max-height:45vh; font-size:12px; }
-    body.panel-abierto #resumen, body.panel-abierto #indicador { display:none; }
-    #pestanas-panel button { padding:5px 2px; font-size:12px; }
-    #ajustes .fila { flex-wrap:wrap; }
-  }
 </style>
 </head>
 <body>
@@ -118,9 +136,10 @@
 <div class="caja" id="medidas"></div>
 <div class="caja" id="resumen"></div>
 <button id="b-panel" title="El panel: mundo, animales, datos y parámetros (B)" data-en-title="The panel: world, animals, data and parameters (B)">🐾</button>
-<span id="b-ayuda" class="ayuda izq" data-es="En el móvil: un dedo gira la cámara, pellizcar avanza o retrocede y arrastrar con dos dedos la desplaza. Cámara: botón derecho + W A S D para volar, Q y E para bajar y subir, rueda para acercarse, F encuadrar, P perspectiva u ortográfica. Clic en un animal, una planta o un hongo: su ficha. Teclas: espacio pausa, 1–5 velocidad (×1 ×10 ×60 ×600 máx), B el panel, G seguir a otro animal, Esc dejar de seguir, Z resumen del día, I indicador, M medidas, Intro pantalla completa." data-en="On a phone: one finger turns the camera, pinching moves forwards or backwards and dragging with two fingers pans it. Camera: right button + W A S D to fly, Q and E to go down and up, wheel to zoom, F to frame, P perspective or orthographic. Click an animal, a plant or a fungus: its card. Keys: space pause, 1–5 speed (×1 ×10 ×60 ×600 max), B the panel, G follow another animal, Esc stop following, Z day summary, I indicator, M measurements, Enter full screen."></span>
+<span id="b-ayuda" class="ayuda izq" data-es="En el móvil: un dedo gira la cámara, pellizcar avanza o retrocede y arrastrar con dos dedos la desplaza. Cámara: botón derecho + W A S D para volar, Q y E para bajar y subir, rueda para acercarse, F encuadrar, P perspectiva u ortográfica. Clic en un animal, una planta o un hongo: su ficha. Teclas: espacio pausa, 1–5 velocidad (×1 ×10 ×60 ×600 máx), B el panel, G seguir a otro animal (siguiéndolo, el botón derecho o un dedo giran a su alrededor y la rueda o pellizcar acercan; la ✕ de «Siguiendo», abajo a la derecha, deja de seguirlo), Esc cerrar la ficha, Z resumen del día, I indicador, M medidas, Intro pantalla completa." data-en="On a phone: one finger turns the camera, pinching moves forwards or backwards and dragging with two fingers pans it. Camera: right button + W A S D to fly, Q and E to go down and up, wheel to zoom, F to frame, P perspective or orthographic. Click an animal, a plant or a fungus: its card. Keys: space pause, 1–5 speed (×1 ×10 ×60 ×600 max), B the panel, G follow another animal (while following, the right button or one finger orbit around it and the wheel or pinching zoom; the ✕ of «Following», bottom right, stops), Esc close the card, Z day summary, I indicator, M measurements, Enter full screen."></span>
+<div id="ventana-ficha" class="oculto"><button id="cerrar-ficha" title="Cerrar" data-en-title="Close">✕</button><div id="ficha"></div></div>
 <div id="panel">
-  <div id="pestanas-panel"><button data-p="mundo" class="on" data-en="World">Mundo</button><button data-p="animales" data-en="Animals">Animales</button><button data-p="datos" data-en="Data">Datos</button><button data-p="parametros" data-en="Parameters">Parámetros</button><button data-p="ficha" id="pestana-ficha" class="oculto"><span id="pestana-ficha-nombre"></span><span id="cerrar-ficha" class="cerrar" title="Cerrar la ficha" data-en-title="Close the card">✕</span></button></div>
+  <div id="pestanas-panel"><button data-p="mundo" class="on" data-en="World">Mundo</button><button data-p="animales" data-en="Animals">Animales</button><button data-p="datos" data-en="Data">Datos</button><button data-p="parametros" data-en="Parameters">Parámetros</button><button data-p="graficos" data-en="Options">Opciones</button></div>
   <div class="hoja" id="hoja-mundo">
     <div id="ajustes">
       <div class="fila"><span data-en="World">Mundo</span><div id="tam-mundo" class="crece"></div><span class="ayuda izq" data-es="Cuánta selva calcula el motor (de 1 a 10 km²) y, por tanto, cuántos animales hay. Todos salen en el mapa: cada animal dibujado vale por varios del motor. Cambiarlo vuelve a generar el mundo." data-en="How much forest the engine computes (1 to 10 km²), and therefore how many animals there are. All of them appear on the map: each drawn animal stands for several in the engine. Changing it regenerates the world."></span></div>
@@ -139,7 +158,6 @@
     <div class="buscador"><input type="search" id="buscar-animal" placeholder="Buscar especie o nombre científico" data-en-placeholder="Search species or scientific name" autocomplete="off"></div>
     <div id="lista"></div>
   </div>
-  <div class="hoja oculto" id="hoja-ficha"><div id="ficha"></div></div>
   <div class="hoja oculto" id="hoja-datos">
     <div class="botonera pequenos" id="datos-categorias"></div>
     <div id="datos-lista"></div>
@@ -147,6 +165,7 @@
     <div id="datos-grafica" class="caja-grafica"></div>
     <div id="datos-capas"></div>
   </div>
+  <div class="hoja oculto" id="hoja-graficos"><div id="graficos"></div></div>
   <div class="hoja oculto" id="hoja-parametros">
     <h4><span data-en="Change from tomorrow">Cambiar desde mañana</span><span class="ayuda" data-es="Cambia el clima o lo que admite el motor desde el día siguiente al que se ve: los días que vienen se vuelven a calcular con el cambio. Antes, mira la predicción." data-en="Changes the climate or what the engine allows from the day after the one shown: the coming days are computed again with the change. Check the prediction first."></span></h4>
     <div id="param-lista"></div>
@@ -158,7 +177,8 @@
   </div>
 </div>
 <div class="caja" id="aviso"></div>
+<div id="siguiendo" class="oculto"><button id="siguiendo-nombre" title="Abrir su ficha" data-en-title="Open its card"></button><button id="siguiendo-x" title="Dejar de seguir" data-en-title="Stop following">✕</button></div>
 <link rel="stylesheet" href="../comun/comun.css">
-<script type="module" src="./vivo.js?v=202610032115"></script>
+<script type="module" src="./vivo.js?v=202610052205"></script>
 </body>
 </html>

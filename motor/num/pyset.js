@@ -201,3 +201,59 @@ export class PySet {
   *[Symbol.iterator]() { for (const e of this.tabla) if (e !== null && e.clave !== DUMMY) yield e.clave; }
   toArray() { return [...this]; }
 }
+
+// Un set de CPython solo para añadir, con hashes enteros no negativos (como mucho 2^50): el mismo algoritmo
+// que PySet (la misma tabla, el mismo sondeo y los mismos cambios de tamaño, así que el mismo orden al
+// recorrerlo), con la aritmética en Number en vez de BigInt: con enteros no negativos así de pequeños,
+// h & mask es h % (mask + 1), perturb >>= 5 es floor(perturb / 32) y la suma del sondeo cabe exacta en un
+// doble. Para el set de presas de cada cohorte (el hash es su número de orden).
+export class PySetEnteros {
+  constructor() { this.mask = 7; this.claves = new Array(8).fill(undefined); this.hashes = new Float64Array(8); this.fill = 0; }
+  add(clave, hash) {
+    if (!(hash >= 0 && hash <= 2 ** 50 && Math.floor(hash) === hash)) throw new Error('PySetEnteros: hash fuera de rango');
+    const m1 = this.mask + 1;
+    let i = hash % m1, perturb = hash;
+    for (;;) {
+      let j = i;
+      let probes = (i + LINEAR_PROBES <= this.mask) ? LINEAR_PROBES : 0;
+      do {
+        if (this.claves[j] === undefined) {
+          this.fill++;
+          this.claves[j] = clave; this.hashes[j] = hash;
+          if (this.fill * 5 < this.mask * 3) return;
+          this._resize(this.fill > 50000 ? this.fill * 2 : this.fill * 4);
+          return;
+        }
+        if (this.hashes[j] === hash && this.claves[j] === clave) return;
+        j++;
+      } while (probes--);
+      perturb = Math.floor(perturb / 32);
+      i = (i * 5 + 1 + perturb) % m1;
+    }
+  }
+  _resize(minused) {
+    let n = 8;
+    while (n <= minused) n *= 2;
+    const vc = this.claves, vh = this.hashes;
+    if (n === 8 && vc.length === 8) return;
+    this.mask = n - 1;
+    this.claves = new Array(n).fill(undefined); this.hashes = new Float64Array(n);
+    for (let k = 0; k < vc.length; k++) if (vc[k] !== undefined) this._insertarLimpio(vc[k], vh[k]);
+  }
+  _insertarLimpio(clave, hash) {
+    const mask = this.mask, m1 = mask + 1;
+    let perturb = hash, i = hash % m1;
+    for (;;) {
+      if (this.claves[i] === undefined) { this.claves[i] = clave; this.hashes[i] = hash; return; }
+      if (i + LINEAR_PROBES <= mask) {
+        for (let j = 1; j <= LINEAR_PROBES; j++) {
+          if (this.claves[i + j] === undefined) { this.claves[i + j] = clave; this.hashes[i + j] = hash; return; }
+        }
+      }
+      perturb = Math.floor(perturb / 32);
+      i = (i * 5 + 1 + perturb) % m1;
+    }
+  }
+  get size() { return this.fill; }
+  toArray() { const r = []; for (const c of this.claves) if (c !== undefined) r.push(c); return r; }
+}

@@ -2,36 +2,44 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EcoLoco · galería: foto real frente a modelo</title>
 <style>
   body { margin:0; background:#14100f; color:#efe4d2; font:13px/1.35 system-ui, sans-serif; }
   header { padding:12px 18px 2px; } header h1 .ayuda { font-size:11px; } h1 { margin:0; font-size:18px; } header p { margin:3px 0 0; color:#a8998a; }
-  .filtros { padding:8px 18px; display:flex; gap:6px; }
+  .filtros { padding:8px 18px; display:flex; flex-wrap:wrap; gap:6px; }
   .filtros button { background:#1d1815; color:#efe4d2; border:1px solid #3a2f29; border-radius:6px; padding:5px 10px; cursor:pointer; font:inherit; }
   .filtros button[aria-pressed="true"] { border-color:#e8a64a; color:#e8a64a; }
   .rejilla { display:grid; grid-template-columns:repeat(auto-fill, minmax(min(420px, 100%), 1fr)); gap:10px; padding:8px 18px 20px; }
   .tarjeta { background:#1d1815; border:1px solid #3a2f29; border-radius:8px; overflow:hidden; }
-  .par { display:grid; grid-template-columns:1fr 1fr; height:200px; } @media (max-width:500px) { .par, .par img, .par canvas { height:150px; } .rejilla { padding:8px; } }
+  .par { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); height:200px; } @media (max-width:500px) { .par, .par img, .par canvas { height:150px; } .rejilla { padding:8px; } }
   .par img, .par canvas { width:100%; height:200px; object-fit:cover; display:block; background:#0d0a09; }
   .par canvas { image-rendering:pixelated; }
+  .trio { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); height:220px; }
+  .trio img, .trio canvas { width:100%; height:220px; object-fit:cover; display:block; background:#0d0a09; }
+  .rejilla.comparar { grid-template-columns:repeat(auto-fill, minmax(min(640px, 100%), 1fr)); }
+  .cifras { display:grid; grid-template-columns:1fr 1fr 1fr; font-size:11px; color:#a8998a; padding:4px 9px 0; }
+  .cifras b { color:#efe4d2; font-weight:600; }
   .pie .tri { float:right; font-style:normal; color:#1a1410; background:#e8a64a; border-radius:4px; padding:1px 7px; font-weight:600; }
   .pie { padding:6px 9px; } .pie b { color:#e8a64a; } .pie span { color:#a8998a; display:block; font-size:11px; }
 </style>
 </head>
 <body>
 <header><h1><span data-en="Real photo (iNaturalist) next to our model">Foto real (iNaturalist) frente a nuestro modelo</span><span class="ayuda" data-es="Izquierda, la foto de referencia; derecha, el modelo tal como está ahora, con sus triángulos." data-en="Left, the reference photo; right, the model as it is now, with its triangles."></span></h1></header>
-<div class="filtros"><button data-t="animal" aria-pressed="true" data-en="Animals">Animales</button><button data-t="planta" aria-pressed="false" data-en="Plants">Plantas</button><button data-t="seta" aria-pressed="false" data-en="Mushrooms">Setas</button></div>
+<div class="filtros"><button data-t="animal" aria-pressed="true" data-en="Animals">Animales</button><button data-t="planta" aria-pressed="false" data-en="Plants">Plantas</button><button data-t="seta" aria-pressed="false" data-en="Mushrooms">Setas</button><button data-t="comparar" aria-pressed="false" data-en="Cubes vs smooth">Cubos y suave</button><span class="ayuda" data-es="Cubos y suave: la foto, el modelo de cubos de antes y el nuevo suave, cada uno con sus triángulos y los FPS pintando 64 a la vez (400 × 400, esperando a la tarjeta gráfica)." data-en="Cubes vs smooth: the photo, the old cube model and the new smooth one, each with its triangles and the FPS drawing 64 at once (400 × 400, waiting for the GPU)."></span></div>
 <main class="rejilla" id="rejilla"></main>
 <script type="module">
 import * as THREE from '../vendor/three.module.js';
-import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610032115';
-import { crearAnimal } from './animales.js?v=202610032115';
-import { crearPlanta } from './plantas.js?v=202610032115';
-import { creditoFoto } from './credito.js?v=202610032115';
-import { T, traducirDom, num } from '../../../comun/idioma.js?v=202610032115';
-import { ponerAyudas } from '../../../comun/ayuda.js?v=202610032115';
-import { cabecera } from '../../../comun/cabecera.js?v=202610032115';
-import { nombreEsp } from '../../../comun/nombres.js?v=202610032115';
+import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610052205';
+import { crearAnimal } from './animales.js?v=202610052205';
+import { crearPlanta } from './plantas.js?v=202610052205';
+import { crearAnimal as crearAnimalCubos } from './animales-cubos.js?v=202610052205';
+import { crearPlanta as crearPlantaCubos } from './plantas-cubos.js?v=202610052205';
+import { creditoFoto } from './credito.js?v=202610052205';
+import { T, traducirDom, num } from '../../../comun/idioma.js?v=202610052205';
+import { ponerAyudas } from '../../../comun/ayuda.js?v=202610052205';
+import { cabecera } from '../../../comun/cabecera.js?v=202610052205';
+import { nombreEsp } from '../../../comun/nombres.js?v=202610052205';
 traducirDom(); ponerAyudas(); cabecera('galeria');
 
 const fotos = await (await fetch('./ref-fotos.json')).json();
@@ -72,7 +80,63 @@ function triangulos(raiz) {
   return Math.round(n);
 }
 
+// lo que tarda en pintarse un modelo: 64 copias en rejilla, 30 fotogramas esperando a la GPU
+function medirFps(crear, animal) {
+  const escena = new THREE.Scene();
+  escena.background = new THREE.Color('#6f9a92');
+  escena.add(new THREE.HemisphereLight('#d8e8d0', '#2a3a20', 1.3));
+  const sol = new THREE.DirectionalLight('#fff2d8', 3); sol.position.set(-1, 2, 1); escena.add(sol);
+  const modelos = [];
+  let tam = 1;
+  for (let i = 0; i < 64; i++) {
+    const m = crear(); tam = Math.max(m.tam.x, m.tam.z, m.tam.y * 0.6);
+    m.raiz.position.set((i % 8 - 3.5) * tam * 1.1, 0, (Math.floor(i / 8) - 3.5) * tam * 1.1);
+    m.poner?.(m.anims?.includes('andar') ? 'andar' : m.anims?.[0], 0);
+    escena.add(m.raiz); modelos.push(m);
+  }
+  const cam = new THREE.PerspectiveCamera(40, 1, tam * 0.05, tam * 60);
+  cam.position.set(tam * 6, tam * 5, tam * 7); cam.lookAt(0, 0, 0);
+  const gl = renderer.getContext(), px = new Uint8Array(4);
+  const pasar = (n) => { for (let k = 0; k < n; k++) { for (const m of modelos) m.paso(k / 30); renderer.render(escena, cam); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); } };
+  pasar(5);
+  const t0 = performance.now(); pasar(30);
+  const ms = (performance.now() - t0) / 30;
+  escena.traverse((o) => { if (o.isMesh && o.material?.dispose) o.material.dispose?.(); });
+  return 1000 / ms;
+}
+const COMPARAR = ['pantera-nebulosa', 'gato-leopardo', 'dillenia', 'palma-cola-pez', 'helecho-dipteris'];
+function comparar() {
+  const cont = document.getElementById('rejilla'); cont.innerHTML = ''; cont.classList.add('comparar');
+  const todas = [...ANIMALES.map((e) => [e, 'animal']), ...PLANTAS.map((e) => [e, 'planta']), ...SETAS.map((e) => [e, 'seta'])];
+  todas.sort((a, b) => (COMPARAR.indexOf(a[0].id) + 1 || 99) - (COMPARAR.indexOf(b[0].id) + 1 || 99));
+  const lista = new URLSearchParams(location.search).get('todas') ? todas : todas.filter(([e]) => COMPARAR.includes(e.id));
+  const resumen = [];
+  for (const [e, tipo] of lista) {
+    const f = porId[e.id], animal = tipo === 'animal';
+    const t = document.createElement('div'); t.className = 'tarjeta'; t.dataset.id = e.id;
+    const trio = document.createElement('div'); trio.className = 'trio';
+    const img = document.createElement('img'); img.src = f?.foto || ''; img.alt = nombreEsp(e); trio.append(img);
+    const cifras = [];
+    for (const [nombre, crear] of [['cubos', () => (animal ? crearAnimalCubos(e) : crearPlantaCubos(e))], ['suave', () => (animal ? crearAnimal(e) : crearPlanta(e))]]) {
+      try {
+        const m = crear(), tri = triangulos(m.raiz);
+        trio.append(retrato(m, animal));
+        const fps = medirFps(crear, animal);
+        cifras.push(`<span>${nombre}: <b>${num(tri)}</b> ${T('triángulos', 'triangles')} · <b>${Math.round(fps)}</b> FPS ×64</span>`);
+        resumen.push({ id: e.id, version: nombre, triangulos: tri, fps: Math.round(fps) });
+      } catch (err) { const p = document.createElement('div'); p.textContent = 'error: ' + err.message; trio.append(p); console.error(err); }
+    }
+    const pie = document.createElement('div'); pie.className = 'pie';
+    pie.innerHTML = `<b>${nombreEsp(e)}</b> · <i>${e.cientifico}</i><span>${T('foto', 'photo')}: ${f ? creditoFoto(f.autor) : '—'}</span>`;
+    const c = document.createElement('div'); c.className = 'cifras'; c.innerHTML = `<span>${T('foto real', 'real photo')}</span>${cifras.join('')}`;
+    t.append(trio, c, pie); cont.append(t);
+  }
+  window.__comparar = resumen;
+}
+
 function pintar(tipo) {
+  document.getElementById('rejilla').classList.remove('comparar');
+  if (tipo === 'comparar') return comparar();
   const lista = tipo === 'animal' ? ANIMALES : tipo === 'planta' ? PLANTAS : SETAS;
   const cont = document.getElementById('rejilla'); cont.innerHTML = '';
   for (const e of lista) {

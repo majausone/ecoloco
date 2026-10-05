@@ -1,7 +1,7 @@
 // Los nombres de las especies, sus categorías y los grupos del motor en inglés (los de
 // español están en graficos/pruebas-morta/borneo/especies.js). nombreEsp(e) da el nombre de
 // una especie en el idioma elegido; nombreGrupo(g, es) el de un grupo del motor.
-import { T, enIngles } from './idioma.js?v=202610032115';
+import { T, enIngles } from './idioma.js?v=202610052205';
 
 export const NOMBRE_EN = {
   'pantera-nebulosa': 'Sunda clouded leopard', 'gato-leopardo': 'Sunda leopard cat', muntiaco: 'Bornean yellow muntjac', 'ciervo-raton': 'Greater mouse-deer',
@@ -16,6 +16,7 @@ export const NOMBRE_EN = {
   'pino-apio': 'Celery pine', rododendro: 'Long-flowered rhododendron', 'palma-cola-pez': 'Giant fishtail palm', pinanga: 'Understorey palm',
   'jengibre-antorcha': 'Torch ginger', phrynium: 'Phrynium', 'helecho-dipteris': 'Umbrella fern', 'cuerno-alce': 'Crown staghorn fern',
   rhaphidophora: 'Shingle plant', 'orquidea-tigre': 'Tiger orchid', 'nepenthes-stenophylla': 'Pitcher plant', 'nepenthes-rajah': 'Giant pitcher plant',
+  tetrastigma: 'Rafflesia vine', ratan: 'Rattan', 'liana-colgante': 'Monkey ladder', enredadera: 'Climbing pepper',
   rafflesia: 'Rafflesia', amanita: 'Sculpted amanita', russula: 'Red russula', 'boleto-ruibarbo': 'Rhubarb bolete', 'falo-velo': 'Bridal veil stinkhorn',
   'estrella-roja': 'Starfish fungus', 'copa-tropical': 'Hairy tropical cup', repisa: 'Yellow-footed bracket', 'poros-luminosos': 'Glowing bonnet',
   'mycena-verde': 'Green glowing mycena', termitomyces: 'Termite mushroom', cordyceps: 'Zombie-ant fungus',
