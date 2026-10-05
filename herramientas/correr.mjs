@@ -2,7 +2,7 @@
 // model_data.zarr (grupos inputs, init, outputs) y los CSV de animales.
 //
 // Uso: node herramientas/correr.mjs <escenario.json> --salida runs/js_mensual [--semilla 1]
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, openSync, writeSync, closeSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { Simulacion } from '../motor/simulacion.js?v=202610052205';
 import { escribirZarr } from '../motor/salida/zarr.js?v=202610052205';
@@ -34,7 +34,14 @@ for (const [ruta, bytes] of escribirZarr(sim)) {
 }
 // pandas en Windows escribe los CSV con CRLF
 const CRLF = String.fromCharCode(13, 10);
-for (const [nombre, lineas] of Object.entries(sim.csv())) writeFileSync(join(salida, nombre), lineas.join(CRLF) + CRLF);
+// (por partes: con Maliau entero el CSV de los animales pasa de los 512 MB que caben en una cadena
+// de V8, y lineas.join daba «RangeError: Invalid string length»)
+for (const [nombre, lineas] of Object.entries(sim.csv())) {
+  const fd = openSync(join(salida, nombre), 'w');
+  if (!lineas.length) writeSync(fd, CRLF);
+  for (let i = 0; i < lineas.length; i += 20000) writeSync(fd, lineas.slice(i, i + 20000).join(CRLF) + CRLF);
+  closeSync(fd);
+}
 const tFin = performance.now();
 const tiempos = {
   semilla, pasos: sim.time_index, segundos_init: (tInit - t0) / 1000, segundos_pasos: (tSim - tInit) / 1000,

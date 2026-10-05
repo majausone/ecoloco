@@ -7,6 +7,8 @@ Third-party parts, under their own licenses:
 
 - motor/pyrealm.js ports the parts of pyrealm used by Virtual Ecosystem.
   pyrealm: MIT License, Copyright (c) 2023 David Orme.
+- graficos/vendor/ez-tree/ (ez-tree, the tree generator, adapted): MIT License,
+  Copyright (c) 2024 Daniel Greenheck.
 - graficos/pruebas-morta/vendor/ (three.js) and vivo/vendor/ (Sky and Water from
   the three.js examples): MIT License, Copyright 2010-2026 Three.js Authors.
 - The species photos in graficos/pruebas-morta/borneo/ref/ come from iNaturalist
