@@ -109,6 +109,11 @@ export function escribirZarr(sim) {
   const xy = coordsXY(sim);
   const nT = sim.model_timing.n_updates;
   const tiempo = Array.from({ length: nT }, (_, i) => i);
+  // en inputs e init, time_index mide lo que miden los datos cargados (el clima de entrada), como en el
+  // original; solo en outputs mide la pasada (si la pasada es más corta que los datos, no coinciden)
+  let nTDatos = nT;
+  for (const v of Object.values(sim.escenario.inputs)) { const i = (v.dims || []).indexOf('time_index'); if (i >= 0) { nTDatos = v.shape[i]; break; } }
+  const tiempoDatos = Array.from({ length: nTDatos }, (_, i) => i);
 
   // inputs y init: estado tras cargar los datos / tras inicializar los módulos
   const fijo = (nombreGrupo, nombres, fuente) => {
@@ -116,12 +121,12 @@ export function escribirZarr(sim) {
     for (const k of nombres) {
       const a = fuente(k);
       ponerCoords(g, a, sim, xy);
-      if (a.dims.includes('time_index')) g.coord('time_index', ['time_index'], tiempo, '<i8');
+      if (a.dims.includes('time_index')) g.coord('time_index', ['time_index'], tiempoDatos, '<i8');
       const ent = sim.escenario.inputs[k];
       const entero = nombreGrupo === 'inputs' && ent && ent.dtype === 'int64';
       g.variable(k, a.dims, a.shape, entero ? bytesI64(a.data) : bytesF64(a.data), entero ? '<i8' : '<f8', atributos(sim, k, a, xy));
     }
-    if ([...g.coords.keys()].length && !g.coords.has('time_index')) g.coord('time_index', ['time_index'], tiempo, '<i8');
+    if ([...g.coords.keys()].length && !g.coords.has('time_index')) g.coord('time_index', ['time_index'], tiempoDatos, '<i8');
     g.cerrarCoords();
   };
   fijo('inputs', sim.varsInputs, (k) => sim.entradas.get(k));
