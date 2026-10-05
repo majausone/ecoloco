@@ -3,7 +3,7 @@
    niebla y nubes), el viento, las sombras, el antialias y la transparencia de lo que tapa al seleccionado.
    Se guarda en el navegador (localStorage) y se aplica al momento. */
 
-import { T } from '../comun/idioma.js?v=202610052309';
+import { T } from '../comun/idioma.js?v=202610052338';
 
 const CLAVE = 'ecoloco-graficos';
 export const GRAFICOS_BASE = {

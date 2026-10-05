@@ -15,7 +15,7 @@
    Opciones (vivo/graficos.js). */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { conTransparencia } from './transparencia.js?v=202610052309';
+import { conTransparencia } from './transparencia.js?v=202610052338';
 
 const VENTANA = 176; // m de la textura del suelo alrededor de la cámara
 // la brizna: x de −1 a 1 (a lo ancho), y de 0 a 1 (a lo alto); cerca con 3 tramos, lejos un triángulo

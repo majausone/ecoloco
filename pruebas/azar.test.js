@@ -2,8 +2,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { PyRandom, RandomState } from '../motor/azar/mt19937.js?v=202610052309';
-import { Generator } from '../motor/azar/pcg64.js?v=202610052309';
+import { PyRandom, RandomState } from '../motor/azar/mt19937.js?v=202610052338';
+import { Generator } from '../motor/azar/pcg64.js?v=202610052338';
 
 const ref = JSON.parse(readFileSync(new URL('../datos/vectores/azar.json', import.meta.url)));
 const igual = (a, b, m) => assert.deepEqual(Array.from(a), b, m);

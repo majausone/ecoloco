@@ -2,8 +2,8 @@
 // de plantas en tres CSV (cohortes, dosel por comunidad y dosel por tallo). En el ejemplo
 // del original está apagado; se activa con plants.community_data_export.
 
-import { PySet } from '../num/pyset.js?v=202610052309';
-import { F, I, S, tablaCSV } from '../salida/csv.js?v=202610052309';
+import { PySet } from '../num/pyset.js?v=202610052338';
+import { F, I, S, tablaCSV } from '../salida/csv.js?v=202610052338';
 
 // Columnas del DataFrame de cohortes (Cohorts de pyrealm con los rasgos de la flora)
 const RASGOS = ['a_hd', 'ca_ratio', 'h_max', 'rho_s', 'lai', 'sla', 'tau_f', 'tau_r', 'tau_b', 'par_ext', 'yld', 'zeta',

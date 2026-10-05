@@ -4,7 +4,7 @@
    el bosque entero son pocas mallas. */
 
 import * as THREE from '../vendor/three.module.js';
-import { azar, mecer } from '../escena-v3.js?v=202610052309';
+import { azar, mecer } from '../escena-v3.js?v=202610052338';
 
 const SOL = new THREE.Vector3(-0.6, 0.75, 0.35).normalize();
 const color = (c) => (c instanceof THREE.Color ? c : new THREE.Color(c));

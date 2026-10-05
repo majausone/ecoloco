@@ -1,9 +1,9 @@
 // CoreComponents: tiempos del modelo (ModelTiming) y estructura vertical de capas
 // (LayerStructure), como core/core_components.py.
 
-import { Arr } from './arr.js?v=202610052309';
-import { nansumaEje } from '../num/np.js?v=202610052309';
-import { f64 } from '../num/f64.js?v=202610052309';
+import { Arr } from './arr.js?v=202610052338';
+import { nansumaEje } from '../num/np.js?v=202610052338';
+import { f64 } from '../num/f64.js?v=202610052338';
 
 // ------------------------------------------------------------------ cantidades de tiempo
 // Factores de pint en segundos (year = 365.25 días, month = year / 12).

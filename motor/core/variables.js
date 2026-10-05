@@ -2,7 +2,7 @@
 // El orden sale de un TopologicalSorter de Python sobre un grafo construido con sets de
 // cadenas, así que se reproduce con PySet (orden de CPython con PYTHONHASHSEED=0).
 
-import { PySet } from '../num/pyset.js?v=202610052309';
+import { PySet } from '../num/pyset.js?v=202610052338';
 
 export function setupVariables(nombresModelos, metaModelos, varsDatos) {
   const rv = new Map(); // nombre -> {populated_init, required_init, populated_first, updated, required_update}

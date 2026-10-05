@@ -1110,3 +1110,38 @@ suave), `banco-final-rana-gigante-rio-5000-cerca.png`, `vivo-suave-animal5.png` 
 - Las sombras de las plantas cercanas salen de su versión ligera (copas algo más simples en el suelo).
 - La carga tarda un segundo más (las mallas de los animales se hacen al abrir, en 4 Workers).
 - Lo opcional de Quaternius no se ha hecho: todas las especies salen de sus formas de cubos.
+
+## Encargo 9: todo lo nuevo en EcoLoco, y publicado (2026-10-05/06)
+
+**La fusión.** El código nuevo (plantas con ez-tree, animales suaves, lianas, troncos sobre el
+río, insectos, seguir en órbita, el motor más rápido) se ha fusionado a tres bandas desde el
+punto en que se separó: base, lo de EcoLoco y lo nuevo, con los finales de línea igualados y sin
+la versión `?v=` de las importaciones (se vuelve a poner al final con `herramientas/versionar.mjs`).
+Solo chocaron 5 ficheros (`README.md`, `galeria.html`, `mundo/dia.js`, `vivo/index.html`,
+`vivo/tactil.js`); en todos, lo nuevo ya incluía lo de EcoLoco o lo mejoraba, salvo el README, que
+es el de EcoLoco puesto al día. Se conservan LICENSE, NOTICE, el README en inglés, `docs/`, la
+home que explica el proyecto, la cabecera (el logo es la home, los dos GitHub), `versionar.mjs` y
+los retoques de la web. Sin ficheros privados ni nada del `.gitignore`.
+
+**Velocidad, medida de nuevo** (la misma máquina, una pasada detrás de otra; pasadas completas, de
+cargar los datos a escribir todas las salidas; idénticas bit a bit con `herramientas/comparar.py`):
+
+| Caso | Python original | Motor JS | Más rápido |
+|---|---|---|---|
+| Ejemplo mensual (2 años, 9 × 9 celdas) | 134,9 s | 13,2 s | ×10 |
+| Diario, 60 días | 31 min 14 s | 38,0 s | ×49 |
+
+Durante las dos había otros procesos ocupando algo de CPU en la máquina (una máquina virtual de
+WSL); a los dos lados por igual. Solo la simulación, sin escribir las salidas, el JS tarda 8,9 s y
+30,7 s. `herramientas/banco_motor.mjs`: idéntico en mensual, simple, bio, clima, rejilla, Maliau
+60 días y diario 60 días.
+
+**Un fallo del escritor del zarr** que salió al medir: con una pasada más corta que el clima de
+entrada (60 días de 731), el JS ponía `time_index` de 60 en los grupos `inputs` e `init`, y el
+original 731 (lo que miden los datos cargados). Arreglado (`motor/salida/zarr.js`); ahora el diario
+de 60 días da 249/249 variables y los CSV idénticos.
+
+**`correr.mjs`** escribe los CSV por partes: con la pasada entera de Maliau, el de los animales
+pasa de lo que cabe en una cadena de V8 y `lineas.join` daba «RangeError: Invalid string length».
+El texto es el mismo byte a byte (comprobado con el ejemplo). La pasada entera de Maliau (4018 días)
+ya termina: simulación 1191 s, total 1843 s, y los CSV de 0,8, 1,5 y 0,67 GB.

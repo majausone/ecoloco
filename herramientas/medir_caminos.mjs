@@ -4,10 +4,10 @@
 // la vuelta (mundo/dia.js, ESTADISTICAS), cuántos animales lo hacen 3 veces o más en un día («atascados»)
 // y los ms por día. Necesita datos/escenarios/maliau.json.
 import { readFileSync } from 'node:fs';
-import { Mundo } from '../mundo/mundo.js?v=202610052309';
-import { reiniciarIds } from '../mundo/agentes.js?v=202610052309';
-import { ESTADISTICAS } from '../mundo/dia.js?v=202610052309';
-import { COMPORTAMIENTO } from '../mundo/especies.js?v=202610052309';
+import { Mundo } from '../mundo/mundo.js?v=202610052338';
+import { reiniciarIds } from '../mundo/agentes.js?v=202610052338';
+import { ESTADISTICAS } from '../mundo/dia.js?v=202610052338';
+import { COMPORTAMIENTO } from '../mundo/especies.js?v=202610052338';
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ? process.argv[i + 1] : d; };
 const DIAS = +arg('dias', 4), SEMILLA = +arg('semilla', 1);
 const esc = JSON.parse(readFileSync(new URL('../datos/escenarios/maliau.json', import.meta.url), 'utf8'));

@@ -12,8 +12,8 @@
    Solo los que están a menos de CERCA m de la cámara. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { conTransparencia } from './transparencia.js?v=202610052309';
-import { COMPORTAMIENTO } from '../mundo/especies.js?v=202610052309';
+import { conTransparencia } from './transparencia.js?v=202610052338';
+import { COMPORTAMIENTO } from '../mundo/especies.js?v=202610052338';
 
 const CERCA = 120;
 const CAJA = new THREE.BoxGeometry(1, 1, 1);

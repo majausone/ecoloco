@@ -11,13 +11,13 @@
    El viento, el crecer de flores y frutos y el marchitarse van en el shader (parchePlanta). */
 
 import * as THREE from '../vendor/three.module.js';
-import { azar } from '../escena-v3.js?v=202610052309';
+import { azar } from '../escena-v3.js?v=202610052338';
 import { Tree } from '../../vendor/ez-tree/tree.js';
 import { Branch } from '../../vendor/ez-tree/branch.js';
 import RNG from '../../vendor/ez-tree/rng.js';
-import { Malla, tubo, tira, tarjeta, torno, bola, bezier, vec, tono, mezcla, uvCelda } from './geometria.js?v=202610052309';
-import { construir as construirCubos } from './plantas-cubos.js?v=202610052309';
-import { texturaPlantas } from './plantas-textura.js?v=202610052309';
+import { Malla, tubo, tira, tarjeta, torno, bola, bezier, vec, tono, mezcla, uvCelda } from './geometria.js?v=202610052338';
+import { construir as construirCubos } from './plantas-cubos.js?v=202610052338';
+import { texturaPlantas } from './plantas-textura.js?v=202610052338';
 
 const TIPOS = ['solido', 'hoja', 'fruto', 'flor', 'brillo'];
 const color = (c) => (c instanceof THREE.Color ? c : new THREE.Color(c));

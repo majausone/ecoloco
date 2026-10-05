@@ -2,10 +2,10 @@
    recibe { id } y devuelve la malla de cerca y la de lejos (con sus huesos) y las piezas para
    pintar el pelaje, todo en datos planos (las mallas, con sus arrays transferidos). */
 
-import { ANIMALES } from './especies.js?v=202610052309';
-import { crearAnimal } from './animales-cubos.js?v=202610052309';
-import { suavizar } from './suavizar.js?v=202610052309';
-import { objetivosDe, aPlano } from './suavizar-datos.js?v=202610052309';
+import { ANIMALES } from './especies.js?v=202610052338';
+import { crearAnimal } from './animales-cubos.js?v=202610052338';
+import { suavizar } from './suavizar.js?v=202610052338';
+import { objetivosDe, aPlano } from './suavizar-datos.js?v=202610052338';
 
 self.onmessage = ({ data: { id } }) => {
   const e = ANIMALES.find((x) => x.id === id);

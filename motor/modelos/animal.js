@@ -17,15 +17,15 @@
 // Neumaier solo con los primeros). Por eso las masas guardan una marca `n*` que dice si el
 // valor es np.float64. Ver sumaMixta en num/py.js.
 
-import { exp, log, pow, asin } from '../num/ucrt.js?v=202610052309';
-import { suma, sumaEje, media, mediaEje, nanmediaEje } from '../num/np.js?v=202610052309';
-import { sumaMixta, mediaEstadistica, sumaPy } from '../num/py.js?v=202610052309';
-import { PySet, PySetEnteros } from '../num/pyset.js?v=202610052309';
-import { Arr } from '../core/arr.js?v=202610052309';
-import { diasAFecha } from '../core/componentes.js?v=202610052309';
-import { ModeloBase } from './base.js?v=202610052309';
-import { F, I, S, B, L, tablaCSV } from '../salida/csv.js?v=202610052309';
-import { f64 } from '../num/f64.js?v=202610052309';
+import { exp, log, pow, asin } from '../num/ucrt.js?v=202610052338';
+import { suma, sumaEje, media, mediaEje, nanmediaEje } from '../num/np.js?v=202610052338';
+import { sumaMixta, mediaEstadistica, sumaPy } from '../num/py.js?v=202610052338';
+import { PySet, PySetEnteros } from '../num/pyset.js?v=202610052338';
+import { Arr } from '../core/arr.js?v=202610052338';
+import { diasAFecha } from '../core/componentes.js?v=202610052338';
+import { ModeloBase } from './base.js?v=202610052338';
+import { F, I, S, B, L, tablaCSV } from '../salida/csv.js?v=202610052338';
+import { f64 } from '../num/f64.js?v=202610052338';
 
 // ------------------------------------------------------------------ rasgos (animal_traits)
 const D = {};

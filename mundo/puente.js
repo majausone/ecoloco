@@ -4,8 +4,8 @@
 // dispersiones, entradas y salidas), el clima, las plantas de cada cuadro (cohortes de
 // árboles, fruta, hojas, setas) y lo que comió cada cohorte en cada cuadro.
 
-import { Simulacion } from '../motor/simulacion.js?v=202610052309';
-import { diasAFecha } from '../motor/core/componentes.js?v=202610052309';
+import { Simulacion } from '../motor/simulacion.js?v=202610052338';
+import { diasAFecha } from '../motor/core/componentes.js?v=202610052338';
 
 const suma3 = (a, i) => a[i] + a[i + 1] + a[i + 2];
 

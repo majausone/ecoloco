@@ -8,7 +8,7 @@
 // (hambre, sed, sueño) van en horas de juego; el movimiento, en metros por tic a velocidad
 // natural de pantalla (una especie que anda a 1 m/s recorre 1 m por tic).
 
-import { COMPORTAMIENTO, ESPECIES_DE_GRUPO, VERTEBRADOS, activo, E } from './especies.js?v=202610052309';
+import { COMPORTAMIENTO, ESPECIES_DE_GRUPO, VERTEBRADOS, activo, E } from './especies.js?v=202610052338';
 
 let siguiente = 0;
 export const nuevoId = (prefijo) => `${prefijo}${(siguiente++).toString(36)}`;

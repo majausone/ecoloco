@@ -5,8 +5,8 @@
 //
 // Uso: node herramientas/sostenibilidad.mjs [escenario.json] [--dias 1096]
 import { readFileSync } from 'node:fs';
-import { Simulacion } from '../motor/simulacion.js?v=202610052309';
-import { escalarEscenario } from '../mundo/escala.js?v=202610052309';
+import { Simulacion } from '../motor/simulacion.js?v=202610052338';
+import { escalarEscenario } from '../mundo/escala.js?v=202610052338';
 
 const args = process.argv.slice(2);
 const ruta = args[0] && !args[0].startsWith('--') ? args[0] : 'datos/escenarios/maliau.json';
