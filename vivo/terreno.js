@@ -15,10 +15,10 @@
      queda por debajo del agua, con la profundidad en cada vértice, y un shader propio (vivo/agua.js). */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { conTransparencia } from './transparencia.js?v=202610052205';
-import { ruido2, tono } from '../graficos/pruebas-morta/escena-v3.js?v=202610052205';
-import { BALDOSA } from '../mundo/mapa.js?v=202610052205';
-import { materialAgua } from './agua.js?v=202610052205';
+import { conTransparencia } from './transparencia.js?v=202610052309';
+import { ruido2, tono } from '../graficos/pruebas-morta/escena-v3.js?v=202610052309';
+import { BALDOSA } from '../mundo/mapa.js?v=202610052309';
+import { materialAgua } from './agua.js?v=202610052309';
 
 export const NIVEL_AGUA = -0.72;
 const B = BALDOSA, PASO = 0.5, N = B / PASO; // la rejilla de detalle: N + 1 vértices por lado

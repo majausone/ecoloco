@@ -1,7 +1,7 @@
 // La cabecera común de EcoLoco: arriba del todo en todas las páginas (portada, simulación,
 // editor, galería e interfaz del motor) para ir de una a otra, con el selector de idioma a la
 // derecha. cabecera('vivo') la pone y marca la página en la que se está.
-import { T, idioma, ponerIdioma } from './idioma.js?v=202610052205';
+import { T, idioma, ponerIdioma } from './idioma.js?v=202610052309';
 
 const raiz = new URL('../', import.meta.url);
 const PAGINAS = [

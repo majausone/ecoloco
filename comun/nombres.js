@@ -1,7 +1,7 @@
 // Los nombres de las especies, sus categorías y los grupos del motor en inglés (los de
 // español están en graficos/pruebas-morta/borneo/especies.js). nombreEsp(e) da el nombre de
 // una especie en el idioma elegido; nombreGrupo(g, es) el de un grupo del motor.
-import { T, enIngles } from './idioma.js?v=202610052205';
+import { T, enIngles } from './idioma.js?v=202610052309';
 
 export const NOMBRE_EN = {
   'pantera-nebulosa': 'Sunda clouded leopard', 'gato-leopardo': 'Sunda leopard cat', muntiaco: 'Bornean yellow muntjac', 'ciervo-raton': 'Greater mouse-deer',

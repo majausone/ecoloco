@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { PySet, hashPy } from '../motor/num/pyset.js?v=202610052205';
+import { PySet, hashPy } from '../motor/num/pyset.js?v=202610052309';
 const casos = JSON.parse(readFileSync(new URL('../datos/vectores/pyset.json', import.meta.url)));
 test('hash de str como CPython con PYTHONHASHSEED=0', () => assert.equal(hashPy('plants'), 2081799259051479400n));
 test('orden de iteración de set como CPython 3.12', () => {

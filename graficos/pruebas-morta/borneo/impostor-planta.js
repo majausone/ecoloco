@@ -5,7 +5,7 @@
    por árbol, con la luz del día encima (Lambert) y el recorte de las hojas (alphaTest). */
 
 import * as THREE from '../vendor/three.module.js';
-import { atlas } from './plantas.js?v=202610052205';
+import { atlas } from './plantas.js?v=202610052309';
 
 const LADO = 256;
 

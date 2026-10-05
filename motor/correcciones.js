@@ -7,7 +7,7 @@
 //    (unidades, truncados, comparaciones que nunca se cumplen...), cada una con su interruptor;
 //  * ajustes de parámetros (AJUSTES): valores del original que no tienen sentido con lo
 //    anterior arreglado (eficiencias, proporciones C:N:P de los animales).
-import { CORRECCIONES_ANIMAL } from './modelos/animal.js?v=202610052205';
+import { CORRECCIONES_ANIMAL } from './modelos/animal.js?v=202610052309';
 
 export const CORRECCIONES_PLANTAS = {
   restar_sotobosque: false, // lo comido del sotobosque se resta de su biomasa

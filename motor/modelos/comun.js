@@ -1,7 +1,7 @@
 // Funciones compartidas entre módulos: lo de pyrealm.core.hygro y abiotic_tools que usan
 // varios modelos, y utilidades de arrays con la semántica de numpy.
 
-import { exp } from '../num/ucrt.js?v=202610052205';
+import { exp } from '../num/ucrt.js?v=202610052309';
 
 export const ZERO_CELSIUS = 273.15; // scipy.constants.zero_Celsius
 

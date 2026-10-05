@@ -13,12 +13,12 @@
    siempre tenga las que tocan, y como mucho un nivel por fotograma. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052205';
-import { construir, SacoP, materialPlanta, materialSombraPlanta, SUAVES } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610052205';
+import { PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052309';
+import { construir, SacoP, materialPlanta, materialSombraPlanta, SUAVES } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610052309';
 // (variantes, azar y escala de cada árbol: los mismos que usan los posaderos de la simulación)
-import { VARIANTES, ARBOL, azarDe, varianteDe, escalaDe } from '../mundo/posaderos.js?v=202610052205';
-import { hacerImpostorPlanta, materialImpostorPlanta } from '../graficos/pruebas-morta/borneo/impostor-planta.js?v=202610052205';
-import { conTransparencia } from './transparencia.js?v=202610052205';
+import { VARIANTES, ARBOL, azarDe, varianteDe, escalaDe } from '../mundo/posaderos.js?v=202610052309';
+import { hacerImpostorPlanta, materialImpostorPlanta } from '../graficos/pruebas-morta/borneo/impostor-planta.js?v=202610052309';
+import { conTransparencia } from './transparencia.js?v=202610052309';
 
 export const CERCA = 35, MEDIO = 140, LEJOS = 2000, SETAS_HASTA = 2000;
 const SOMBRA = 70, NIVELES = 1;

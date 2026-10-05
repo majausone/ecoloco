@@ -86,8 +86,8 @@
    "resource_pool_data.csv": "identica"
   },
   "pasos": 24,
-  "segundos_python": 154.50517829996534,
-  "segundos_js": 42.004302100000004,
+  "segundos_python": 134.876147700008,
+  "segundos_js": 9.110719000000001,
   "configs": [
    "repos/ve_ejemplo/ve_example/config/abiotic_config.toml",
    "repos/ve_ejemplo/ve_example/config/animal_config.toml",

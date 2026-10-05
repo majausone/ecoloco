@@ -12,7 +12,7 @@
 // tronco tiene su sitio fijo. Así el bosque es siempre el mismo y, de un día a otro, solo
 // cambia donde el motor dice que nace o muere algo.
 
-import { Azar, ruido2 } from './azar.js?v=202610052205';
+import { Azar, ruido2 } from './azar.js?v=202610052309';
 
 export const BALDOSA = 30;
 

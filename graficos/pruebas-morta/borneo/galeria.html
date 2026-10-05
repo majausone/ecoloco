@@ -30,16 +30,16 @@
 <main class="rejilla" id="rejilla"></main>
 <script type="module">
 import * as THREE from '../vendor/three.module.js';
-import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610052205';
-import { crearAnimal } from './animales.js?v=202610052205';
-import { crearPlanta } from './plantas.js?v=202610052205';
-import { crearAnimal as crearAnimalCubos } from './animales-cubos.js?v=202610052205';
-import { crearPlanta as crearPlantaCubos } from './plantas-cubos.js?v=202610052205';
-import { creditoFoto } from './credito.js?v=202610052205';
-import { T, traducirDom, num } from '../../../comun/idioma.js?v=202610052205';
-import { ponerAyudas } from '../../../comun/ayuda.js?v=202610052205';
-import { cabecera } from '../../../comun/cabecera.js?v=202610052205';
-import { nombreEsp } from '../../../comun/nombres.js?v=202610052205';
+import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610052309';
+import { crearAnimal } from './animales.js?v=202610052309';
+import { crearPlanta } from './plantas.js?v=202610052309';
+import { crearAnimal as crearAnimalCubos } from './animales-cubos.js?v=202610052309';
+import { crearPlanta as crearPlantaCubos } from './plantas-cubos.js?v=202610052309';
+import { creditoFoto } from './credito.js?v=202610052309';
+import { T, traducirDom, num } from '../../../comun/idioma.js?v=202610052309';
+import { ponerAyudas } from '../../../comun/ayuda.js?v=202610052309';
+import { cabecera } from '../../../comun/cabecera.js?v=202610052309';
+import { nombreEsp } from '../../../comun/nombres.js?v=202610052309';
 traducirDom(); ponerAyudas(); cabecera('galeria');
 
 const fotos = await (await fetch('./ref-fotos.json')).json();

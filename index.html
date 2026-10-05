@@ -29,12 +29,19 @@
   ul { margin:6px 0; padding-left:22px; } li { margin:5px 0; }
   code { background:#221b17; border:1px solid #3a2f29; border-radius:4px; padding:1px 5px; font-size:13.5px; }
   blockquote { margin:10px 0; padding:8px 14px; border-left:3px solid var(--acento); background:#16110f; font-size:14px; color:var(--suave); }
+  table.velocidad { border-collapse:collapse; width:100%; margin:10px 0 4px; font-size:15px; }
+  table.velocidad th, table.velocidad td { border-bottom:1px solid var(--borde); padding:7px 10px; text-align:right; }
+  table.velocidad th:first-child, table.velocidad td:first-child { text-align:left; }
+  table.velocidad th { color:var(--suave); font-weight:600; font-size:13.5px; }
+  table.velocidad td b { color:var(--acento); font-size:17px; }
+  .nota { font-size:13px; color:var(--suave); }
+  @media (max-width:600px) { table.velocidad { font-size:13px; } table.velocidad th, table.velocidad td { padding:6px 5px; } }
 </style>
 </head>
 <body>
 <div class="pagina">
   <h1>EcoLoco</h1>
-  <p class="lema" data-en="Virtual Ecosystem, the ecosystem model of Imperial College London, made visual: a living rainforest in 3D, and an interface in the browser for every parameter, input and simulation of the model.">Virtual Ecosystem, el modelo de ecosistemas del Imperial College de Londres, hecho visual: una selva viva en 3D, y una interfaz en el navegador para cada parámetro, entrada y simulación del modelo.</p>
+  <p class="lema" data-en="Virtual Ecosystem, the ecosystem model of Imperial College London, in JavaScript: the same results, bit for bit, much faster; with an interface for every parameter and chart, and a living rainforest in 3D.">Virtual Ecosystem, el modelo de ecosistemas del Imperial College de Londres, en JavaScript: los mismos resultados, bit a bit, mucho más rápido; con una interfaz para cada parámetro y gráfica, y una selva viva en 3D.</p>
   <figure><img src="portada/capturas/01-world.jpg" alt="The living rainforest of Maliau" data-en-alt="The living rainforest of Maliau"></figure>
 
   <h2 data-en="What it is based on: Virtual Ecosystem">En qué se basa: Virtual Ecosystem</h2>
@@ -43,12 +50,17 @@
   <p data-en="It is a scientific tool written in Python: it is configured with text files, run from the command line, and its results are data files. The ideas behind it are described by its authors in:">Es una herramienta científica escrita en Python: se configura con ficheros de texto, se corre desde la línea de comandos y sus resultados son ficheros de datos. Sus autores explican las ideas que hay detrás en:</p>
   <blockquote>Ewers, R. M., Cook, J., Daniel, O., Orme, D., Groner, V., Joshi, J., Rallings, A., Rallings, T. &amp; Amarasekare, P. (2024). <i>New insights to be gained from a Virtual Ecosystem.</i> EcoEvoRxiv. <a href="https://doi.org/10.32942/X26W5B" target="_blank" rel="noopener">doi:10.32942/X26W5B</a></blockquote>
 
-  <h2 data-en="What EcoLoco adds">Lo que añade EcoLoco</h2>
-  <p data-en="EcoLoco takes Virtual Ecosystem and gives it what a model of a forest asks for: being able to see it and to play with it.">EcoLoco coge Virtual Ecosystem y le da lo que pide un modelo de un bosque: poder verlo y poder jugar con él.</p>
+  <h2 data-en="What EcoLoco is">Qué es EcoLoco</h2>
+  <p data-en="EcoLoco is Virtual Ecosystem in the browser, with two things added on top: an interface to change every parameter and look at every result, and a living 3D world where you can see what the simulation says happening to the animals and plants of Borneo.">EcoLoco es Virtual Ecosystem en el navegador, con dos cosas encima: una interfaz para cambiar cada parámetro y ver cada resultado, y un mundo vivo en 3D donde se ve a los animales y plantas de Borneo haciendo lo que dice la simulación.</p>
 
-  <h3 data-en="1 · A living world you can see">1 · Un mundo vivo que se puede ver</h3>
-  <p data-en="The forest the model computes becomes a 3D rainforest of Maliau (Borneo), with its real daily climate. The trees are the model's plant cohorts, at their real density and height. On top, every animal is simulated as an individual, minute by minute: it looks for food, drinks, sleeps at its hour, flees from predators, hunts, courts and nests. Every day this world is reconciled with the model, so births, deaths, who eats whom and how much is eaten are those of Virtual Ecosystem. You can follow any animal, read why it does what it does, and click any tree or mushroom.">El bosque que calcula el modelo se convierte en una selva de Maliau (Borneo) en 3D, con su clima diario real. Los árboles son las cohortes de plantas del modelo, a su densidad y su altura reales. Encima, cada animal se simula como un individuo, minuto a minuto: busca comida, bebe, duerme a su hora, huye de los depredadores, caza, corteja y anida. Cada día este mundo se cuadra con el modelo, así que los nacimientos, las muertes, quién se come a quién y cuánto se come son los de Virtual Ecosystem. Se puede seguir a cualquier animal, leer por qué hace lo que hace y pulsar cualquier árbol o seta.</p>
-  <figure><img src="portada/capturas/02-animal-card.jpg" alt="Following an animal, with its card"><figcaption data-en="Following a water monitor: what it does and why, its home, what it has done today and what its species is like.">Siguiendo a un varano: qué hace y por qué, su hogar, lo que ha hecho hoy y cómo es su especie.</figcaption></figure>
+  <h3 data-en="1 · The same model, in JavaScript: identical results, much faster">1 · El mismo modelo, en JavaScript: los mismos resultados, mucho más rápido</h3>
+  <p data-en="Virtual Ecosystem 0.2.2 was rewritten in JavaScript, module by module. It is not an approximation: it gives exactly the same numbers as the original, bit for bit, in every output compared (all the variables of every step, and the animal and plant tables). It runs in any browser, with nothing to install, and much faster:">Virtual Ecosystem 0.2.2 se ha reescrito en JavaScript, módulo a módulo. No es una aproximación: da exactamente los mismos números que el original, bit a bit, en todas las salidas comparadas (todas las variables de cada paso y las tablas de animales y plantas). Corre en cualquier navegador, sin instalar nada, y mucho más rápido:</p>
+  <table class="velocidad">
+    <tr><th data-en="Scenario">Escenario</th><th data-en="Original (Python)">Original (Python)</th><th data-en="Our engine (JavaScript)">Nuestro motor (JavaScript)</th><th data-en="Faster">Más rápido</th></tr>
+    <tr><td data-en="Example, monthly steps (2 years, 9 × 9 cells)">Ejemplo, paso mensual (2 años, 9 × 9 celdas)</td><td data-en="134.9 s">134,9 s</td><td data-en="13.2 s">13,2 s</td><td><b>×10</b></td></tr>
+    <tr><td data-en="Example, daily steps (60 days, 9 × 9 cells)">Ejemplo, paso diario (60 días, 9 × 9 celdas)</td><td>31 min 14 s</td><td data-en="38.0 s">38,0 s</td><td><b>×49</b></td></tr>
+  </table>
+  <p class="nota" data-en="Whole runs, from loading the data to writing every output, measured one after the other on the same computer (Ryzen 9 5900X, Windows 11; Python 3.12.4, Node 22). In both cases the two give exactly the same bits.">Pasadas completas, de cargar los datos a escribir todas las salidas, medidas una detrás de otra en el mismo ordenador (Ryzen 9 5900X, Windows 11; Python 3.12.4, Node 22). En los dos casos dan exactamente los mismos bits.</p>
 
   <h3 data-en="2 · An interface for everything">2 · Una interfaz para todo</h3>
   <p data-en="Everything that in the original is a text file or a data file can be done here with the mouse: choose and edit every parameter of every model (more than 300, each with its explanation), the animal and plant types, the climate and the starting data; run the model step by step; see populations, biomass, soil, water and temperature in charts; explore any variable on the map; and export the results in the same formats as the original. Inside the living world, the climate can be changed from tomorrow, with a prediction of what would happen with and without the change.">Todo lo que en el original es un fichero de texto o de datos se puede hacer aquí con el ratón: elegir y cambiar cada parámetro de cada modelo (más de 300, cada uno con su explicación), los tipos de animal y de planta, el clima y los datos de partida; correr el modelo paso a paso; ver en gráficas las poblaciones, la biomasa, el suelo, el agua y la temperatura; explorar cualquier variable en el mapa; y exportar los resultados en los mismos formatos que el original. Dentro del mundo vivo se puede cambiar el clima desde mañana, con una predicción de lo que pasaría con y sin el cambio.</p>
@@ -57,8 +69,25 @@
     <figure><img src="portada/capturas/05-prediction.jpg" alt="A climate prediction"><figcaption data-en="+2 °C from tomorrow: the prediction with (orange) and without (blue) the change.">+2 °C desde mañana: la predicción con (naranja) y sin (azul) el cambio.</figcaption></figure>
   </div>
 
-  <h3 data-en="3 · The same model, in the browser">3 · El mismo modelo, en el navegador</h3>
-  <p data-en="To do all this in a web page, Virtual Ecosystem 0.2.2 was rewritten in JavaScript, module by module. It is not an approximation: it gives exactly the same numbers as the original, bit for bit, in every output compared, and it runs 5 to 15 times faster. Nothing needs to be installed.">Para hacer todo esto en una página web, Virtual Ecosystem 0.2.2 se ha reescrito en JavaScript, módulo a módulo. No es una aproximación: da exactamente los mismos números que el original, bit a bit, en todas las salidas comparadas, y va entre 5 y 15 veces más rápido. No hay que instalar nada.</p>
+  <h3 data-en="3 · A living world you can see">3 · Un mundo vivo que se puede ver</h3>
+  <p data-en="The forest the model computes becomes a 3D rainforest of Maliau (Borneo), with its real daily climate. The trees are the model's plant cohorts, at their real density and height. On top, every animal is simulated as an individual, minute by minute: it looks for food, drinks, sleeps at its hour, flees from predators, hunts, courts and nests. Every day this world is reconciled with the model, so births, deaths, who eats whom and how much is eaten are those of Virtual Ecosystem.">El bosque que calcula el modelo se convierte en una selva de Maliau (Borneo) en 3D, con su clima diario real. Los árboles son las cohortes de plantas del modelo, a su densidad y su altura reales. Encima, cada animal se simula como un individuo, minuto a minuto: busca comida, bebe, duerme a su hora, huye de los depredadores, caza, corteja y anida. Cada día este mundo se cuadra con el modelo, así que los nacimientos, las muertes, quién se come a quién y cuánto se come son los de Virtual Ecosystem.</p>
+  <ul>
+    <li data-en="<b>Real-looking trees and animals.</b> The trees are grown with ez-tree (trunk, branches and leaves), and the 33 animals have smooth bodies with a skeleton and painted fur, without costing more to the graphics card than simple shapes.">
+      <b>Árboles y animales con cuerpo.</b> Los árboles se generan con ez-tree (tronco, ramas y hojas) y los 33 animales tienen cuerpo suave con esqueleto y pelaje pintado, sin gastar más gráfica que unas formas simples.</li>
+    <li data-en="<b>Lianas and climbers:</b> the Tetrastigma vine with the rafflesia at its foot, rattan, lianas hanging between trees and over the river, and creepers up the trunks.">
+      <b>Lianas y trepadoras:</b> la liana Tetrastigma con la rafflesia a su pie, el ratán, lianas colgando entre los árboles y sobre el río, y enredaderas por los troncos.</li>
+    <li data-en="<b>Fallen logs over the river:</b> the animals that do not swim look for a way and cross on them.">
+      <b>Troncos caídos sobre el río:</b> los animales que no nadan buscan camino y cruzan por ellos.</li>
+    <li data-en="<b>Insects you can see walking</b>, each in its own patch: termites in procession, the tiger beetle running, stick insects on their branch.">
+      <b>Insectos que se ve que andan</b>, cada uno en su zona: termitas en procesión, el escarabajo tigre corriendo, el insecto palo en su rama.</li>
+    <li data-en="<b>Follow any animal:</b> the camera orbits around it (also with one finger on a phone) and its card tells what it is doing and why, its home and what it has done today. Trees, lianas and mushrooms can be clicked too.">
+      <b>Seguir a cualquier animal:</b> la cámara gira a su alrededor (también con un dedo en el móvil) y su ficha cuenta qué hace y por qué, su hogar y lo que ha hecho hoy. Los árboles, las lianas y las setas también se pulsan.</li>
+  </ul>
+  <figure><img src="portada/capturas/02-animal-card.jpg" alt="Following an animal, with its card"><figcaption data-en="Following an animal: what it does and why, its home, what it has done today and what its species is like.">Siguiendo a un animal: qué hace y por qué, su hogar, lo que ha hecho hoy y cómo es su especie.</figcaption></figure>
+  <div class="dos">
+    <figure><img src="portada/capturas/03-river.png" alt="Lianas and a fallen log over the river"><figcaption data-en="Lianas hanging over the river, and a macaque crossing on a fallen log.">Lianas colgando sobre el río y un macaco cruzando por un tronco caído.</figcaption></figure>
+    <figure><img src="portada/capturas/04-insects.png" alt="A tiger beetle running"><figcaption data-en="Down on the forest floor: a tiger beetle running through the grass.">A ras de suelo: un escarabajo tigre corriendo entre la hierba.</figcaption></figure>
+  </div>
 
   <h2 data-en="The sections">Las secciones</h2>
   <div class="secciones">
@@ -80,12 +109,12 @@
     <a class="enlace" href="https://github.com/majausone/ecoloco" target="_blank" rel="noopener"><b data-en="EcoLoco on GitHub">EcoLoco en GitHub</b><span data-en="The code of this site: the JavaScript model, the living world and the interfaces. BSD 3-Clause.">El código de esta web: el modelo en JavaScript, el mundo vivo y las interfaces. BSD 3-Clause.</span></a>
     <a class="enlace" href="https://github.com/ImperialCollegeLondon/virtual_ecosystem" target="_blank" rel="noopener"><b data-en="Virtual Ecosystem on GitHub">Virtual Ecosystem en GitHub</b><span data-en="The original model, by Rob Ewers, David Orme, Jacob Cook, Vivienne Groner, Taran Rallings, Sally Matson, Olivia Daniel, Jaideep Joshi, Anna Rallings, Priyanga Amarasekare, Diego Alonso Alvarez and Alex Dewar (Imperial College London).">El modelo original, de Rob Ewers, David Orme, Jacob Cook, Vivienne Groner, Taran Rallings, Sally Matson, Olivia Daniel, Jaideep Joshi, Anna Rallings, Priyanga Amarasekare, Diego Alonso Alvarez y Alex Dewar (Imperial College London).</span></a>
   </div>
-  <p data-en="EcoLoco is an independent project, not made by the Virtual Ecosystem team. Also with thanks to pyrealm (also from Imperial), three.js, the ERA5 climate data of Copernicus through Open-Meteo, and the iNaturalist observers whose photos appear in the gallery.">EcoLoco es un proyecto independiente, no hecho por el equipo de Virtual Ecosystem. Gracias también a pyrealm (también del Imperial), three.js, los datos de clima ERA5 de Copernicus a través de Open-Meteo y los observadores de iNaturalist cuyas fotos salen en la galería.</p>
+  <p data-en="EcoLoco is an independent project, not made by the Virtual Ecosystem team. Also with thanks to pyrealm (also from Imperial), three.js, ez-tree (Daniel Greenheck) for the trees, the ERA5 climate data of Copernicus through Open-Meteo, and the iNaturalist observers whose photos appear in the gallery.">EcoLoco es un proyecto independiente, no hecho por el equipo de Virtual Ecosystem. Gracias también a pyrealm (también del Imperial), three.js, ez-tree (Daniel Greenheck) para los árboles, los datos de clima ERA5 de Copernicus a través de Open-Meteo y los observadores de iNaturalist cuyas fotos salen en la galería.</p>
 </div>
 <link rel="stylesheet" href="comun/comun.css">
 <script type="module">
-import { traducirDom } from './comun/idioma.js?v=202610052205';
-import { cabecera } from './comun/cabecera.js?v=202610052205';
+import { traducirDom } from './comun/idioma.js?v=202610052309';
+import { cabecera } from './comun/cabecera.js?v=202610052309';
 traducirDom(); cabecera('portada');
 </script>
 </body>

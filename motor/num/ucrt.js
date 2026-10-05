@@ -6,11 +6,11 @@
 // FMA de ucrtbase.dll (ver herramientas/extraer_tablas_ucrt.py). Las constantes y tablas
 // salen de la propia DLL. El `Math.exp` de JS (fdlibm) difiere en ~7% de los valores.
 
-import { fma } from './fma.js?v=202610052205';
+import { fma } from './fma.js?v=202610052309';
 import {
   EXP_T1, EXP_T2, EXP_T3, LOG_TINV, LOG_TA, LOG_TB, POW_LOG, POW_EXP, LOG10_TA, LOG10_TB,
-} from './tablas_ucrt.js?v=202610052205';
-import { f64 } from './f64.js?v=202610052205';
+} from './tablas_ucrt.js?v=202610052309';
+import { f64 } from './f64.js?v=202610052309';
 
 const buf = new ArrayBuffer(8);
 const F = new Float64Array(buf);
