@@ -5,7 +5,7 @@
    con el cambio, azul para lo que pasaría sin él. */
 
 export const COLOR = { serie: '#c47f2c', sin: '#3b86cf' };
-import { T, num } from '../comun/idioma.js?v=202610052338';
+import { T, num } from '../comun/idioma.js?v=202610060010';
 const NS = 'http://www.w3.org/2000/svg';
 const el = (t, a = {}) => { const e = document.createElementNS(NS, t); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); return e; };
 

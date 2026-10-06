@@ -2,15 +2,15 @@
    un mundo antes de generarlo (con preajustes), ver lo que va a tener y abrir los mundos guardados.
    La configuración va a la simulación por la dirección: vivo/?mundo=... (mundo/config.js). */
 
-import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052338';
-import { ESPECIES_DE_GRUPO, VERTEBRADOS } from '../mundo/especies.js?v=202610052338';
-import { PLANTAS_DEL_MUNDO, SETAS_DEL_MUNDO } from '../mundo/mapa.js?v=202610052338';
-import { CONFIG_BASE, PREAJUSTES, OPCIONES, OPCIONES_EN, completar, gruposQuitados, resumen, aTexto } from '../mundo/config.js?v=202610052338';
-import { controlTamano, LADO } from '../comun/tamano.js?v=202610052338';
-import { T, enIngles, traducirDom, num as numero } from '../comun/idioma.js?v=202610052338';
-import { ayuda, ponerAyudas } from '../comun/ayuda.js?v=202610052338';
-import { cabecera } from '../comun/cabecera.js?v=202610052338';
-import { GRUPO_EN, nombreEsp, categoria } from '../comun/nombres.js?v=202610052338';
+import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060010';
+import { ESPECIES_DE_GRUPO, VERTEBRADOS } from '../mundo/especies.js?v=202610060010';
+import { PLANTAS_DEL_MUNDO, SETAS_DEL_MUNDO } from '../mundo/mapa.js?v=202610060010';
+import { CONFIG_BASE, PREAJUSTES, OPCIONES, OPCIONES_EN, completar, gruposQuitados, resumen, aTexto } from '../mundo/config.js?v=202610060010';
+import { controlTamano, LADO } from '../comun/tamano.js?v=202610060010';
+import { T, enIngles, traducirDom, num as numero } from '../comun/idioma.js?v=202610060010';
+import { ayuda, ponerAyudas } from '../comun/ayuda.js?v=202610060010';
+import { cabecera } from '../comun/cabecera.js?v=202610060010';
+import { GRUPO_EN, nombreEsp, categoria } from '../comun/nombres.js?v=202610060010';
 
 traducirDom(); ponerAyudas(); cabecera('simulacion');
 // (la página está en portada/: lo demás, desde la raíz del proyecto)

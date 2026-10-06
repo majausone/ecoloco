@@ -1,14 +1,49 @@
 // Interfaz de EcoLoco: edita el escenario, manda la simulación a un Web Worker
 // (trabajador.js) y pinta lo que va llegando. No calcula nada del modelo.
 
-import { Rejilla } from '../motor/core/rejilla.js?v=202610052338';
-import { zip as zipBytes } from '../motor/salida/zip.js?v=202610052338';
-import { activarCorrecciones } from '../motor/correcciones.js?v=202610052338';
-import { T, enIngles, traducirDom } from '../comun/idioma.js?v=202610052338';
-import { ayuda, ponerAyudas } from '../comun/ayuda.js?v=202610052338';
-import { cabecera } from '../comun/cabecera.js?v=202610052338';
+import { Rejilla } from '../motor/core/rejilla.js?v=202610060010';
+import { zip as zipBytes } from '../motor/salida/zip.js?v=202610060010';
+import { activarCorrecciones } from '../motor/correcciones.js?v=202610060010';
+import { T, enIngles, traducirDom } from '../comun/idioma.js?v=202610060010';
+import { ayuda, ponerAyudas } from '../comun/ayuda.js?v=202610060010';
+import { htmlAyudaCorrecciones } from './ayuda-correcciones.js?v=202610060010';
+import { cabecera } from '../comun/cabecera.js?v=202610060010';
 
 traducirDom(); ponerAyudas(); cabecera('motor');
+montarAyudaCorrecciones();
+
+// el «?» de la casilla de correcciones: un panel largo (interfaz/ayuda-correcciones.js) que se
+// abre al pasar el ratón y se queda abierto al pulsar el «?»; lo cierran la ✕, Esc o pulsar fuera
+function montarAyudaCorrecciones() {
+  const b = document.getElementById('ayuda-corregir'), g = document.getElementById('globo-corregir');
+  if (!b || !g) return;
+  g.querySelector('.contenido').innerHTML = htmlAyudaCorrecciones(T);
+  let fijo = false, cierre = 0;
+  const colocar = () => {
+    if (innerWidth <= 700) return; // (en el móvil, abajo y a lo ancho: lo pone el CSS)
+    const r = b.getBoundingClientRect(), w = Math.min(600, innerWidth - 24);
+    g.style.width = w + 'px';
+    g.style.left = Math.min(Math.max(12, r.left + r.width / 2 - w / 2), innerWidth - w - 12) + 'px';
+    const y = r.bottom + 8;
+    g.style.top = y + 'px';
+    g.style.maxHeight = Math.max(240, innerHeight - y - 16) + 'px';
+  };
+  const abrir = () => { clearTimeout(cierre); colocar(); g.hidden = false; b.setAttribute('aria-expanded', 'true'); };
+  const cerrar = () => { fijo = false; g.classList.remove('fijo'); g.hidden = true; b.setAttribute('aria-expanded', 'false'); };
+  const quizaCerrar = () => { clearTimeout(cierre); cierre = setTimeout(() => { if (!fijo) cerrar(); }, 300); };
+  b.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') abrir(); });
+  b.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') quizaCerrar(); });
+  g.addEventListener('mouseenter', () => clearTimeout(cierre));
+  g.addEventListener('mouseleave', quizaCerrar);
+  b.addEventListener('click', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    if (fijo) cerrar(); else { fijo = true; g.classList.add('fijo'); abrir(); }
+  });
+  g.querySelector('.cerrar').addEventListener('click', cerrar);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !g.hidden) cerrar(); });
+  document.addEventListener('click', (e) => { if (fijo && !g.contains(e.target) && e.target !== b) cerrar(); });
+  addEventListener('resize', () => { if (!g.hidden) colocar(); });
+}
 
 const zip = (ficheros) => new Blob([zipBytes(ficheros)], { type: 'application/zip' });
 
@@ -574,7 +609,7 @@ function retardo() { return Math.round((100 - Number($('#velocidad').value)) * 2
 
 function nuevoTrabajador() {
   if (trabajador) trabajador.terminate();
-  trabajador = new Worker('trabajador.js?v=202610052338', { type: 'module' });
+  trabajador = new Worker('trabajador.js?v=202610060010', { type: 'module' });
   trabajador.onmessage = (ev) => {
     const m = ev.data;
     if (m.tipo === 'listo') {

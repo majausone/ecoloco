@@ -1,7 +1,7 @@
 // Arr: el equivalente mínimo de un xarray.DataArray: dimensiones con nombre, forma,
 // datos float64 en orden C y coordenadas por dimensión.
 
-import { f64 } from '../num/f64.js?v=202610052338';
+import { f64 } from '../num/f64.js?v=202610060010';
 export class Arr {
   constructor(dims, shape, data, coords = {}) {
     this.dims = dims;

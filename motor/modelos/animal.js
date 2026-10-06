@@ -17,15 +17,15 @@
 // Neumaier solo con los primeros). Por eso las masas guardan una marca `n*` que dice si el
 // valor es np.float64. Ver sumaMixta en num/py.js.
 
-import { exp, log, pow, asin } from '../num/ucrt.js?v=202610052338';
-import { suma, sumaEje, media, mediaEje, nanmediaEje } from '../num/np.js?v=202610052338';
-import { sumaMixta, mediaEstadistica, sumaPy } from '../num/py.js?v=202610052338';
-import { PySet, PySetEnteros } from '../num/pyset.js?v=202610052338';
-import { Arr } from '../core/arr.js?v=202610052338';
-import { diasAFecha } from '../core/componentes.js?v=202610052338';
-import { ModeloBase } from './base.js?v=202610052338';
-import { F, I, S, B, L, tablaCSV } from '../salida/csv.js?v=202610052338';
-import { f64 } from '../num/f64.js?v=202610052338';
+import { exp, log, pow, asin } from '../num/ucrt.js?v=202610060010';
+import { suma, sumaEje, media, mediaEje, nanmediaEje } from '../num/np.js?v=202610060010';
+import { sumaMixta, mediaEstadistica, sumaPy } from '../num/py.js?v=202610060010';
+import { PySet, PySetEnteros } from '../num/pyset.js?v=202610060010';
+import { Arr } from '../core/arr.js?v=202610060010';
+import { diasAFecha } from '../core/componentes.js?v=202610060010';
+import { ModeloBase } from './base.js?v=202610060010';
+import { F, I, S, B, L, tablaCSV } from '../salida/csv.js?v=202610060010';
+import { f64 } from '../num/f64.js?v=202610060010';
 
 // ------------------------------------------------------------------ rasgos (animal_traits)
 const D = {};
@@ -1121,8 +1121,8 @@ export const CORRECCIONES_ANIMAL = {
   presas_pequenas: false,     // se pueden cazar presas de menos de 0,1 g (insectos jóvenes, termitas)
   inmigracion: false,         // entran y salen animales del bosque de alrededor si la densidad se aleja mucho de la de referencia
   metamorfosis_solo_larvas: false, // solo las larvas se metamorfosean (en el original, también los adultos: mariposa -> oruga)
-  cohortes_iniciales_mezcladas: false,
-  fusionar_cohortes: false,   // junta cohortes parecidas (mismo grupo y sitio, masa cercana) si un grupo pasa de MAX_COHORTES (como Madingley) // las cohortes del principio con masas de cría a adulto (el original: todas recién nacidas)
+  cohortes_iniciales_mezcladas: false, // las cohortes del principio con masas de cría a adulto (el original: todas recién nacidas)
+  fusionar_cohortes: false,   // junta cohortes parecidas (mismo grupo y sitio, masa cercana) si un grupo pasa de MAX_COHORTES (como Madingley)
 };
 export const BOLTZMANN_EV = 8.617333262145e-5;
 const TIEMPO_ENTRADA = 60, TIEMPO_SALIDA = 15; // días (inmigracion)

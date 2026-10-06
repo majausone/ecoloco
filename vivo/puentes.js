@@ -5,8 +5,8 @@
    alturaEn(x, z): la altura de su lomo en un punto (para que los animales anden por encima), o null. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { conTransparencia } from './transparencia.js?v=202610052338';
-import { ruido2 } from '../graficos/pruebas-morta/escena-v3.js?v=202610052338';
+import { conTransparencia } from './transparencia.js?v=202610060010';
+import { ruido2 } from '../graficos/pruebas-morta/escena-v3.js?v=202610060010';
 
 const LADOS = 18, SOBRA = 1.1; // lados del tubo; metros de más por cada orilla (hundidos en la tierra)
 

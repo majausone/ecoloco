@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import * as np from '../motor/num/np.js?v=202610052338';
+import * as np from '../motor/num/np.js?v=202610060010';
 
 const c = JSON.parse(readFileSync(new URL('../datos/vectores/np.json', import.meta.url)),
   (k, v) => (v === 'NaN' ? NaN : v));

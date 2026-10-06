@@ -4,7 +4,7 @@
    Cada prueba es una configuración: bioma, paleta, luz, cámara, resolución y extras. */
 
 import * as THREE from './vendor/three.module.js';
-import { Rejilla } from './voxeles.js?v=202610052338';
+import { Rejilla } from './voxeles.js?v=202610060010';
 
 /* ---- azar y ruido con semilla --------------------------------------------- */
 

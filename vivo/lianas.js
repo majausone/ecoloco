@@ -7,9 +7,9 @@
    material para todas las de cerca (se rehace cuando cambian los árboles: cambiado(), o la zona). */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { SacoP, materialPlanta, materialSombraPlanta, lianaTrepando, lianaColgante, lianaCortina, rafflesiaEn } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610052338';
-import { modeloPlanta, escalaDe, azarDe, varianteDe } from '../mundo/posaderos.js?v=202610052338';
-import { conTransparencia } from './transparencia.js?v=202610052338';
+import { SacoP, materialPlanta, materialSombraPlanta, lianaTrepando, lianaColgante, lianaCortina, rafflesiaEn } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610060010';
+import { modeloPlanta, escalaDe, azarDe, varianteDe } from '../mundo/posaderos.js?v=202610060010';
+import { conTransparencia } from './transparencia.js?v=202610060010';
 
 const RADIO_CERCA = 160; // m alrededor de la cámara con lianas
 

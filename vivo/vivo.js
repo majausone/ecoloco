@@ -17,35 +17,35 @@
      en Maliau, a 4,8° N); de noche brillan las setas luminosas y salen las luciérnagas. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { particulas } from '../graficos/pruebas-morta/escena-v3.js?v=202610052338';
-import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052338';
-import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js?v=202610052338';
-import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js?v=202610052338';
-import { Mapa, BALDOSA } from '../mundo/mapa.js?v=202610052338';
-import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610052338';
-import { crearFicha } from './ficha.js?v=202610052338';
-import { crearTactil } from './tactil.js?v=202610052338';
-import { crearTerreno } from './terreno.js?v=202610052338';
-import { crearBosque, LEJOS } from './bosque.js?v=202610052338';
-import { actualizarTransparencia, uTransp } from './transparencia.js?v=202610052338';
-import { crearHierba } from './hierba.js?v=202610052338';
-import { crearPuentes } from './puentes.js?v=202610052338';
-import { crearLianas } from './lianas.js?v=202610052338';
-import { crearPrecipitacion } from './precipitacion.js?v=202610052338';
-import { crearGraficos, leerGraficos } from './graficos.js?v=202610052338';
-import { crearManada } from './manada.js?v=202610052338';
-import { completar, aTexto, deTexto } from '../mundo/config.js?v=202610052338';
-import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js?v=202610052338';
-import { crearCielo, CAPA_CIELO } from './cielo.js?v=202610052338';
-import { crearHogares } from './hogares.js?v=202610052338';
-import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js?v=202610052338';
-import { ponerAyudas } from '../comun/ayuda.js?v=202610052338';
-import { traducirDom, T, num, enIngles } from '../comun/idioma.js?v=202610052338';
-import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js?v=202610052338';
-import { cabecera } from '../comun/cabecera.js?v=202610052338';
-import { VERTEBRADOS } from '../mundo/especies.js?v=202610052338';
-import { pulsar, despues } from './pulsar.js?v=202610052338';
-import { prepararSuaves } from '../graficos/pruebas-morta/borneo/animales.js?v=202610052338';
+import { particulas } from '../graficos/pruebas-morta/escena-v3.js?v=202610060010';
+import { ANIMALES, PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060010';
+import { Visor, LUCES, pantallaCompleta } from '../graficos/pruebas-morta/borneo/visor.js?v=202610060010';
+import { CamaraUnity } from '../graficos/pruebas-morta/borneo/camara.js?v=202610060010';
+import { Mapa, BALDOSA } from '../mundo/mapa.js?v=202610060010';
+import { TICS, CLAVE, DETALLE } from '../mundo/dia.js?v=202610060010';
+import { crearFicha } from './ficha.js?v=202610060010';
+import { crearTactil } from './tactil.js?v=202610060010';
+import { crearTerreno } from './terreno.js?v=202610060010';
+import { crearBosque, LEJOS } from './bosque.js?v=202610060010';
+import { actualizarTransparencia, uTransp } from './transparencia.js?v=202610060010';
+import { crearHierba } from './hierba.js?v=202610060010';
+import { crearPuentes } from './puentes.js?v=202610060010';
+import { crearLianas } from './lianas.js?v=202610060010';
+import { crearPrecipitacion } from './precipitacion.js?v=202610060010';
+import { crearGraficos, leerGraficos } from './graficos.js?v=202610060010';
+import { crearManada } from './manada.js?v=202610060010';
+import { completar, aTexto, deTexto } from '../mundo/config.js?v=202610060010';
+import { crearPanel, GRUPO_ES as GRUPO_PANEL } from './panel.js?v=202610060010';
+import { crearCielo, CAPA_CIELO } from './cielo.js?v=202610060010';
+import { crearHogares } from './hogares.js?v=202610060010';
+import { controlTamano, LADO as RANGO_LADO } from '../comun/tamano.js?v=202610060010';
+import { ponerAyudas } from '../comun/ayuda.js?v=202610060010';
+import { traducirDom, T, num, enIngles } from '../comun/idioma.js?v=202610060010';
+import { NOMBRE_EN, GRUPO_EN } from '../comun/nombres.js?v=202610060010';
+import { cabecera } from '../comun/cabecera.js?v=202610060010';
+import { VERTEBRADOS } from '../mundo/especies.js?v=202610060010';
+import { pulsar, despues } from './pulsar.js?v=202610060010';
+import { prepararSuaves } from '../graficos/pruebas-morta/borneo/animales.js?v=202610060010';
 
 const $ = (id) => document.getElementById(id);
 const lienzo = $('lienzo');
@@ -72,7 +72,7 @@ let CONFIG;
 try { CONFIG = completar(parametros.get('mundo') ? deTexto(parametros.get('mundo')) : { km2: KM2 || undefined, lado: Number(parametros.get('lado')) || undefined, semilla: Number(parametros.get('semilla') || 1) }); }
 catch { CONFIG = completar({}); }
 const DIA = Math.max(0, Number(parametros.get('dia')) || 0);
-const trabajador = new Worker(new URL('./trabajador.js?v=202610052338', import.meta.url), { type: 'module' });
+const trabajador = new Worker(new URL('./trabajador.js?v=202610060010', import.meta.url), { type: 'module' });
 // las mallas suaves de los animales, en paralelo mientras el trabajador genera el mundo
 const T0 = performance.now(), tiemposCarga = {};
 const suaves = prepararSuaves(ANIMALES).then(() => { tiemposCarga.suaves = performance.now() - T0; });

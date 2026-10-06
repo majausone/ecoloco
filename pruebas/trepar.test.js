@@ -4,10 +4,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { Mundo } from '../mundo/mundo.js?v=202610052338';
-import { reiniciarIds } from '../mundo/agentes.js?v=202610052338';
-import { COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610052338';
-import { CLAVE } from '../mundo/dia.js?v=202610052338';
+import { Mundo } from '../mundo/mundo.js?v=202610060010';
+import { reiniciarIds } from '../mundo/agentes.js?v=202610060010';
+import { COMPORTAMIENTO, ESTADOS } from '../mundo/especies.js?v=202610060010';
+import { CLAVE } from '../mundo/dia.js?v=202610060010';
 
 const RUTA = new URL('../datos/escenarios/maliau.json', import.meta.url);
 const leer = (r) => JSON.parse(readFileSync(r, 'utf8'));

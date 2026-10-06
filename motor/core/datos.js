@@ -1,7 +1,7 @@
 // Data (core/data.py): el almacén compartido de variables entre módulos.
 // Al leer una variable con eje time_index se devuelve el corte del paso actual.
 
-import { Arr } from './arr.js?v=202610052338';
+import { Arr } from './arr.js?v=202610060010';
 
 export class Datos {
   constructor(rejilla, conocidas) {

@@ -9,11 +9,11 @@
 // calcula el día) van minuto a minuto; el resto, a paso grueso (ctx.paso minutos), y la parte
 // visual interpola entre sus fotogramas clave.
 
-import { Azar } from './azar.js?v=202610052338';
-import { hashTexto } from './mapa.js?v=202610052338';
-import { activo, ACTIVIDAD, E, VERTEBRADOS } from './especies.js?v=202610052338';
-import { necesidades, dirigir, alturaDeseada, Copia } from './agentes.js?v=202610052338';
-import { posadero, horquilla, ARBOL, modeloPlanta, escalaDe } from './posaderos.js?v=202610052338';
+import { Azar } from './azar.js?v=202610060010';
+import { hashTexto } from './mapa.js?v=202610060010';
+import { activo, ACTIVIDAD, E, VERTEBRADOS } from './especies.js?v=202610060010';
+import { necesidades, dirigir, alturaDeseada, Copia } from './agentes.js?v=202610060010';
+import { posadero, horquilla, ARBOL, modeloPlanta, escalaDe } from './posaderos.js?v=202610060010';
 
 export const TICS = 1440;
 // fotograma clave: tic, x, y, z, rumbo, estado, valor (qué come)

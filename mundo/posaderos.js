@@ -7,8 +7,8 @@
 // Cada árbol del mapa se dibuja con una de VARIANTES variantes de su especie, girado y
 // escalado: varianteDe y escalaDe dicen cuáles (y vivo/bosque.js usa estas mismas).
 
-import { construir, SacoP, troncoDe } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610052338';
-import { PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610052338';
+import { construir, SacoP, troncoDe } from '../graficos/pruebas-morta/borneo/plantas.js?v=202610060010';
+import { PLANTAS, SETAS } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060010';
 
 export const VARIANTES = 3;
 export const ARBOL = new Set(['dipterocarpo', 'agathis', 'higuera', 'roble', 'dillenia', 'palma-cola-pez', 'pinanga']);

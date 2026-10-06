@@ -1,6 +1,6 @@
 // El «?» con globo: un iconito que, al pasar el ratón (o al pulsarlo, o con el foco del
 // teclado), enseña una explicación corta. ayuda(es, en) devuelve su HTML.
-import { T } from './idioma.js?v=202610052338';
+import { T } from './idioma.js?v=202610060010';
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 export const ayuda = (es, en) => `<span class="ayuda" tabindex="0" role="note" aria-label="${esc(T(es, en))}" data-globo="${esc(T(es, en))}">?</span>`;
 // los «?» escritos en el HTML: <span class="ayuda" data-es="…" data-en="…"></span>

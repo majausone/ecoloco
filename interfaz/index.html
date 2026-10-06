@@ -29,7 +29,7 @@
     <label><span data-en="Scenario">Escenario</span> <select id="escenario"></select><span class="ayuda" data-es="Los datos de partida: el ejemplo de Virtual Ecosystem, Maliau (Borneo) u otros de datos/escenarios/." data-en="The starting data: the Virtual Ecosystem example, Maliau (Borneo) or others in datos/escenarios/."></span></label>
     <label><span data-en="Seed">Semilla</span> <input id="semilla" type="number" value="1" min="0" step="1"><span class="ayuda" data-es="El azar del motor: con la misma semilla, la misma simulación, bit a bit." data-en="The engine randomness: with the same seed, the same simulation, bit for bit."></span></label>
     <label><input id="historia" type="checkbox" checked> <span data-en="keep full history">guardar historia completa</span><span class="ayuda" data-es="Guarda todas las variables de todos los pasos: hace falta para exportar el zarr. En pasadas diarias largas ocupa mucha memoria." data-en="Keeps every variable of every step: needed to export the zarr. On long daily runs it uses a lot of memory."></span></label>
-    <label><input id="corregir" type="checkbox"> <span data-en="fix the herbivore bug">corregir el fallo de los herbívoros</span><span class="ayuda" data-es="Activa las correcciones del fallo de los herbívoros (unidades, truncados, Boltzmann, reproducción…) y los ajustes de motor/correcciones.js. Apagado, el motor da los mismos bits que el original. El escenario de Maliau ya las trae puestas." data-en="Turns on the fixes for the herbivore bug (units, truncation, Boltzmann, reproduction…) and the tweaks in motor/correcciones.js. Off, the engine gives the same bits as the original. The Maliau scenario already has them on."></span></label>
+    <label><input id="corregir" type="checkbox"> <span data-en="fix the herbivore bug">corregir el fallo de los herbívoros</span></label><button type="button" class="ayuda ayuda-larga" id="ayuda-corregir" aria-expanded="false" aria-controls="globo-corregir" title="Qué cambia (pulsa para dejarlo abierto)" data-en-title="What it changes (click to keep it open)">?</button>
     <button id="b-iniciar" class="principal" data-en="Start / restart">Iniciar / reiniciar</button>
     <button id="b-paso" disabled data-en="One step">Un paso</button>
     <button id="b-correr" disabled data-en="▶ Run">▶ Correr</button>
@@ -77,7 +77,8 @@
   <div id="entradas"></div>
 </section>
 
+<div id="globo-corregir" class="globo-largo" role="dialog" aria-modal="false" hidden><button type="button" class="cerrar" title="Cerrar" data-en-title="Close">✕</button><div class="contenido"></div></div>
 <div id="error" hidden></div>
-<script type="module" src="app.js?v=202610052338"></script>
+<script type="module" src="app.js?v=202610060010"></script>
 </body>
 </html>
