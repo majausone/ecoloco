@@ -15,7 +15,7 @@ const TIPOS = {
   '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.md': 'text/markdown; charset=utf-8',
 };
-const PERMITIDO = ['index.html', 'portada', 'comun', 'interfaz', 'motor', 'datos/escenarios', 'vivo', 'mundo', 'graficos'];
+const PERMITIDO = ['index.html', 'portada', 'comun', 'interfaz', 'motor', 'datos/escenarios', 'vivo', 'mundo', 'graficos', 'possible-issues'];
 
 createServer(async (req, res) => {
   try {

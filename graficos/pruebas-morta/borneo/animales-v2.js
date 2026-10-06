@@ -10,7 +10,7 @@
    las animaciones de la v1 (animales-v1.js). */
 
 import * as THREE from '../vendor/three.module.js';
-import { azar } from '../escena-v3.js?v=202610060010';
+import { azar } from '../escena-v3.js?v=202610060036';
 
 const GRIS = new THREE.Color('#77736e');
 const C = (c) => (c instanceof THREE.Color ? c.clone() : new THREE.Color(c));

@@ -10,8 +10,8 @@
    Se graban con el mismo esqueleto y las mismas animaciones que el modelo de cerca. */
 
 import * as THREE from '../vendor/three.module.js';
-import { crearAnimal, suaveDe } from './animales.js?v=202610060010';
-import { materialPelaje } from './pelaje.js?v=202610060010';
+import { crearAnimal, suaveDe } from './animales.js?v=202610060036';
+import { materialPelaje } from './pelaje.js?v=202610060036';
 
 // los tramos que se graban de cada animación: las que se repiten, de t = 1 a 1 + PERIODO (2π/2,5:
 // un número entero de ciclos para los ritmos más usados); las de una vez (dormir, morir), de 0 a 2,4 s

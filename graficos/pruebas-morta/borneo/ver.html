@@ -12,11 +12,11 @@
 /* Un modelo solo, de cerca, con cámaras fijas (para comparar y hacer capturas):
    ver.html?id=pantera-nebulosa[&cubos=1][&anim=andar&t=0.4][&vista=lado|tres|frente|arriba][&rejilla=4] */
 import * as THREE from '../vendor/three.module.js';
-import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610060010';
-import { crearAnimal } from './animales.js?v=202610060010';
-import { crearPlanta } from './plantas.js?v=202610060010';
-import { crearAnimal as crearAnimalCubos } from './animales-cubos.js?v=202610060010';
-import { crearPlanta as crearPlantaCubos } from './plantas-cubos.js?v=202610060010';
+import { ANIMALES, PLANTAS, SETAS } from './especies.js?v=202610060036';
+import { crearAnimal } from './animales.js?v=202610060036';
+import { crearPlanta } from './plantas.js?v=202610060036';
+import { crearAnimal as crearAnimalCubos } from './animales-cubos.js?v=202610060036';
+import { crearPlanta as crearPlantaCubos } from './plantas-cubos.js?v=202610060036';
 const q = new URLSearchParams(location.search);
 const id = q.get('id') || 'pantera-nebulosa', cubos = !!q.get('cubos'), vista = q.get('vista') || 'tres';
 const e = ANIMALES.find((x) => x.id === id) || PLANTAS.find((x) => x.id === id) || SETAS.find((x) => x.id === id);

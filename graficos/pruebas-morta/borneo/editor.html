@@ -107,17 +107,17 @@
 
 <script type="module">
 import * as THREE from '../vendor/three.module.js';
-import { ANIMALES, PLANTAS, SETAS, GRUPOS } from './especies.js?v=202610060010';
-import { crearAnimal, NOMBRES_ANIMACION } from './animales.js?v=202610060010';
-import { crearPlanta, NOMBRES_ANIM_PLANTA, SacoP } from './plantas.js?v=202610060010';
-import { Visor, pantallaCompleta } from './visor.js?v=202610060010';
-import { azar } from '../escena-v3.js?v=202610060010';
-import { creditoFoto } from './credito.js?v=202610060010';
-import { T, traducirDom, num } from '../../../comun/idioma.js?v=202610060010';
-import { ayuda, ponerAyudas } from '../../../comun/ayuda.js?v=202610060010';
-import { cabecera } from '../../../comun/cabecera.js?v=202610060010';
-import { nombreEsp, categoria } from '../../../comun/nombres.js?v=202610060010';
-import { dato, GRUPOS_EN, ANIMACION_EN } from '../../../comun/fichas-en.js?v=202610060010';
+import { ANIMALES, PLANTAS, SETAS, GRUPOS } from './especies.js?v=202610060036';
+import { crearAnimal, NOMBRES_ANIMACION } from './animales.js?v=202610060036';
+import { crearPlanta, NOMBRES_ANIM_PLANTA, SacoP } from './plantas.js?v=202610060036';
+import { Visor, pantallaCompleta } from './visor.js?v=202610060036';
+import { azar } from '../escena-v3.js?v=202610060036';
+import { creditoFoto } from './credito.js?v=202610060036';
+import { T, traducirDom, num } from '../../../comun/idioma.js?v=202610060036';
+import { ayuda, ponerAyudas } from '../../../comun/ayuda.js?v=202610060036';
+import { cabecera } from '../../../comun/cabecera.js?v=202610060036';
+import { nombreEsp, categoria } from '../../../comun/nombres.js?v=202610060036';
+import { dato, GRUPOS_EN, ANIMACION_EN } from '../../../comun/fichas-en.js?v=202610060036';
 traducirDom(); ponerAyudas(); cabecera('editor');
 const grupoTxt = (g) => T(GRUPOS[g], GRUPOS_EN[g]);
 // las fotos reales de cada especie (de iNaturalist, con su autor)

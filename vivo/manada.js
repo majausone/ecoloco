@@ -12,14 +12,14 @@
    La posición de cada animal se interpola entre sus fotogramas clave. */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060010';
-import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales.js?v=202610060010';
-import { hornearVAT, filaVAT, materialVAT, hacerImpostor, materialImpostor } from '../graficos/pruebas-morta/borneo/lejos.js?v=202610060010';
-import { CLAVE } from '../mundo/dia.js?v=202610060010';
-import { ESTADOS, COMPORTAMIENTO } from '../mundo/especies.js?v=202610060010';
-import { fundir } from './fundir.js?v=202610060010';
-import { animar, COMO_SE_VE } from './animaciones.js?v=202610060010';
-import { conTransparencia } from './transparencia.js?v=202610060010';
+import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060036';
+import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales.js?v=202610060036';
+import { hornearVAT, filaVAT, materialVAT, hacerImpostor, materialImpostor } from '../graficos/pruebas-morta/borneo/lejos.js?v=202610060036';
+import { CLAVE } from '../mundo/dia.js?v=202610060036';
+import { ESTADOS, COMPORTAMIENTO } from '../mundo/especies.js?v=202610060036';
+import { fundir } from './fundir.js?v=202610060036';
+import { animar, COMO_SE_VE } from './animaciones.js?v=202610060036';
+import { conTransparencia } from './transparencia.js?v=202610060036';
 
 // hasta dónde va cada nivel, en veces el tamaño del animal (con un mínimo y un máximo en metros)
 const CERCA = 30, CERCANOS = 60, CERCA_X = 35, MEDIO_X = 35;

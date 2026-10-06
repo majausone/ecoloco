@@ -28,23 +28,4 @@ body.con-cabecera { padding-top:34px; box-sizing:border-box; }
   .ayuda:hover::after, .ayuda:focus::after { position:fixed; left:8px; right:8px; top:auto; bottom:12px; transform:none; width:auto; max-width:none; }
   .ayuda.izq:hover::after, .ayuda.izq:focus::after { left:8px; right:8px; }
 }
-
-/* el «?» largo: un panel con título, grupos y su barra, que se abre al pasar el ratón y se queda
-   abierto al pulsarlo (✕, Esc o pulsar fuera lo cierran); en el móvil sale abajo, a lo ancho */
-button.ayuda { padding:0; line-height:1; }
-.ayuda.ayuda-larga::after { display:none !important; }
-.ayuda.ayuda-larga[aria-expanded="true"] { background:#e8a64a; color:#1a1410; border-color:#e8a64a; }
-.globo-largo { position:fixed; z-index:60; width:min(600px, calc(100vw - 24px)); max-height:70vh; overflow:auto; overscroll-behavior:contain;
-  background:#1d1815; color:#efe4d2; border:1px solid #e8a64a; border-radius:8px; padding:14px 18px 12px; box-shadow:0 8px 28px rgba(0,0,0,.55);
-  font:13px/1.5 system-ui, sans-serif; scrollbar-width:thin; scrollbar-color:#e8a64a #2a221e; }
-.globo-largo .cerrar { position:sticky; top:0; float:right; margin:-6px -8px 0 8px; background:#2a221e; color:#efe4d2; border:1px solid #4a3c34;
-  border-radius:50%; width:26px; height:26px; cursor:pointer; font:14px/1 system-ui, sans-serif; display:none; }
-.globo-largo.fijo .cerrar { display:block; }
-.globo-largo h3 { margin:0 0 6px; font-size:15px; color:#e8a64a; }
-.globo-largo h4 { margin:14px 0 4px; font-size:13px; color:#e8a64a; text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid #3a2f29; padding-bottom:2px; }
-.globo-largo h5 { margin:8px 0 2px; font-size:12.5px; color:#d8c9b3; }
-.globo-largo p { margin:6px 0; } .globo-largo ul { margin:2px 0 4px; padding-left:18px; } .globo-largo li { margin:3px 0; }
-.globo-largo .interruptor { font:10.5px ui-monospace, monospace; color:#8a7a68; white-space:nowrap; }
-@media (max-width:700px) {
-  .globo-largo { left:0 !important; right:0; top:auto !important; bottom:0; width:auto; max-height:78vh; border-radius:12px 12px 0 0; padding:14px 14px 18px; font-size:13.5px; }
-}
+a.ayuda { text-decoration:none; }

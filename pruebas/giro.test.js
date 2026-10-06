@@ -5,10 +5,10 @@
 // finas: alas, élitros, lengua, ojos) y la ligera; como mucho un 2 % fuera (degenerados y pliegues).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060010';
-import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales-cubos.js?v=202610060010';
-import { suavizar } from '../graficos/pruebas-morta/borneo/suavizar.js?v=202610060010';
-import { objetivosDe } from '../graficos/pruebas-morta/borneo/suavizar-datos.js?v=202610060010';
+import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060036';
+import { crearAnimal } from '../graficos/pruebas-morta/borneo/animales-cubos.js?v=202610060036';
+import { suavizar } from '../graficos/pruebas-morta/borneo/suavizar.js?v=202610060036';
+import { objetivosDe } from '../graficos/pruebas-morta/borneo/suavizar-datos.js?v=202610060036';
 
 export function giro(g) {
   const P = g.attributes.position.array, N = g.attributes.normal.array, I = g.index.array;

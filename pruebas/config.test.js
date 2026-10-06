@@ -5,9 +5,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { Mundo } from '../mundo/mundo.js?v=202610060010';
-import { reiniciarIds } from '../mundo/agentes.js?v=202610060010';
-import { PREAJUSTES, completar, gruposQuitados, aTexto, deTexto } from '../mundo/config.js?v=202610060010';
+import { Mundo } from '../mundo/mundo.js?v=202610060036';
+import { reiniciarIds } from '../mundo/agentes.js?v=202610060036';
+import { PREAJUSTES, completar, gruposQuitados, aTexto, deTexto } from '../mundo/config.js?v=202610060036';
 
 const RUTA = new URL('../datos/escenarios/maliau.json', import.meta.url);
 const hay = existsSync(RUTA);

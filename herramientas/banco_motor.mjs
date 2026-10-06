@@ -11,7 +11,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { Simulacion } from '../motor/simulacion.js?v=202610060010';
+import { Simulacion } from '../motor/simulacion.js?v=202610060036';
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : d; };

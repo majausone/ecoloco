@@ -10,10 +10,10 @@
    crearAnimal(e, { cubos: true }) da la versión de cubos de antes. */
 
 import * as THREE from '../vendor/three.module.js';
-import { crearAnimal as crearAnimalCubos, NOMBRES_ANIMACION } from './animales-cubos.js?v=202610060010';
-import { suavizar } from './suavizar.js?v=202610060010';
-import { pintarPelaje, materialPelaje } from './pelaje.js?v=202610060010';
-import { objetivosDe, dePlano } from './suavizar-datos.js?v=202610060010';
+import { crearAnimal as crearAnimalCubos, NOMBRES_ANIMACION } from './animales-cubos.js?v=202610060036';
+import { suavizar } from './suavizar.js?v=202610060036';
+import { pintarPelaje, materialPelaje } from './pelaje.js?v=202610060036';
+import { objetivosDe, dePlano } from './suavizar-datos.js?v=202610060036';
 
 export { NOMBRES_ANIMACION };
 
@@ -52,7 +52,7 @@ export function prepararSuaves(especies) {
     const trabajadores = [];
     const dar = (w) => { if (siguiente < faltan.length) { w.actual = faltan[siguiente++]; w.postMessage({ id: w.actual.id }); } else w.terminate(); };
     for (let i = 0; i < n; i++) {
-      const w = new Worker(new URL('./suavizar-trabajador.js?v=202610060010', import.meta.url), { type: 'module' });
+      const w = new Worker(new URL('./suavizar-trabajador.js?v=202610060036', import.meta.url), { type: 'module' });
       w.onmessage = ({ data }) => {
         const e = faltan.find((x) => x.id === data.id);
         if (!cache.has(e.id)) completar(e, dePlano(data.plano));

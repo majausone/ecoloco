@@ -10,9 +10,9 @@
 //   {tipo:'exportar', que}                           'zarr' | 'csv_animales'
 // Mensajes a la página: 'listo', 'paso', 'mapa', 'fin', 'archivo', 'error'.
 
-import { Simulacion } from '../motor/simulacion.js?v=202610060010';
-import { escribirZarr } from '../motor/salida/zarr.js?v=202610060010';
-import { diasAFecha } from '../motor/core/componentes.js?v=202610060010';
+import { Simulacion } from '../motor/simulacion.js?v=202610060036';
+import { escribirZarr } from '../motor/salida/zarr.js?v=202610060036';
+import { diasAFecha } from '../motor/core/componentes.js?v=202610060036';
 
 let meta = null;
 let sim = null;

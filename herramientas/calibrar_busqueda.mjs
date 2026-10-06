@@ -10,8 +10,8 @@
 //
 // Uso: node herramientas/calibrar_busqueda.mjs <escenario.json> <salida.json> [--dias 10] [--vueltas 6] [--objetivo 1.5]
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { Simulacion } from '../motor/simulacion.js?v=202610060010';
-import { activarCorrecciones } from '../motor/correcciones.js?v=202610060010';
+import { Simulacion } from '../motor/simulacion.js?v=202610060036';
+import { activarCorrecciones } from '../motor/correcciones.js?v=202610060036';
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(n); return i >= 0 ? args[i + 1] : d; };

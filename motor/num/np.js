@@ -11,8 +11,8 @@
 //  * ndarray ** escalar: atajos -1 (1/x), 0 (1), 0.5 (sqrt), 1 (x), 2 (x*x); si no, pow.
 //    Un escalar numpy o float de Python ** algo usa siempre pow (sin atajos).
 
-import { fma } from './fma.js?v=202610060010';
-import { pow } from './ucrt.js?v=202610060010';
+import { fma } from './fma.js?v=202610060036';
+import { pow } from './ucrt.js?v=202610060036';
 
 // ------------------------------------------------------------------ sumas
 export function sumaPares(a, off, n, paso) {

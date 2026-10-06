@@ -177,8 +177,5 @@ engine still gives the same bits.
 | `herramientas/` | Scenario conversion, the Python oracle and the bit-for-bit comparison suite. |
 | `datos/escenarios/` | Ready-to-run scenarios (compiled configuration plus input data). |
 
-Everything else is documented in Spanish:
-- [docs/TECNICO.md](docs/TECNICO.md): how each part is launched, how new scenarios are converted
-  from the original TOML files and how the bit-for-bit comparison is run.
-- [informe/INFORME.md](informe/INFORME.md): the full report, with what matches, the herbivore fixes,
-  sustainability runs, timings and every design decision.
+The rest is documented in Spanish in [docs/TECNICO.md](docs/TECNICO.md): how each part is launched,
+how new scenarios are converted from the original TOML files and how the bit-for-bit comparison is run.

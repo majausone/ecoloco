@@ -6,7 +6,7 @@
 // Un mundo se describe entero con su configuración y su semilla (el motor es determinista), así
 // que «guardar un mundo» es guardar esto más el día en que va.
 
-import { ESPECIES_DE_GRUPO, VERTEBRADOS } from './especies.js?v=202610060010';
+import { ESPECIES_DE_GRUPO, VERTEBRADOS } from './especies.js?v=202610060036';
 
 export const CONFIG_BASE = {
   nombre: 'Maliau, bosque maduro',

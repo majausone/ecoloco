@@ -11,7 +11,6 @@ Encima del motor está **el mundo vivo de Maliau**: una simulación de animales 
 excavan, anidan...) que cada día cuadra con lo que dice el motor, y una página que lo
 enseña en 3D con día y noche y velocidades de ×1 a ×600 y más.
 
-El informe con lo que cuadra, lo que no y los tiempos está en [`informe/INFORME.md`](../informe/INFORME.md).
 
 ## Qué hay
 

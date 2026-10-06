@@ -1,16 +1,16 @@
 // Modelo hidrológico (models/hydrology): above_ground.py, below_ground.py,
 // hydrology_tools.py y hydrology_model.py, operación a operación.
 
-import { Arr } from '../core/arr.js?v=202610060010';
-import { ModeloBase } from './base.js?v=202610060010';
-import { exp, pow } from '../num/ucrt.js?v=202610060010';
-import { suma, sumaEje, nansumaEje, mediaEje, gradienteEje0, argmax } from '../num/np.js?v=202610060010';
-import { PySet } from '../num/pyset.js?v=202610060010';
+import { Arr } from '../core/arr.js?v=202610060036';
+import { ModeloBase } from './base.js?v=202610060036';
+import { exp, pow } from '../num/ucrt.js?v=202610060036';
+import { suma, sumaEje, nansumaEje, mediaEje, gradienteEje0, argmax } from '../num/np.js?v=202610060036';
+import { PySet } from '../num/pyset.js?v=202610060036';
 import {
   ZERO_CELSIUS, npMax, npMin, npClip, nanACero, vpSat, calorEspecifico, densidadAire, calorLatente,
   pendientePresionSat,
-} from './comun.js?v=202610060010';
-import { f64 } from '../num/f64.js?v=202610060010';
+} from './comun.js?v=202610060036';
+import { f64 } from '../num/f64.js?v=202610060036';
 
 const celdas = (n) => Array.from({ length: n }, (_, i) => i);
 

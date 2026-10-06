@@ -6,7 +6,7 @@
 // Uso: node herramientas/huellas.mjs <escenario.json> <salida.json> [--semilla 1]
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { Simulacion } from '../motor/simulacion.js?v=202610060010';
+import { Simulacion } from '../motor/simulacion.js?v=202610060036';
 
 export function huellas(escenario, meta, semilla = 1) {
   const sim = new Simulacion(escenario, { semilla, meta });

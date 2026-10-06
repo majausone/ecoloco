@@ -16,7 +16,7 @@ const RAIZ = resolve(dirname(new URL(import.meta.url).pathname.replace(/^\/(\w:)
 const version = process.argv[2] || new Date().toISOString().replace(/\D/g, '').slice(0, 12);
 // (también las pruebas y herramientas de Node: si importaran un módulo sin la versión, Node cargaría
 // dos copias de él)
-const CARPETAS = ['index.html', 'comun', 'vivo', 'portada', 'mundo', 'interfaz', 'motor', 'graficos/pruebas-morta', 'pruebas', 'herramientas'];
+const CARPETAS = ['index.html', 'comun', 'vivo', 'portada', 'mundo', 'interfaz', 'motor', 'graficos/pruebas-morta', 'pruebas', 'herramientas', 'possible-issues'];
 
 const ficheros = [];
 const recorrer = (r) => {

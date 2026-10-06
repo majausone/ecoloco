@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Possible issues in Virtual Ecosystem 0.2.2 · EcoLoco</title>
+<meta name="description" content="Possible issues we found in Virtual Ecosystem 0.2.2 while porting it to JavaScript, each with where it is, a minimal reproduction and what our fix does.">
+<style>
+  html, body { margin:0; background:#0d0b0a; color:#efe4d2; font:15px/1.6 system-ui, sans-serif; }
+  .pagina { max-width:960px; margin:0 auto; padding:24px 22px 70px; box-sizing:border-box; }
+  h1 { color:#e8a64a; font-size:clamp(28px, 5vw, 38px); margin:14px 0 6px; line-height:1.2; }
+  h2 { color:#e8a64a; font-size:23px; margin:44px 0 6px; border-bottom:1px solid #3a2f29; padding-bottom:4px; }
+  h3 { font-size:17px; margin:0 0 8px; color:#f3e7d4; } .num { color:#e8a64a; margin-right:4px; }
+  a { color:#e8a64a; } p { margin:8px 0; }
+  .lema { font-size:17px; color:#d8c9b3; }
+  .nota { background:rgba(20,16,15,.86); border:1px solid #3a2f29; border-radius:10px; padding:12px 16px; margin:16px 0; font-size:14px; color:#cdbda8; }
+  .issue, section { scroll-margin-top:48px; }
+  .issue { background:rgba(20,16,15,.86); border:1px solid #3a2f29; border-radius:10px; padding:14px 18px; margin:14px 0; }
+  dl { margin:0; display:grid; grid-template-columns:190px 1fr; gap:6px 14px; }
+  dt { color:#b9ab99; font-size:13.5px; padding-top:1px; } dd { margin:0; min-width:0; }
+  code { font:13px ui-monospace, SFMono-Regular, Consolas, monospace; background:#221b17; border:1px solid #3a2f29; border-radius:4px; padding:0 4px; }
+  pre { margin:4px 0; padding:10px 12px; border-radius:8px; overflow:auto; border:1px solid #3a2f29; }
+  pre code { background:none; border:none; padding:0; white-space:pre; }
+  pre.codigo { background:#16110f; } pre.salida { background:#10140f; border-color:#2f3a2c; color:#cfe3c4; }
+  .salida-t { font-size:12px; color:#8a9a82; margin-top:6px; }
+  .switch { display:inline-block; font-size:12px; color:#b9ab99; margin-left:6px; }
+  .indice ul { list-style:none; padding-left:0; } .indice ol { margin:4px 0 10px; } .indice > ul > li { margin:6px 0; font-weight:600; } .indice ol { font-weight:normal; font-size:14px; }
+  @media (max-width:700px) { dl { grid-template-columns:1fr; gap:2px; } dt { margin-top:8px; } .issue { padding:12px 12px; } }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <h1>Possible issues in Virtual Ecosystem 0.2.2</h1>
+  <p class="lema">While porting <a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem" target="_blank" rel="noopener">Virtual Ecosystem</a> to JavaScript, bit for bit, we found a few places where the code seems not to do what was intended. We list them here in case they are useful to its authors. They are <b>possible</b> issues: we may well be misreading the model, and we would be glad to be corrected.</p>
+  <div class="nota">
+    <p>Everything refers to <b>virtual_ecosystem 0.2.2</b> (commit <a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/tree/0176dc2b74d04b510e70cfc2f3885188bbf33780" target="_blank" rel="noopener"><code>0176dc2</code></a>). Each snippet is self-contained and was run with that version (Python 3.12, its own virtual environment); the output shown under it is the real output.</p>
+    <p>Our JavaScript engine reproduces the original exactly, including these behaviours. The fixes are optional: in <a href="../interfaz/">the engine page</a> they are all switched on together by the «fix the herbivore bug» box, and off by default, so that the engine gives the same bits as the original.</p>
+  </div>
+  <nav class="indice"><ul><li><a href="#clear">1. Likely bugs</a><ol><li><a href="#boltzmann">The metabolic rate uses the Boltzmann constant in J/K where the formula needs eV/K</a></li><li><a href="#forage-time">Foraging time is truncated to whole days</a></li><li><a href="#reproductive-mass">Reproductive mass never increases</a></li><li><a href="#enum-str">Enum members compared with strings</a></li><li><a href="#subcanopy-density">Understorey biomass in kg m⁻² is read as kg per cell</a></li><li><a href="#subcanopy-consumed">What animals eat from the understorey is never removed from it</a></li><li><a href="#metabolism-per-cell">Each cohort metabolises once for every cell of its territory</a></li><li><a href="#time-per-diet">Foraging time is divided by all diet categories, but all plants (or all prey) are eaten in one call</a></li><li><a href="#mushrooms">Mushroom eaters are never offered fungal fruiting bodies</a></li><li><a href="#metamorphosis">Adults with indirect development also metamorphose</a></li><li><a href="#initial-cohorts">Initial cohorts are counted as adults but created as newborns</a></li><li><a href="#depletion">Plant and litter resources are not depleted between cohorts in the same step</a></li><li><a href="#damuth">Damuth’s law uses its intercept without the logarithm</a></li><li><a href="#herbivory-per-stem">Canopy herbivory of a whole cohort seems to be subtracted from per-stem masses</a></li><li><a href="#water-negative">The water limitation factor can be negative</a></li><li><a href="#soil-evaporation">Soil evaporation uses vapour pressure instead of specific humidity</a></li><li><a href="#fruiting-units">Eaten fruiting bodies (kg) are subtracted from a pool in kg m⁻²</a></li><li><a href="#litter-zero">A litter pool with a decay rate of zero becomes NaN</a></li></ol></li><li><a href="#daily">2. Things that only show with a daily time step</a><ol><li><a href="#daily-foraging">No animal ever eats</a></li><li><a href="#daily-rain">Rain is lost on about 70 % of days</a></li></ol></li><li><a href="#suggestions">3. Suggestions: parameters and design choices</a><ol><li><a href="#conversion-efficiency">Assimilation efficiency</a></li><li><a href="#cnp">Body C:N:P proportions</a></li><li><a href="#sigma">Prey size tolerance</a></li><li><a href="#birth-threshold">Breeding threshold</a></li><li><a href="#encounter">Prey density counted twice in the encounter rate</a></li><li><a href="#ceil">A predator always kills at least one whole prey</a></li><li><a href="#small-prey">Minimum prey mass of 0.1 g</a></li><li><a href="#metabolism-food">Metabolism is paid only from body mass</a></li><li><a href="#closed">Each grid is a closed system</a></li><li><a href="#cohort-count">The number of cohorts grows without limit</a></li><li><a href="#search-rate">Search rates (our least certain change)</a></li></ol></li></ul></nav>
+  <section id="clear">
+  <h2>1. Likely bugs</h2>
+  <p>Places where the code seems to do something different from what its own documentation, units or variable names say. We are fairly confident about these, but you know the model far better than we do.</p>
+
+<article class="issue" id="boltzmann">
+  <h3><span class="num">1.1</span> The metabolic rate uses the Boltzmann constant in J/K where the formula needs eV/K</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The activation energy <code>Ea = 0.69</code> is in eV, but <code>k_B</code> defaults to <code>CoreConstants().boltzmann_constant</code>, which is <code>scipy.constants.Boltzmann</code> in J/K (1.38·10⁻²³).</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/scaling_functions.py#L174" target="_blank" rel="noopener"><code>models/animal/scaling_functions.py</code></a>, <code>metabolic_rate()</code><br>with <code>exp(-(Ea / (kB * Tk)))</code></dd>
+    <dt>Why it looks like a problem</dt><dd>With k_B in J/K the exponent is about −1.6·10²⁰, so the temperature term is exactly 0.0 and every metabolic rate is 0.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>from math import exp
+from virtual_ecosystem.core.model_config import CoreConstants
+from virtual_ecosystem.models.animal.model_config import AnimalConstants
+Es, Ea = AnimalConstants().metabolic_scaling_coefficients
+kB = CoreConstants().boltzmann_constant
+print(kB, Ea)
+print(exp(-(Ea / (kB * 310.0))))              # as in metabolic_rate()
+print(exp(-(Ea / (8.617333262e-5 * 310.0))))  # with k_B in eV/K</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>1.380649e-23 0.69
+0.0
+6.059394106690683e-12</code></pre></dd>
+    <dt>Effect</dt><dd>Animals never spend energy: <code>total_animal_respiration</code> is exactly 0 in every step of every run.</dd>
+    <dt>What our fix does</dt><dd>Use k_B = 8.617333262·10⁻⁵ eV/K in the metabolic rate. <span class="switch">switch: <code>boltzmann_ev</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="forage-time">
+  <h3><span class="num">1.2</span> Foraging time is truncated to whole days</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The time available per diet is computed with <code>numpy.timedelta64</code> arithmetic: <code>dt * tau_f * sigma_f_t / diet_category_count</code>.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_cohorts.py#L1461" target="_blank" rel="noopener"><code>models/animal/animal_cohorts.py</code></a>, <code>AnimalCohort.forage_cohort()</code><br><code>time_available_per_diet</code></dd>
+    <dt>Why it looks like a problem</dt><dd>Multiplying or dividing a <code>timedelta64</code> in days by a float rounds down to whole days.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import numpy as np
+from virtual_ecosystem.models.animal.model_config import AnimalConstants
+tau_f = AnimalConstants().tau_f      # 0.5
+print(np.timedelta64(30, "D") * tau_f * 1.0 / 2)   # monthly step, 2 diet categories: 7.5 days expected
+print(np.timedelta64(1, "D") * tau_f * 1.0 / 3)    # daily step, 3 diet categories</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>7 days
+0 days</code></pre></dd>
+    <dt>Effect</dt><dd>With a monthly step part of each day is lost; with a daily step the time is <b>0 days and no animal ever eats</b> (see section 2).</dd>
+    <dt>What our fix does</dt><dd>Compute the time as a float number of days. <span class="switch">switch: <code>forrajeo_continuo</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="reproductive-mass">
+  <h3><span class="num">1.3</span> Reproductive mass never increases</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>reproductive_mass_cnp</code> starts at zero and the only call that changes it subtracts the mass of the offspring. Growth always goes to <code>mass_cnp</code>. The constant <code>flow_to_reproductive_mass_threshold</code> is defined in the configuration but not used anywhere.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_cohorts.py#L330" target="_blank" rel="noopener"><code>models/animal/animal_cohorts.py</code></a>, <code>AnimalCohort.grow()</code><br><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1328" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>AnimalModel.handle_post_birth_parent_updates()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>The number of offspring is computed from the reproductive mass, so it is always 0.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+import virtual_ecosystem.models.animal.animal_cohorts as ac
+import virtual_ecosystem.models.animal.animal_model as am
+lines = (inspect.getsource(ac) + inspect.getsource(am)).splitlines()
+calls = [lines[i + 1].strip() for i, l in enumerate(lines) if "reproductive_mass_cnp.update(" in l]
+print(len(calls), "call(s) to reproductive_mass_cnp.update():", calls)
+src = inspect.getsource(ac) + inspect.getsource(am)
+print("flow_to_reproductive_mass_threshold used:", "flow_to_reproductive_mass_threshold" in src)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>1 call(s) to reproductive_mass_cnp.update(): ['C=-min(total_c, parent.reproductive_mass_cnp.C),']
+flow_to_reproductive_mass_threshold used: False</code></pre></dd>
+    <dt>Effect</dt><dd>No animal is ever born.</dd>
+    <dt>What our fix does</dt><dd>Once a cohort is adult (mass ≥ <code>flow_to_reproductive_mass_threshold</code> × adult mass), what it grows goes to its reproductive mass. <span class="switch">switch: <code>reproduccion</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="enum-str">
+  <h3><span class="num">1.4</span> Enum members compared with strings</h3>
+  <dl>
+    <dt>What the original does</dt><dd>Several conditions compare <code>functional_group.reproductive_type</code> or <code>migration_type</code> (plain <code>Enum</code> members) with string literals.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1328" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>handle_post_birth_parent_updates()</code> (<code>== "semelparous"</code>)<br><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1381" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>calculate_semelparous_mass_loss()</code> (<code>!= "semelparous"</code>)<br><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1450" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>birth_community()</code> (<code>!= "nonreproductive"</code>)<br><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1769" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>migrate_external_community()</code> (<code>== "seasonal"</code>)</dd>
+    <dt>Why it looks like a problem</dt><dd>An <code>Enum</code> member is never equal to a string, so the equalities are always False and the inequalities always True.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>from virtual_ecosystem.models.animal.animal_traits import ReproductiveType, MigrationType
+print(ReproductiveType.SEMELPAROUS == "semelparous")
+print(MigrationType.SEASONAL == "seasonal")
+print(ReproductiveType.NONREPRODUCTIVE != "nonreproductive")</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>False
+False
+True</code></pre></dd>
+    <dt>Effect</dt><dd>Semelparous parents never lose their mass or die after breeding, no cohort ever migrates seasonally, and non-reproductive groups are treated as reproductive.</dd>
+    <dt>What our fix does</dt><dd>Compare with the enum members (<code>ReproductiveType.SEMELPAROUS</code>, …). <span class="switch">switch: <code>comparar_enums</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="subcanopy-density">
+  <h3><span class="num">1.5</span> Understorey biomass in kg m⁻² is read as kg per cell</h3>
+  <dl>
+    <dt>What the original does</dt><dd>In <code>ARRAY_RESOURCES</code>, the litter and fungal pools are declared with <code>density=True</code> (converted to mass with the cell area), but <code>subcanopy_vegetation_cnp</code> and <code>subcanopy_seedbank_cnp</code> are not, although their unit is kg m⁻².</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/array_resources.py#L207" target="_blank" rel="noopener"><code>models/animal/array_resources.py</code></a>, <code>ARRAY_RESOURCES</code></dd>
+    <dt>Why it looks like a problem</dt><dd>Without the conversion, a cell of 8100 m² offers herbivores the biomass of one square metre.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import tomllib, importlib.resources as ir
+from virtual_ecosystem.models.animal.array_resources import ARRAY_RESOURCES
+dv = tomllib.loads((ir.files("virtual_ecosystem") / "data_variables.toml").read_text(encoding="utf-8"))
+unit = {v["name"]: v.get("unit") for v in dv["variable"]}
+for r in ARRAY_RESOURCES:
+    print(r.pool_array, "|", unit.get(r.pool_array), "| density =", r.density)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>subcanopy_vegetation_cnp | kg m-2 | density = False
+subcanopy_seedbank_cnp | kg m2 | density = False
+canopy_foliage_cnp | kg | density = False
+canopy_seed_cnp | kg | density = False
+canopy_fruit_cnp | kg | density = False
+fallen_seeds_cnp | kg | density = False
+fallen_fruit_cnp | kg | density = False
+litter_pool_above_metabolic_cnp | kg m^-2 | density = True
+litter_pool_above_structural_cnp | kg m^-2 | density = True
+litter_pool_woody_cnp | kg m^-2 | density = True
+litter_pool_below_metabolic_cnp | kg m^-2 | density = True
+litter_pool_below_structural_cnp | kg m^-2 | density = True
+fungal_fruiting_bodies_cnp | kg m^-2 | density = True</code></pre></dd>
+    <dt>Effect</dt><dd>Ground herbivores (insects, lizards) find thousands of times less food, and because the encounter rate uses the biomass density squared, their intake is many millions of times lower.</dd>
+    <dt>What our fix does</dt><dd>Treat both pools as densities (multiply by the cell area). <span class="switch">switch: <code>sotobosque_por_m2</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="subcanopy-consumed">
+  <h3><span class="num">1.6</span> What animals eat from the understorey is never removed from it</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The animal model writes <code>subcanopy_vegetation_cnp_consumed</code> and <code>subcanopy_seedbank_cnp_consumed</code>. The plant model lists and initialises them, but never subtracts them (it does subtract the canopy and fallen fruit and seed consumption).</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/plants/plants_model.py#L80" target="_blank" rel="noopener"><code>models/plants/plants_model.py</code></a>, <code>PlantsModel</code> (<code>vars_required_for_update</code>)<br><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/plants/plants_model.py#L897" target="_blank" rel="noopener"><code>models/plants/plants_model.py</code></a>, <code>PlantsModel.apply_herbivory()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>Consumption that is recorded but never applied makes the understorey an endless resource.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+import virtual_ecosystem.models.plants.plants_model as pm
+lines = [l.strip() for l in inspect.getsource(pm).splitlines() if "subcanopy_vegetation_cnp_consumed" in l]
+print(len(lines), "mentions in the plant model:", lines)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>2 mentions in the plant model: ['"subcanopy_vegetation_cnp_consumed",', '"subcanopy_vegetation_cnp_consumed",']</code></pre></dd>
+    <dt>Effect</dt><dd>The understorey is never depleted by herbivores.</dd>
+    <dt>What our fix does</dt><dd>Subtract the consumed understorey biomass in the plant update. <span class="switch">switch: <code>restar_sotobosque</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="metabolism-per-cell">
+  <h3><span class="num">1.7</span> Each cohort metabolises once for every cell of its territory</h3>
+  <dl>
+    <dt>What the original does</dt><dd>A cohort is appended to the community of every cell of its territory, and <code>metabolize_community</code> loops over cells and then over the cohorts in each community.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1110" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>update_community_occupancy()</code><br><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1576" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>metabolize_community()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>A cohort whose territory covers n cells calls <code>metabolize()</code> n times per step.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal.animal_model import AnimalModel
+for f in (AnimalModel.update_community_occupancy, AnimalModel.metabolize_community):
+    print([l.strip() for l in inspect.getsource(f).splitlines()
+           if l.strip().startswith(("for ", "self.communities[cell_id].append", "metabolic_waste_mass ="))])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['for cell_id in territory_cells:', 'self.communities[cell_id].append(cohort)']
+['for cell_id, community in self.communities.items():', 'for cohort in community:', 'metabolic_waste_mass = cohort.metabolize(cohort.current_temperature, dt)']</code></pre></dd>
+    <dt>Effect</dt><dd>Once the Boltzmann constant is fixed, large animals (territories of up to 81 cells) spend up to 81 times their metabolism and starve within days.</dd>
+    <dt>What our fix does</dt><dd>Metabolise each cohort once per step and spread its waste and respiration over its territory. <span class="switch">switch: <code>metabolismo_una_vez</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="time-per-diet">
+  <h3><span class="num">1.8</span> Foraging time is divided by all diet categories, but all plants (or all prey) are eaten in one call</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>diet_category_count</code> counts each category (foliage, fruit, seeds…), the time is divided by it, and then the whole plant list is foraged in one call with that single share. The same happens with prey.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_cohorts.py#L1461" target="_blank" rel="noopener"><code>models/animal/animal_cohorts.py</code></a>, <code>AnimalCohort.forage_cohort()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>A herbivore that eats foliage, fruit and seeds gets one third of its time for all plants together.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal.animal_traits import DietType
+from virtual_ecosystem.models.animal.animal_cohorts import AnimalCohort
+print((DietType.FOLIAGE | DietType.FRUIT | DietType.SEEDS).count_dietary_categories())
+print([l.strip() for l in inspect.getsource(AnimalCohort.forage_cohort).splitlines() if "time_available_per_diet" in l])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>3
+['time_available_per_diet = (', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,', 'adjusted_dt=time_available_per_diet,']</code></pre></dd>
+    <dt>Effect</dt><dd>Herbivores and predators with several diet categories forage for only a fraction of the intended time.</dd>
+    <dt>What our fix does</dt><dd>Give the plant (or prey) call the time of all the plant (or prey) categories of the diet. <span class="switch">switch: <code>tiempo_plantas, tiempo_presas</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="mushrooms">
+  <h3><span class="num">1.9</span> Mushroom eaters are never offered fungal fruiting bodies</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>fungal_fruiting_bodies_cnp</code> is defined as an array resource with <code>diet_type=MUSHROOMS</code>, but <code>forage_community</code> only builds the array resource list for plant and detritus diets.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1463" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>AnimalModel.forage_community()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>The MUSHROOMS flag is never checked, so the resource never reaches the cohorts.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal.animal_model import AnimalModel
+code = inspect.getsource(AnimalModel.forage_community).split('"""')[2]   # without the docstring
+print("DietType.MUSHROOMS checked:", "DietType.MUSHROOMS" in code)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>DietType.MUSHROOMS checked: False</code></pre></dd>
+    <dt>Effect</dt><dd>Fungivores never eat mushrooms.</dd>
+    <dt>What our fix does</dt><dd>Add the MUSHROOMS flag to the array resource request. <span class="switch">switch: <code>setas</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="metamorphosis">
+  <h3><span class="num">1.10</span> Adults with indirect development also metamorphose</h3>
+  <dl>
+    <dt>What the original does</dt><dd>A cohort metamorphoses when its development type is indirect and its mass reaches the adult mass; its development status (larval or adult) is not checked.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1695" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>AnimalModel.metamorphose_community()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>An adult butterfly that reaches its adult mass is turned into its offspring group (caterpillars).</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal.animal_model import AnimalModel
+print([l.strip() for l in inspect.getsource(AnimalModel.metamorphose_community).splitlines()
+       if "development_type" in l or "development_status" in l or "mass_current &gt;=" in l])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['cohort.functional_group.development_type == DevelopmentType.INDIRECT', 'and (cohort.mass_current &gt;= cohort.functional_group.adult_mass)']</code></pre></dd>
+    <dt>Effect</dt><dd>Butterflies turn back into caterpillars and never breed.</dd>
+    <dt>What our fix does</dt><dd>Only larval cohorts metamorphose. <span class="switch">switch: <code>metamorfosis_solo_larvas</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="initial-cohorts">
+  <h3><span class="num">1.11</span> Initial cohorts are counted as adults but created as newborns</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The number of individuals comes from the biomass density divided by the <b>adult</b> mass, but every cohort is created with <code>mass=fg.birth_mass</code>.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L585" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>AnimalModel._initialize_communities()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>The starting biomass is a few per cent of what was intended, and almost no animal reaches breeding size.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal.animal_model import AnimalModel
+print([l.strip() for l in inspect.getsource(AnimalModel._initialize_communities).splitlines()
+       if "biomass_density_to_individuals" in l or "fg.adult_mass," in l or "mass=fg.birth_mass" in l])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['total_individuals = biomass_density_to_individuals(', 'fg.adult_mass,', 'mass=fg.birth_mass,']</code></pre></dd>
+    <dt>Effect</dt><dd>Populations start as newborns (4–10 % of adult mass) and most die before breeding.</dd>
+    <dt>What our fix does</dt><dd>Spread the initial cohorts between birth and adult mass. <span class="switch">switch: <code>cohortes_iniciales_mezcladas</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="depletion">
+  <h3><span class="num">1.12</span> Plant and litter resources are not depleted between cohorts in the same step</h3>
+  <dl>
+    <dt>What the original does</dt><dd>Each time a cohort asks for a cell resource, <code>ResourcePool.__getitem__</code> builds a new <code>CellResource</code> from <code>elemental_masses</code>, which are not reduced when something is eaten; <code>get_eaten</code> only reduces the temporary object.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/array_resources.py#L421" target="_blank" rel="noopener"><code>models/animal/array_resources.py</code></a>, <code>ResourcePool.__getitem__()</code><br><code>CellResource.get_eaten()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>Every cohort sees the full pool, so the total eaten in a step can exceed what is there.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+import virtual_ecosystem.models.animal.array_resources as ar
+print([l.strip() for l in inspect.getsource(ar.ResourcePool.__getitem__).splitlines() if "available_elemental_masses" in l])
+print([l.strip() for l in inspect.getsource(ar.CellResource.get_eaten).splitlines() if "-=" in l])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['available_elemental_masses=self.elemental_masses[cell_id],']
+['self._mass_current -= actual']</code></pre></dd>
+    <dt>Effect</dt><dd>With many herbivores, consumption can exceed the available biomass.</dd>
+    <dt>What our fix does</dt><dd>Subtract what each cohort eats from the pool before the next one forages (and never take more than half of what is left). <span class="switch">switch: <code>agotar_recursos</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="damuth">
+  <h3><span class="num">1.13</span> Damuth’s law uses its intercept without the logarithm</h3>
+  <dl>
+    <dt>What the original does</dt><dd>Damuth’s law is log₁₀ D = a + b log₁₀ M, but <code>damuths_law</code> uses <code>a</code> as a multiplier: D = a · M<sup>b</sup>. (Only with <code>density_scaling_method = "damuth"</code>; the default is "madingley".)</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/scaling_functions.py#L26" target="_blank" rel="noopener"><code>models/animal/scaling_functions.py</code></a>, <code>damuths_law()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>With a = 4.23 the densities are 10<sup>4.23</sup>/4.23 ≈ 4000 times too low.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>from virtual_ecosystem.models.animal.scaling_functions import damuths_law
+print(damuths_law(10.0, (-0.75, 4.23)) * 1e6, "individuals per km2 for a 10 kg herbivore")
+print(10 ** 4.23 * (10.0 * 1000) ** -0.75, "with log10 D = 4.23 - 0.75 log10 M (M in g)")</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>0.00423 individuals per km2 for a 10 kg herbivore
+16.982436524617462 with log10 D = 4.23 - 0.75 log10 M (M in g)</code></pre></dd>
+    <dt>Effect</dt><dd>Unrealistic starting densities when the Damuth method is chosen.</dd>
+    <dt>What our fix does</dt><dd>Use 10<sup>a</sup>. <span class="switch">switch: <code>damuth_log10</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="herbivory-per-stem">
+  <h3><span class="num">1.14</span> Canopy herbivory of a whole cohort seems to be subtracted from per-stem masses</h3>
+  <dl>
+    <dt>What the original does</dt><dd>Herbivory is shared among the cohorts of a PFT and subtracted from each cohort’s tissue masses and from <code>stem_allometry.foliage_mass</code>, which we understand to be per stem.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/plants/plants_model.py#L897" target="_blank" rel="noopener"><code>models/plants/plants_model.py</code></a>, <code>PlantsModel.apply_herbivory()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>If those masses are per stem, a cohort of many stems loses its whole consumption from each stem.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.plants.plants_model import PlantsModel
+print([l.strip() for l in inspect.getsource(PlantsModel.apply_herbivory).splitlines()
+       if "relative_herbivory" in l or "apply_herbivory(" in l or "foliage_mass -" in l])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['def apply_herbivory(self) -&gt; None:', 'relative_herbivory = tissue.get_relative_carbon_biomass_by_pft(', '* relative_herbivory[:, np.newaxis]', 'tissue.apply_herbivory(herbivory_by_cohort)', 'community.stem_allometry.foliage_mass - foliage_carbon_loss / 2']</code></pre></dd>
+    <dt>Effect</dt><dd>With many herbivores, crowns drop to zero and later steps divide 0 by 0. We may be misreading the units here.</dd>
+    <dt>What our fix does</dt><dd>Share the consumption among the stems of the cohort. <span class="switch">switch: <code>hojas_comidas_por_tallo</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="water-negative">
+  <h3><span class="num">1.15</span> The water limitation factor can be negative</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The factor is <code>min(1, (soil_moisture − residual) / demand)</code>, with no lower bound.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/plants/plants_model.py#L1226" target="_blank" rel="noopener"><code>models/plants/plants_model.py</code></a>, <code>PlantsModel.apply_water_limitation()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>When the soil is drier than the residual water, the factor is negative, and so is production.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import numpy as np
+soil_moisture, residual, demand = np.array([20.0]), np.array([30.0]), np.array([50.0])
+print(np.minimum(1, (soil_moisture - residual) / demand))   # as in apply_water_limitation()</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>[-0.2]</code></pre></dd>
+    <dt>Effect</dt><dd>Negative gross primary production in dry soils.</dd>
+    <dt>What our fix does</dt><dd>Bound the factor at 0. <span class="switch">switch: <code>agua_sin_negativos</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="soil-evaporation">
+  <h3><span class="num">1.16</span> Soil evaporation uses vapour pressure instead of specific humidity</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The docstring says E = ρ/Rₐ (α q_sat − q). The code computes <code>saturated_specific_humidity</code> but uses <code>saturation_vapour_pressure</code> (kPa) in the flux, and then divides the mass flux (kg m⁻² s⁻¹) by the latent heat of vaporisation.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/hydrology/above_ground.py#L233" target="_blank" rel="noopener"><code>models/hydrology/above_ground.py</code></a>, <code>calculate_soil_evaporation()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>The two quantities differ by two orders of magnitude, and a mass flux divided by latent heat is no longer a mass flux.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+import virtual_ecosystem.models.hydrology.above_ground as ag
+s = inspect.getsource(ag.calculate_soil_evaporation)
+print([l.strip() for l in s.splitlines() if "alpha * saturation_vapour_pressure" in l or "evaporative_flux / latent_heat_vapourisation" in l])
+print("saturated_specific_humidity used in the flux:", "alpha * saturated_specific_humidity" in s)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['alpha * saturation_vapour_pressure - specific_humidity_air', 'evaporative_flux / latent_heat_vapourisation']
+saturated_specific_humidity used in the flux: False</code></pre></dd>
+    <dt>Effect</dt><dd>Soil evaporation does not follow the documented formula.</dd>
+    <dt>What our fix does</dt><dd>Use α q_sat − q and do not divide by the latent heat (kg m⁻² s⁻¹ = mm s⁻¹). <span class="switch">switch: <code>evaporacion_suelo</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="fruiting-units">
+  <h3><span class="num">1.17</span> Eaten fruiting bodies (kg) are subtracted from a pool in kg m⁻²</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The soil model subtracts <code>fungal_fruiting_bodies_consumed_cnp</code> (unit kg) from <code>fungal_fruiting_bodies_cnp</code> (unit kg m⁻²).</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/soil/soil_model.py#L341" target="_blank" rel="noopener"><code>models/soil/soil_model.py</code></a>, <code>SoilModel._update()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>The units do not match: the subtraction is 8100 times too large in a 8100 m² cell.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import tomllib, importlib.resources as ir
+dv = tomllib.loads((ir.files("virtual_ecosystem") / "data_variables.toml").read_text(encoding="utf-8"))
+unit = {v["name"]: v.get("unit") for v in dv["variable"]}
+print("fungal_fruiting_bodies_cnp:", unit["fungal_fruiting_bodies_cnp"])
+print("fungal_fruiting_bodies_consumed_cnp:", unit["fungal_fruiting_bodies_consumed_cnp"])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>fungal_fruiting_bodies_cnp: kg m^-2
+fungal_fruiting_bodies_consumed_cnp: kg</code></pre></dd>
+    <dt>Effect</dt><dd>Fruiting bodies can become negative once animals eat them.</dd>
+    <dt>What our fix does</dt><dd>Divide the consumed mass by the cell area before subtracting it. <span class="switch">switch: <code>setas_por_m2</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="litter-zero">
+  <h3><span class="num">1.18</span> A litter pool with a decay rate of zero becomes NaN</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>calculate_final_pool_size</code> computes the equilibrium as <code>input_rate / decay_rate</code>.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/litter/carbon.py#L295" target="_blank" rel="noopener"><code>models/litter/carbon.py</code></a>, <code>calculate_final_pool_size()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>With a zero rate (for instance very dry or cold conditions) this is ∞ − ∞.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import numpy as np
+from virtual_ecosystem.models.litter.carbon import calculate_final_pool_size
+with np.errstate(all="ignore"):
+    print(calculate_final_pool_size(np.array([0.01]), np.array([0.0]), np.array([1.0]), 1.0))</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>[nan]</code></pre></dd>
+    <dt>Effect</dt><dd>A NaN that spreads to the rest of the litter and soil.</dd>
+    <dt>What our fix does</dt><dd>With a zero rate, the pool just adds its input. <span class="switch">switch: <code>tasa_cero</code></span></dd>
+  </dl>
+</article>
+  </section>
+  <section id="daily">
+  <h2>2. Things that only show with a daily time step</h2>
+  <p>The example runs monthly. Running it daily (update_interval = "1 day") shows two more problems.</p>
+
+<article class="issue" id="daily-foraging">
+  <h3><span class="num">2.1</span> No animal ever eats</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The truncation of the foraging time described in section 1 gives 0 days when the step is one day.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_cohorts.py#L1461" target="_blank" rel="noopener"><code>models/animal/animal_cohorts.py</code></a>, <code>AnimalCohort.forage_cohort()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>One day × tau_f (0.5) × sigma_f_t / number of diet categories is less than one day, and it is rounded down.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import numpy as np
+print(np.timedelta64(1, "D") * 0.5 * 1.0 / 1)   # even with a single diet category</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>0 days</code></pre></dd>
+    <dt>Effect</dt><dd>At a daily step, no animal eats and all of them starve.</dd>
+    <dt>What our fix does</dt><dd>As above. <span class="switch">switch: <code>forrajeo_continuo</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="daily-rain">
+  <h3><span class="num">2.2</span> Rain is lost on about 70 % of days</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>distribute_monthly_rainfall</code> spreads each step’s rain over its days with a Markov chain whose first day is wet with probability <code>p_wet_dry</code> (0.3). With a one-day step, every day is a «first day».</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/hydrology/above_ground.py#L568" target="_blank" rel="noopener"><code>models/hydrology/above_ground.py</code></a>, <code>distribute_monthly_rainfall()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>The real daily rainfall from the input data is kept only when the draw says the day is wet.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import numpy as np
+from virtual_ecosystem.models.hydrology.above_ground import distribute_monthly_rainfall
+dry = sum(distribute_monthly_rainfall(np.array([10.0]), 1, 0.6, 0.3, 1.0, 1.0, seed=s)[0, 0] == 0
+          for s in range(1000))
+print(dry / 1000, "of 1000 rainy days come out dry")</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>0.719 of 1000 rainy days come out dry</code></pre></dd>
+    <dt>Effect</dt><dd>The soil dries out, and in our runs the litter model then produced NaN.</dd>
+    <dt>What our fix does</dt><dd>With a one-day step, use each day’s rain as it is. <span class="switch">switch: <code>lluvia_paso_diario</code></span></dd>
+  </dl>
+</article>
+  </section>
+  <section id="suggestions">
+  <h2>3. Suggestions: parameters and design choices</h2>
+  <p>These are not bugs. They are values or choices that, once the problems above were fixed, did not let the Maliau animals sustain themselves in our runs. We changed them by our own judgement; we offer them only as suggestions.</p>
+
+<article class="issue" id="conversion-efficiency">
+  <h3><span class="num">3.1</span> Assimilation efficiency</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>conversion_efficiency</code> is 0.1 for herbivores, 0.25 for carnivores and 0.175 for omnivores.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/model_config.py#L212" target="_blank" rel="noopener"><code>models/animal/model_config.py</code></a>, <code>AnimalConstants.conversion_efficiency</code></dd>
+    <dt>Why it looks like a problem</dt><dd>These look like trophic transfer efficiencies, which already include respiration; with metabolism subtracted separately, respiration may be counted twice.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>from virtual_ecosystem.models.animal.model_config import AnimalConstants
+print({k.name: v for k, v in AnimalConstants().conversion_efficiency.items()})</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>{'HERBIVORE': 0.1, 'CARNIVORE': 0.25, 'OMNIVORE': 0.175}</code></pre></dd>
+    <dt>Effect</dt><dd>Animals assimilate too little of what they eat to cover their metabolism.</dd>
+    <dt>What our fix does</dt><dd>We use Madingley’s assimilation efficiencies (Harfoot et al. 2014): 0.5 herbivores, 0.8 carnivores, 0.65 omnivores. <span class="switch">parameter change</span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="cnp">
+  <h3><span class="num">3.2</span> Body C:N:P proportions</h3>
+  <dl>
+    <dt>What the original does</dt><dd>The body C:N:P proportions are 50/30/20 for mammals, 40/30/30 for birds and 40/20/40 for invertebrates, amphibians and reptiles (20–40 % phosphorus).</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/model_config.py#L247" target="_blank" rel="noopener"><code>models/animal/model_config.py</code></a>, <code>AnimalConstants.cnp_proportion_terms</code></dd>
+    <dt>Why it looks like a problem</dt><dd>A real animal body is roughly 80/17/3 (insects about 82/16/2): phosphorus is a few per cent, not a fifth or more.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>from virtual_ecosystem.models.animal.model_config import AnimalConstants
+for taxa, cnp in AnimalConstants().cnp_proportion_terms.items():
+    print(taxa.name, cnp)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>MAMMAL {'C': 0.5, 'N': 0.3, 'P': 0.2}
+BIRD {'C': 0.4, 'N': 0.3, 'P': 0.3}
+INVERTEBRATE {'C': 0.4, 'N': 0.2, 'P': 0.4}
+AMPHIBIAN {'C': 0.4, 'N': 0.2, 'P': 0.4}
+REPTILE {'C': 0.4, 'N': 0.2, 'P': 0.4}</code></pre></dd>
+    <dt>Effect</dt><dd>Growth tends to be limited by phosphorus and nitrogen.</dd>
+    <dt>What our fix does</dt><dd>80/17/3 for vertebrates and 82/16/2 for invertebrates. <span class="switch">parameter change</span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="sigma">
+  <h3><span class="num">3.3</span> Prey size tolerance</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>sigma_opt_pred_prey</code> = 0.7.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/model_config.py#L296" target="_blank" rel="noopener"><code>models/animal/model_config.py</code></a>, <code>AnimalConstants.sigma_opt_pred_prey</code></dd>
+    <dt>Why it looks like a problem</dt><dd>With 0.7, a 100 g bird hardly «sees» half-gram insects; real predators take prey of very different sizes.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>from virtual_ecosystem.models.animal.model_config import AnimalConstants
+print(AnimalConstants().sigma_opt_pred_prey)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>0.7</code></pre></dd>
+    <dt>Effect</dt><dd>Predators find very little prey.</dd>
+    <dt>What our fix does</dt><dd>2.0. <span class="switch">parameter change</span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="birth-threshold">
+  <h3><span class="num">3.4</span> Breeding threshold</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>birth_mass_threshold</code> = 1.5: a cohort breeds when its reproductive mass reaches half its body mass, and releases all the young at once.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/model_config.py#L258" target="_blank" rel="noopener"><code>models/animal/model_config.py</code></a>, <code>AnimalConstants.birth_mass_threshold</code></dd>
+    <dt>Why it looks like a problem</dt><dd>A 1 kg bird with 40 g chicks would release 12 at once.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>from virtual_ecosystem.models.animal.model_config import AnimalConstants
+print(AnimalConstants().birth_mass_threshold)</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>1.5</code></pre></dd>
+    <dt>Effect</dt><dd>Few, very large broods.</dd>
+    <dt>What our fix does</dt><dd>1.1 (10 %), which gives 2–3 young. <span class="switch">parameter change</span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="encounter">
+  <h3><span class="num">3.5</span> Prey density counted twice in the encounter rate</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>k_i_j</code> multiplies the prey cohort density by the density of its mass bin.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/scaling_functions.py#L566" target="_blank" rel="noopener"><code>models/animal/scaling_functions.py</code></a>, <code>k_i_j()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>The docstring says this is intentional and absorbed by calibration; we found encounters proportional to density easier to calibrate.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal import scaling_functions as sf
+print([l.strip() for l in inspect.getsource(sf.k_i_j).splitlines() if l.strip().startswith("return")])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['return alpha_i_j * (N_j_t / intersection_area_ha) * theta_i_j']</code></pre></dd>
+    <dt>Effect</dt><dd>Encounters scale with the square of prey density.</dd>
+    <dt>What our fix does</dt><dd>Linear in prey density. <span class="switch">switch: <code>caza_lineal</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="ceil">
+  <h3><span class="num">3.6</span> A predator always kills at least one whole prey</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>get_eaten</code> uses <code>ceil</code> for the number of individuals killed.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_cohorts.py#L655" target="_blank" rel="noopener"><code>models/animal/animal_cohorts.py</code></a>, <code>AnimalCohort.get_eaten()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>A predator that only needs a small fraction of a prey kills a whole one each step.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal.animal_cohorts import AnimalCohort
+print([l.strip() for l in inspect.getsource(AnimalCohort.get_eaten).splitlines() if "ceil(" in l])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['max_individuals_killed = ceil(potential_consumed_mass / individual_mass)']</code></pre></dd>
+    <dt>Effect</dt><dd>Predation is biased upwards for small intakes.</dd>
+    <dt>What our fix does</dt><dd>Round at random, with the same mean. <span class="switch">switch: <code>caza_redondeo</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="small-prey">
+  <h3><span class="num">3.7</span> Minimum prey mass of 0.1 g</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>prey_group_selection</code> gives every prey group a (0.0001, 1000) kg range.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/scaling_functions.py#L238" target="_blank" rel="noopener"><code>models/animal/scaling_functions.py</code></a>, <code>prey_group_selection()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>Termites and young insects weigh less than 0.1 g.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal import scaling_functions as sf
+print([l.strip() for l in inspect.getsource(sf.prey_group_selection).splitlines() if "0.0001" in l][:1])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['result[fg.name] = (0.0001, 1000.0)']</code></pre></dd>
+    <dt>Effect</dt><dd>Small invertebrates cannot be eaten.</dd>
+    <dt>What our fix does</dt><dd>A much lower minimum (one microgram). <span class="switch">switch: <code>presas_pequenas</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="metabolism-food">
+  <h3><span class="num">3.8</span> Metabolism is paid only from body mass</h3>
+  <dl>
+    <dt>What the original does</dt><dd><code>metabolize</code> takes the metabolic cost from the cohort’s body carbon.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_cohorts.py#L357" target="_blank" rel="noopener"><code>models/animal/animal_cohorts.py</code></a>, <code>AnimalCohort.metabolize()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>Animals usually pay their metabolism first from what they have just eaten.</dd>
+    <dt>Reproduce it</dt><dd><pre class="codigo"><code>import inspect
+from virtual_ecosystem.models.animal.animal_cohorts import AnimalCohort
+print([l.strip() for l in inspect.getsource(AnimalCohort.metabolize).splitlines() if "mass_cnp.update" in l])</code></pre><div class="salida-t">Output with virtual_ecosystem 0.2.2:</div><pre class="salida"><code>['self.mass_cnp.update(C=-actual_carbon_metabolized)']</code></pre></dd>
+    <dt>Effect</dt><dd>Animals lose body mass even when they have eaten enough.</dd>
+    <dt>What our fix does</dt><dd>Use the surplus carbon from the food first. <span class="switch">switch: <code>metabolismo_con_comida</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="closed">
+  <h3><span class="num">3.9</span> Each grid is a closed system</h3>
+  <dl>
+    <dt>What the original does</dt><dd>No animal enters or leaves the simulated area.</dd>
+    <dt>Where</dt><dd><code>models/animal/animal_model.py</code></dd>
+    <dt>Why it looks like a problem</dt><dd>A small patch of forest is usually connected to the forest around it.</dd>
+    
+    <dt>Effect</dt><dd>Rare large animals go extinct locally and cannot come back.</dd>
+    <dt>What our fix does</dt><dd>If a population falls below half of its starting density, animals come in from the edge; above twice, they leave. <span class="switch">switch: <code>inmigracion</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="cohort-count">
+  <h3><span class="num">3.10</span> The number of cohorts grows without limit</h3>
+  <dl>
+    <dt>What the original does</dt><dd>Every animal birth and every plant recruitment creates a new cohort, and cohorts are never merged.</dd>
+    <dt>Where</dt><dd><a href="https://github.com/ImperialCollegeLondon/virtual_ecosystem/blob/0176dc2b74d04b510e70cfc2f3885188bbf33780/virtual_ecosystem/models/animal/animal_model.py#L1328" target="_blank" rel="noopener"><code>models/animal/animal_model.py</code></a>, <code>AnimalModel.handle_post_birth_parent_updates()</code><br><code>models/plants/plants_model.py</code>, <code>apply_recruitment()</code></dd>
+    <dt>Why it looks like a problem</dt><dd>Over long runs the number of cohorts, and the run time, keep growing.</dd>
+    
+    <dt>Effect</dt><dd>Long simulations get slower and slower.</dd>
+    <dt>What our fix does</dt><dd>Merge similar animal cohorts when a group has more than 60 (as Madingley does), and add new seedlings to the seedling cohort of their type. <span class="switch">switch: <code>fusionar_cohortes, reclutas_juntos</code></span></dd>
+  </dl>
+</article>
+
+<article class="issue" id="search-rate">
+  <h3><span class="num">3.11</span> Search rates (our least certain change)</h3>
+  <dl>
+    <dt>What the original does</dt><dd>Even with everything above, the encounter formulas gave intakes that did not match real animals for the Maliau groups: some never ate and others ate everything.</dd>
+    <dt>Where</dt><dd>Our Maliau scenario only, not the original code</dd>
+    <dt>Why it looks like a problem</dt><dd>We added an optional <code>search_rate_multiplier</code> column to the functional group table and calibrated it so each group assimilates about 1.5 times what it spends.</dd>
+    
+    <dt>Effect</dt><dd>The multipliers range from about 0.000003 (termites) to 260,000 (scavengers), which suggests the encounter formulas themselves may not scale with real densities and body masses. This is the change we are least sure about.</dd>
+    <dt>What our fix does</dt><dd>A per-group multiplier of the search rate (1 = original). <span class="switch">switch: <code>search_rate_multiplier</code></span></dd>
+  </dl>
+</article>
+  </section>
+  <p class="nota">EcoLoco is an independent project and is not affiliated with the Virtual Ecosystem team. Source code: <a href="https://github.com/majausone/ecoloco" target="_blank" rel="noopener">github.com/majausone/ecoloco</a>.</p>
+</div>
+<link rel="stylesheet" href="../comun/comun.css">
+<script type="module">
+import { cabecera } from '../comun/cabecera.js?v=202610060036';
+cabecera('');
+</script>
+</body>
+</html>

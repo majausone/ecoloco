@@ -6,7 +6,7 @@
    Solo en el navegador (usa un canvas). Las casillas, en el orden de geometria.js (CELDAS). */
 
 import * as THREE from '../vendor/three.module.js';
-import { CELDAS, LADO_ATLAS } from './geometria.js?v=202610060010';
+import { CELDAS, LADO_ATLAS } from './geometria.js?v=202610060036';
 
 const C = 256, N = C * LADO_ATLAS;
 let textura = null;

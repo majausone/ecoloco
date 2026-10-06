@@ -4,12 +4,12 @@
    En la consola: __banco.medir(120) -> ms por fotograma esperando a la GPU, triángulos... */
 
 import * as THREE from '../graficos/pruebas-morta/vendor/three.module.js';
-import { Visor } from '../graficos/pruebas-morta/borneo/visor.js?v=202610060010';
-import { crearManada } from './manada.js?v=202610060010';
-import { ESTADOS } from '../mundo/especies.js?v=202610060010';
-import { TICS } from '../mundo/dia.js?v=202610060010';
-import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060010';
-import { prepararSuaves } from '../graficos/pruebas-morta/borneo/animales.js?v=202610060010';
+import { Visor } from '../graficos/pruebas-morta/borneo/visor.js?v=202610060036';
+import { crearManada } from './manada.js?v=202610060036';
+import { ESTADOS } from '../mundo/especies.js?v=202610060036';
+import { TICS } from '../mundo/dia.js?v=202610060036';
+import { ANIMALES } from '../graficos/pruebas-morta/borneo/especies.js?v=202610060036';
+import { prepararSuaves } from '../graficos/pruebas-morta/borneo/animales.js?v=202610060036';
 
 const q = new URLSearchParams(location.search);
 const ESPECIE = q.get('especie') || 'rana-gigante-rio', N = Number(q.get('n') || 5000), LADO = Number(q.get('lado') || 100);
